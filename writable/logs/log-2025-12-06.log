@@ -1,0 +1,1449 @@
+CRITICAL - 2025-12-06 08:35:44 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/download]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(88): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadLaporan()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:36:09 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/distribusi]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(136): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadDistribusi()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:36:37 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/distribusi]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(136): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadDistribusi()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:36:49 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/distribusi]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(136): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadDistribusi()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:36:49 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/distribusi]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(136): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadDistribusi()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:36:56 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/download]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(88): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadLaporan()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:38:57 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/download]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(88): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadLaporan()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:39:01 --> Error: Class "TCPDF" not found
+[Method: GET, Route: dashboard/laporan/download]
+in APPPATH\Libraries\PdfGenerator.php on line 7.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(315): include_once()
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Libraries\\PdfGenerator.php')
+ 3 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Libraries\\PdfGenerator')
+ 4 APPPATH\Controllers\Dashboard.php(88): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Libraries\\PdfGenerator')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Dashboard->downloadLaporan()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 08:58:01 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Produsen->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 08:58:01 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: produsen]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:58:01 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:58:01 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 08:58:10 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Produsen->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 08:58:10 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: produsen]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:58:10 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 08:58:10 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:02:57 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Produsen->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:02:57 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: produsen]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:02:57 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:02:57 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:05:36 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Produsen->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:05:36 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: produsen]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:05:36 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:05:36 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `produsen`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\ProdusenModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Produsen.php(21): App\Models\ProdusenModel->getProdusen(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:07:38 --> ErrorException: Undefined array key "is_active"
+[Method: GET, Route: produsen]
+in APPPATH\Views\produsen\index.php on line 95.
+ 1 APPPATH\Views\produsen\index.php(95): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "is_active"', 'C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Views\\produsen\\index.php', 95)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Views\\produsen\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('produsen/index', [], true)
+ 5 APPPATH\Controllers\Produsen.php(31): view('produsen/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:07:46 --> ErrorException: Undefined array key "is_active"
+[Method: GET, Route: produsen]
+in APPPATH\Views\produsen\index.php on line 95.
+ 1 APPPATH\Views\produsen\index.php(95): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "is_active"', 'C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Views\\produsen\\index.php', 95)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Views\\produsen\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('produsen/index', [], true)
+ 5 APPPATH\Controllers\Produsen.php(31): view('produsen/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:07:51 --> ErrorException: Undefined array key "is_active"
+[Method: GET, Route: produsen]
+in APPPATH\Views\produsen\index.php on line 95.
+ 1 APPPATH\Views\produsen\index.php(95): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "is_active"', 'C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Views\\produsen\\index.php', 95)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\xampp\\htdocs\\pmi-stok-darah\\app\\Views\\produsen\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('produsen/index', [], true)
+ 5 APPPATH\Controllers\Produsen.php(31): view('produsen/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Produsen->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Produsen))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:10:33 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:10:33 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: rumahsakit]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:10:33 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:10:33 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:10:36 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:10:36 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: rumahsakit]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:10:36 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:10:36 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:10:53 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:10:53 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: rumahsakit]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:10:53 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:10:53 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:11:07 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:11:07 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: rumahsakit]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:11:07 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:11:07 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:12:25 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:12:25 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: rumahsakit]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:12:25 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:12:25 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:12:55 --> mysqli_sql_exception: Unknown column 'is_active' in 'where clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\xampp\htdocs\pmi-stok-darah\app\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(NULL, 10)
+#8 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+CRITICAL - 2025-12-06 10:12:55 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+[Method: GET, Route: rumahsakit]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 5 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:12:55 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 7 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:12:55 --> [Caused by] mysqli_sql_exception: Unknown column 'is_active' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `rumah_sakit`
+WHERE `is_active` = :is_active:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\RumahSakitModel.php(27): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\RumahSakit.php(21): App\Models\RumahSakitModel->getRumahSakit(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\RumahSakit->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\RumahSakit))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:13:49 --> mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+#6 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+#8 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(NULL, 10)
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Retur->index()
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+#11 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#16 {main}
+CRITICAL - 2025-12-06 10:13:49 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+[Method: GET, Route: return]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 4 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 5 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 6 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:13:49 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 6 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 7 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:13:49 --> [Caused by] mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 7 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 8 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 9 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:16:01 --> mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+#6 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+#8 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(NULL, 10)
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Retur->index()
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+#11 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#16 {main}
+CRITICAL - 2025-12-06 10:16:01 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+[Method: GET, Route: return]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 4 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 5 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 6 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:16:01 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 6 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 7 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:16:01 --> [Caused by] mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 7 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 8 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 9 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:18:23 --> mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+#6 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+#8 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(NULL, 10)
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Retur->index()
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+#11 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#16 {main}
+CRITICAL - 2025-12-06 10:18:23 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+[Method: GET, Route: return]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 4 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 5 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 6 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:18:23 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 6 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 7 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:18:23 --> [Caused by] mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 7 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 8 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 9 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+ERROR - 2025-12-06 10:18:24 --> mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause' in C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\pmi-stok-darah\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_...', 0)
+#1 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_...')
+#2 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_...')
+#3 C:\xampp\htdocs\pmi-stok-darah\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_...', Array, false)
+#4 C:\xampp\htdocs\pmi-stok-darah\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+#6 C:\xampp\htdocs\pmi-stok-darah\system\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+#7 C:\xampp\htdocs\pmi-stok-darah\app\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+#8 C:\xampp\htdocs\pmi-stok-darah\app\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(NULL, 10)
+#9 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(933): App\Controllers\Retur->index()
+#10 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+#11 C:\xampp\htdocs\pmi-stok-darah\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\pmi-stok-darah\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\pmi-stok-darah\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\xampp\htdocs\pmi-stok-darah\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#16 {main}
+CRITICAL - 2025-12-06 10:18:24 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+[Method: GET, Route: return]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 4 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 5 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 6 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:18:24 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 6 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 7 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 8 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
+CRITICAL - 2025-12-06 10:18:24 --> [Caused by] mysqli_sql_exception: Unknown column 'return_darah.tanggal_return' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `return_darah`.*, `stok`.`no_kantong`, `stok`.`goldar`, `stok`.`jenisdarah`, `rumah_sakit`.`nama_rs`, `distribusi`.`tanggal_distribusi`, `distribusi`.`penerima`
+FROM `return_darah`
+JOIN `stok` ON `stok`.`idbag` = `return_darah`.`idbag`
+JOIN `rumah_sakit` ON `rumah_sakit`.`idrs` = `return_darah`.`idrs`
+JOIN `distribusi` ON `distribusi`.`iddistribusi` = `return_darah`.`iddistribusi`
+ORDER BY `return_darah`.`tanggal_return` DESC
+ LIMIT 10', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 7 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 8 APPPATH\Models\ReturnModel.php(33): CodeIgniter\BaseModel->paginate(10)
+ 9 APPPATH\Controllers\Retur.php(30): App\Models\ReturnModel->getReturnWithDetails(null, 10)
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Retur->index()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Retur))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\pmi-stok-darah\\public\\index.php')
