@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-3 col-6">
+                <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3><?= number_format($total_produsen, 0, ',', '.') ?></h3>
@@ -77,9 +77,9 @@
                         </div>
                         <a href="<?= base_url('/produsen') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
+                </div> -->
                 
-                <div class="col-lg-3 col-6">
+                <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3><?= number_format($total_rs, 0, ',', '.') ?></h3>
@@ -90,11 +90,11 @@
                         </div>
                         <a href="<?= base_url('/rumahsakit') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <!-- Second Row of Small Boxes -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-secondary">
                         <div class="inner">
@@ -148,10 +148,10 @@
                         <a href="<?= base_url('/pemusnahan/create') ?>" class="small-box-footer">Segera musnahkan</a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Card Laporan PDF -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-3">
                     <div class="card card-primary">
                         <div class="card-header">
@@ -223,11 +223,50 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
+            <!-- Stok Darah per BDRS -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-hospital"></i> Stok Darah di Setiap BDRS
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <?php if (!empty($stok_per_bdrs)): ?>
+                                <div class="row">
+                                    <?php foreach ($stok_per_bdrs as $stok): ?>
+                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                        <div class="small-box bg-primary">
+                                            <div class="inner">
+                                                <h3><?= number_format($stok['jumlah_stok'], 0, ',', '.') ?></h3>
+                                                <p><?= $stok['nama'] ?></p>
+                                                <p class="mb-1">
+                                                    <small>Masih layak pakai: <strong><?= number_format($stok['layak_pakai'], 0, ',', '.') ?></strong></small>
+                                                </p>
+                                                <p class="mb-0">
+                                                    <small>Sudah expired: <strong><?= number_format($stok['sudah_expired'], 0, ',', '.') ?></strong></small>
+                                                </p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="fas fa-tint"></i>
+                                            </div>
+                                            <a href="<?= base_url('/distribusi') ?>" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-muted text-center">Tidak ada data stok per BDRS</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
-
             <div class="row">
                 <!-- Stok by Golongan Darah -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Stok Darah per Golongan</h3>
@@ -261,10 +300,10 @@
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Stok by Jenis Darah -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Stok Darah per Jenis</h3>
@@ -297,11 +336,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Distribusi Terbaru -->
             <div class="row">
-                <div class="col-12">
+                <!-- <div class="col-12">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Distribusi Terbaru</h3>
@@ -339,7 +378,7 @@
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>

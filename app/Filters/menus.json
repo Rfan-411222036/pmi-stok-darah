@@ -1,0 +1,89 @@
+{
+  "roles": [
+    {
+      "role": "admin",
+      "menus": [
+        {
+          "name": "dashboard",
+          "path": "/dashboard"
+        },
+        {
+          "name": "master data",
+          "children": [
+            {
+              "name": "produsen",
+              "path": "/produsen"
+            },
+            {
+              "name": "rumah sakit",
+              "path": "/rumahsakit"
+            }
+          ]
+        },
+        {
+          "name": "stok darah",
+          "path": "/stok"
+        },
+        {
+          "name": "distribusi",
+          "path": "/distribusi"
+        },
+        {
+          "name": "pemusnahan",
+          "path": "/pemusnahan"
+        },
+        {
+          "name": "return",
+          "path": "/return"
+        },
+        {
+          "name": "user management",
+          "path": "/users"
+        }
+      ]
+    },
+    {
+      "role": "bdrs",
+      "menus": [
+        {
+          "name": "dashboard",
+          "path": "/dashboard"
+        },
+        {
+          "name": "distribusi",
+          "path": "/distribusi"
+        },
+        {
+          "name": "stok darah",
+          "path": "/stok"
+        }
+      ]
+    },
+    {
+      "role": "rs",
+      "menus": [
+        {
+          "name": "dashboard",
+          "path": "/dashboard"
+        },
+        {
+          "name": "distribusi",
+          "path": "/distribusi"
+        },
+        {
+          "name": "cek status",
+          "path": "/dashboard"
+        }
+      ]
+    },
+    {
+      "role": "pimpinan",
+      "menus": [
+        {
+          "name": "dashboard",
+          "path": "/dashboard"
+        }
+      ]
+    }
+  ]
+}

@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="<?= base_url('/dashboard') ?>">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="<?= base_url('/produsen') ?>">Produsen</a></li>
+                        <li class="breadcrumb-item"><a href="<?= base_url('/produsen') ?>">BDRS</a></li>
                         <li class="breadcrumb-item active">Tambah</li>
                     </ol>
                 </div>
@@ -40,14 +40,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nama">Nama Produsen *</label>
+                                    <label for="nama">Nama BDRS *</label>
                                     <input type="text" class="form-control" id="nama" name="nama" 
                                            value="<?= old('nama') ?>" 
-                                           placeholder="Masukkan nama produsen" required>
+                                           placeholder="Masukkan nama BDRS" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="jenis">Jenis Produsen *</label>
+                                    <label for="jenis">Jenis BDRS *</label>
                                     <select class="form-control" id="jenis" name="jenis" required>
                                         <option value="">Pilih Jenis</option>
                                         <option value="perorangan" <?= old('jenis') == 'perorangan' ? 'selected' : '' ?>>Perorangan</option>
@@ -57,21 +57,30 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="telepon">Telepon *</label>
-                                    <input type="text" class="form-control" id="telepon" name="telepon" 
-                                           value="<?= old('telepon') ?>" 
-                                           placeholder="Masukkan nomor telepon" required>
+                                    <label for="jenis_darah">Jenis Darah</label>
+                                    <input type="text" class="form-control" id="jenis_darah" name="jenis_darah" 
+                                           value="<?= old('jenis_darah') ?>" 
+                                           placeholder="Masukkan jenis darah (contoh: A+, B-, O+)">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="no_kantong">No. Kantong Darah *</label>
+                                    <input type="text" class="form-control" id="no_kantong" name="no_kantong" 
+                                           value="<?= old('no_kantong') ?>" 
+                                           placeholder="Masukkan nomor kantong darah" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="status">Status Darah *</label>
+                                    <select class="form-control" id="status" name="status" required>
+                                        <option value="">Pilih Status</option>
+                                        <option value="masih layak" <?= old('status') == 'masih layak' ? 'selected' : '' ?>>Masih Layak</option>
+                                        <option value="expired" <?= old('status') == 'expired' ? 'selected' : '' ?>>Expired</option>
+                                    </select>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           value="<?= old('email') ?>" 
-                                           placeholder="Masukkan email">
-                                </div>
-
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
                                     <textarea class="form-control" id="alamat" name="alamat" 

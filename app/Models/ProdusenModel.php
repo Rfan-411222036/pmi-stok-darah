@@ -8,7 +8,7 @@ class ProdusenModel extends Model
 {
     protected $table = 'produsen';
     protected $primaryKey = 'idprodusen';
-    protected $allowedFields = ['nama', 'jenis', 'alamat', 'telepon', 'email', 'is_active'];
+    protected $allowedFields = ['iduser', 'nama', 'jenis', 'jenis_darah', 'no_kantong', 'status', 'alamat', 'is_active'];
     protected $useTimestamps = false;
 
     public function getProdusen($search = '', $perPage = 10)
@@ -35,7 +35,9 @@ class ProdusenModel extends Model
             $builder->groupStart()
                    ->like('nama', $search)
                    ->orLike('jenis', $search)
-                   ->orLike('telepon', $search)
+                   ->orLike('jenis_darah', $search)
+                   ->orLike('no_kantong', $search)
+                   ->orLike('status', $search)
                    ->groupEnd();
         }
 

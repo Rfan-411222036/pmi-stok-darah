@@ -21,8 +21,8 @@ class Produsen extends BaseController
         $result = $this->produsenModel->getProdusen($search, $perPage);
 
         $data = [
-            'title' => 'Management Produsen',
-            'page_title' => 'Data Produsen Darah',
+            'title' => 'Management BDRS',
+            'page_title' => 'Data BDRS Darah',
             'produsen' => $result['produsen'],
             'pager' => $result['pager'],
             'search' => $search
@@ -34,8 +34,8 @@ class Produsen extends BaseController
     public function create()
     {
         $data = [
-            'title' => 'Tambah Produsen',
-            'page_title' => 'Tambah Data Produsen',
+            'title' => 'Tambah BDRS',
+            'page_title' => 'Tambah Data BDRS',
             'validation' => \Config\Services::validation()
         ];
         return view('produsen/create', $data);
@@ -47,7 +47,8 @@ class Produsen extends BaseController
         $validation->setRules([
             'nama' => 'required',
             'jenis' => 'required',
-            'telepon' => 'required'
+            'no_kantong' => 'required',
+            'status' => 'required'
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
@@ -57,9 +58,10 @@ class Produsen extends BaseController
         $data = [
             'nama' => $this->request->getPost('nama'),
             'jenis' => $this->request->getPost('jenis'),
-            'alamat' => $this->request->getPost('alamat'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email')
+            'jenis_darah' => $this->request->getPost('jenis_darah'),
+            'no_kantong' => $this->request->getPost('no_kantong'),
+            'status' => $this->request->getPost('status'),
+            'alamat' => $this->request->getPost('alamat')
         ];
 
         if ($this->produsenModel->save($data)) {
@@ -102,7 +104,8 @@ class Produsen extends BaseController
         $validation->setRules([
             'nama' => 'required',
             'jenis' => 'required',
-            'telepon' => 'required'
+            'no_kantong' => 'required',
+            'status' => 'required'
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
@@ -112,9 +115,10 @@ class Produsen extends BaseController
         $data = [
             'nama' => $this->request->getPost('nama'),
             'jenis' => $this->request->getPost('jenis'),
-            'alamat' => $this->request->getPost('alamat'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email')
+            'jenis_darah' => $this->request->getPost('jenis_darah'),
+            'no_kantong' => $this->request->getPost('no_kantong'),
+            'status' => $this->request->getPost('status'),
+            'alamat' => $this->request->getPost('alamat')
         ];
 
         if ($this->produsenModel->update($id, $data)) {

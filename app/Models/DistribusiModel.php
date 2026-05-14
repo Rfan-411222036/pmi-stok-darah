@@ -61,4 +61,20 @@ class DistribusiModel extends Model
                    ->get()
                    ->getResultArray();
     }
+
+    public function getStokPerBDRS()
+    {
+        $builder = $this->db->table('login l')
+                           ->select('l.nama,
+                                     COUNT(s.no_kantong) as jumlah_stok,
+                                     SUM(CASE WHEN s.tanggal_expired >= CURDATE() AND s.status = "tersedia" THEN 1 ELSE 0 END) as layak_pakai,
+                                     SUM(CASE WHEN s.tanggal_expired < CURDATE() OR s.status = "expired" THEN 1 ELSE 0 END) as sudah_expired')
+                           ->join('produsen p', 'l.iduser = p.iduser', 'left')
+                           ->join('stok s', 'p.idprodusen = s.idprodusen', 'left')
+                           ->where('l.role', 'bdrs')
+                           ->groupBy('l.iduser, l.nama')
+                           ->orderBy('l.nama');
+
+        return $builder->get()->getResultArray();
+    }
 }

@@ -46,6 +46,9 @@ class Dashboard extends BaseController
         $stokByGolongan = $this->stokModel->getStokByGolongan();
         $stokByJenis = $this->stokModel->getStokByJenis();
 
+        // Data stok per bdrs
+        $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
+
         // Data statistik user
         $totalUsers = $this->userModel->getTotalUsers();
         $totalAdmins = $this->userModel->getTotalAdmins();
@@ -68,6 +71,7 @@ class Dashboard extends BaseController
             'stok_mendekati_expired' => $stokMendekatiExpired,
             'stok_by_golongan' => $stokByGolongan,
             'stok_by_jenis' => $stokByJenis,
+            'stok_per_bdrs' => $stokPerBDRS,
             'total_users' => $totalUsers,
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
