@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Dec 06, 2025 at 09:14 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 14 Bulan Mei 2026 pada 10.34
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `distribusi`
+-- Struktur dari tabel `distribusi`
 --
 
 CREATE TABLE `distribusi` (
@@ -39,7 +39,7 @@ CREATE TABLE `distribusi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `distribusi`
+-- Dumping data untuk tabel `distribusi`
 --
 
 INSERT INTO `distribusi` (`iddistribusi`, `idbag`, `idrs`, `tanggal_distribusi`, `penerima`, `keperluan`, `no_permintaan`, `created_at`) VALUES
@@ -50,7 +50,7 @@ INSERT INTO `distribusi` (`iddistribusi`, `idbag`, `idrs`, `tanggal_distribusi`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `login`
+-- Struktur dari tabel `login`
 --
 
 CREATE TABLE `login` (
@@ -58,22 +58,26 @@ CREATE TABLE `login` (
   `email` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `nama` varchar(100) NOT NULL,
-  `role` enum('admin','staff') DEFAULT 'staff',
+  `role` enum('admin','staff','bdrs','rs','pimpinan') DEFAULT 'staff',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `login`
+-- Dumping data untuk tabel `login`
 --
 
 INSERT INTO `login` (`iduser`, `email`, `password`, `nama`, `role`, `created_at`) VALUES
 (1, 'erfan@gmail.com', 'admin123', 'Administrator', 'admin', '2025-11-29 08:33:38'),
-(2, 'staff@gmail.com', 'staff123', 'Staff PMI', 'staff', '2025-11-29 08:33:38');
+(2, 'bdrssiloam@gmail.com', 'siloam123', 'BDRS Siloam Hospital', 'bdrs', '2025-11-29 08:33:38'),
+(3, 'rsjatisampurna@gmail.com', 'jatisampurna123', 'Admin RS Jati sampurna', 'rs', '2026-05-09 09:14:00'),
+(4, 'bdrseka@gmail.com', 'ekahospital', 'BDRS Eka Hospital', 'bdrs', '2026-05-09 09:16:39'),
+(5, 'bunda@gmail.com', 'bunda123', 'RS Bunda Bekasi', 'rs', '2026-05-09 09:17:37'),
+(6, 'dinkes@gmail.com', 'dinkes123', 'Dinkes Kota Bekasi', 'pimpinan', '2026-05-09 09:18:32');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pemusnahan`
+-- Struktur dari tabel `pemusnahan`
 --
 
 CREATE TABLE `pemusnahan` (
@@ -87,7 +91,7 @@ CREATE TABLE `pemusnahan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `pemusnahan`
+-- Dumping data untuk tabel `pemusnahan`
 --
 
 INSERT INTO `pemusnahan` (`idpemusnahan`, `idbag`, `tanggal_pemusnahan`, `alasan`, `keterangan`, `petugas`, `created_at`) VALUES
@@ -97,33 +101,38 @@ INSERT INTO `pemusnahan` (`idpemusnahan`, `idbag`, `tanggal_pemusnahan`, `alasan
 -- --------------------------------------------------------
 
 --
--- Table structure for table `produsen`
+-- Struktur dari tabel `produsen`
 --
 
 CREATE TABLE `produsen` (
   `idprodusen` int(11) NOT NULL,
+  `iduser` int(11) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
   `jenis` enum('perorangan','perusahaan','instansi') DEFAULT 'perorangan',
+  `jenis_darah` varchar(10) DEFAULT NULL,
+  `no_kantong` varchar(20) DEFAULT NULL,
+  `status` enum('masih layak','expired') DEFAULT 'masih layak',
   `alamat` text DEFAULT NULL,
-  `telepon` varchar(20) DEFAULT NULL,
-  `email` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `produsen`
+-- Dumping data untuk tabel `produsen`
 --
 
-INSERT INTO `produsen` (`idprodusen`, `nama`, `jenis`, `alamat`, `telepon`, `email`, `created_at`) VALUES
-(1, 'Donor Umum', 'perorangan', 'PMI Kota', '08123456789', NULL, '2025-11-29 08:33:38'),
-(2, 'PT. Donor Sehat', 'perusahaan', 'Jl. Perusahaan No. 123', '08234567890', NULL, '2025-11-29 08:33:38'),
-(3, 'Universitas Sehat', 'instansi', 'Jl. Kampus No. 45', '08345678901', NULL, '2025-11-29 08:33:38'),
-(4, 'Karyawan PT. Maju', 'perorangan', 'Jl. Industri No. 67', '08456789012', NULL, '2025-11-29 08:33:38');
+INSERT INTO `produsen` (`idprodusen`, `iduser`, `nama`, `jenis`, `jenis_darah`, `no_kantong`, `status`, `alamat`, `is_active`, `created_at`) VALUES
+(1, NULL, 'Donor Umum', 'perorangan', 'A+', 'KB001/XI/2024', 'masih layak', 'PMI Kota', 1, '2025-11-29 08:33:38'),
+(2, 2, 'BDRS Siloam Hospital', 'instansi', 'O+', 'KB003/XI/2024', 'masih layak', 'Jl. Siloam No. 3', 1, '2025-11-29 08:33:38'),
+(3, NULL, 'Universitas Sehat', 'instansi', 'O+', 'KB002/XI/2024', 'masih layak', 'Jl. Kampus No. 45', 1, '2025-11-29 08:33:38'),
+(4, 4, 'BDRS Eka Hospital', 'instansi', 'A+', 'KB005/XI/2024', 'expired', 'Jl. Eka No. 10', 1, '2025-11-29 08:33:38'),
+(5, NULL, 'PT. Donor Sehat', 'perusahaan', 'B+', NULL, 'masih layak', 'Jl. Perusahaan No. 123', 1, '2025-11-29 08:33:38'),
+(6, NULL, 'Karyawan PT. Maju', 'perorangan', 'AB+', NULL, 'masih layak', 'Jl. Industri No. 67', 1, '2025-11-29 08:33:38');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `return_darah`
+-- Struktur dari tabel `return_darah`
 --
 
 CREATE TABLE `return_darah` (
@@ -140,7 +149,7 @@ CREATE TABLE `return_darah` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `return_darah`
+-- Dumping data untuk tabel `return_darah`
 --
 
 INSERT INTO `return_darah` (`idreturn`, `iddistribusi`, `idbag`, `idrs`, `tanggal_retur`, `alasan_return`, `kondisi_darah`, `ditangani_oleh`, `keterangan`, `created_at`) VALUES
@@ -150,7 +159,7 @@ INSERT INTO `return_darah` (`idreturn`, `iddistribusi`, `idbag`, `idrs`, `tangga
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rumah_sakit`
+-- Struktur dari tabel `rumah_sakit`
 --
 
 CREATE TABLE `rumah_sakit` (
@@ -160,24 +169,25 @@ CREATE TABLE `rumah_sakit` (
   `telepon` varchar(20) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
   `jenis_rs` enum('umum','khusus','swasta','pemerintah') DEFAULT 'umum',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `rumah_sakit`
+-- Dumping data untuk tabel `rumah_sakit`
 --
 
-INSERT INTO `rumah_sakit` (`idrs`, `nama_rs`, `alamat`, `telepon`, `email`, `jenis_rs`, `created_at`) VALUES
-(1, 'RS Umum Daerah', 'Jl. Rumah Sakit No. 1', '021-1234567', NULL, 'pemerintah', '2025-11-29 08:33:38'),
-(2, 'RS Premier', 'Jl. Premier No. 2', '021-2345678', NULL, 'swasta', '2025-11-29 08:33:38'),
-(3, 'RS Siloam', 'Jl. Siloam No. 3', '021-3456789', NULL, 'swasta', '2025-11-29 08:33:38'),
-(4, 'RS Mitra Keluarga', 'Jl. Mitra No. 4', '021-4567890', NULL, 'swasta', '2025-11-29 08:33:38'),
-(5, 'RS Khusus Jiwa', 'Jl. Jiwa No. 5', '021-5678901', NULL, 'khusus', '2025-11-29 08:33:38');
+INSERT INTO `rumah_sakit` (`idrs`, `nama_rs`, `alamat`, `telepon`, `email`, `jenis_rs`, `is_active`, `created_at`) VALUES
+(1, 'RS Umum Daerah', 'Jl. Rumah Sakit No. 1', '021-1234567', NULL, 'pemerintah', 1, '2025-11-29 08:33:38'),
+(2, 'RS Premier', 'Jl. Premier No. 2', '021-2345678', NULL, 'swasta', 1, '2025-11-29 08:33:38'),
+(3, 'RS Siloam', 'Jl. Siloam No. 3', '021-3456789', NULL, 'swasta', 1, '2025-11-29 08:33:38'),
+(4, 'RS Mitra Keluarga', 'Jl. Mitra No. 4', '021-4567890', NULL, 'swasta', 1, '2025-11-29 08:33:38'),
+(5, 'RS Khusus Jiwa', 'Jl. Jiwa No. 5', '021-5678901', NULL, 'khusus', 1, '2025-11-29 08:33:38');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `stok`
+-- Struktur dari tabel `stok`
 --
 
 CREATE TABLE `stok` (
@@ -196,13 +206,13 @@ CREATE TABLE `stok` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `stok`
+-- Dumping data untuk tabel `stok`
 --
 
 INSERT INTO `stok` (`idbag`, `no_kantong`, `idprodusen`, `jenisdarah`, `goldar`, `rhesus`, `volume`, `tanggal_produksi`, `tanggal_expired`, `status`, `keterangan`, `created_at`) VALUES
-(1, 'KB001/XI/2024', 1, 'Whole', 'A', '+', 450, '2024-11-01', '2024-12-01', 'tersedia', 'Darah berkualitas tinggi', '2025-11-29 08:33:38'),
-(2, 'KB002/XI/2024', 2, 'PRC', 'B', '+', 250, '2024-11-02', '2024-12-02', 'tersedia', 'Red Cell Concentrate', '2025-11-29 08:33:38'),
-(3, 'KB003/XI/2024', 3, 'Whole', 'O', '+', 450, '2024-11-03', '2024-12-03', 'tersedia', 'Darah O universal', '2025-11-29 08:33:38'),
+(1, 'KB001/XI/2024', 1, 'Whole', 'A', '+', 450, '2024-11-01', '2024-12-08', 'tersedia', 'Darah berkualitas tinggi', '2025-11-29 08:33:38'),
+(2, 'KB002/XI/2024', 2, 'PRC', 'B', '+', 250, '2024-11-02', '2025-12-07', 'tersedia', 'Red Cell Concentrate', '2025-11-29 08:33:38'),
+(3, 'KB003/XI/2024', 3, 'Whole', 'O', '+', 450, '2025-11-04', '2025-12-11', 'tersedia', 'Darah O universal', '2025-11-29 08:33:38'),
 (4, 'KB004/XI/2024', 1, 'PRC', 'AB', '+', 250, '2024-11-04', '2024-12-04', 'tersedia', 'Red Cell Concentrate AB', '2025-11-29 08:33:38'),
 (5, 'KB005/XI/2024', 4, 'Whole', 'A', '-', 450, '2024-11-05', '2024-12-05', 'tersedia', 'Darah A negatif', '2025-11-29 08:33:38');
 
@@ -211,7 +221,7 @@ INSERT INTO `stok` (`idbag`, `no_kantong`, `idprodusen`, `jenisdarah`, `goldar`,
 --
 
 --
--- Indexes for table `distribusi`
+-- Indeks untuk tabel `distribusi`
 --
 ALTER TABLE `distribusi`
   ADD PRIMARY KEY (`iddistribusi`),
@@ -219,26 +229,26 @@ ALTER TABLE `distribusi`
   ADD KEY `idrs` (`idrs`);
 
 --
--- Indexes for table `login`
+-- Indeks untuk tabel `login`
 --
 ALTER TABLE `login`
   ADD PRIMARY KEY (`iduser`);
 
 --
--- Indexes for table `pemusnahan`
+-- Indeks untuk tabel `pemusnahan`
 --
 ALTER TABLE `pemusnahan`
   ADD PRIMARY KEY (`idpemusnahan`),
   ADD KEY `idbag` (`idbag`);
 
 --
--- Indexes for table `produsen`
+-- Indeks untuk tabel `produsen`
 --
 ALTER TABLE `produsen`
   ADD PRIMARY KEY (`idprodusen`);
 
 --
--- Indexes for table `return_darah`
+-- Indeks untuk tabel `return_darah`
 --
 ALTER TABLE `return_darah`
   ADD PRIMARY KEY (`idreturn`),
@@ -247,13 +257,13 @@ ALTER TABLE `return_darah`
   ADD KEY `idrs` (`idrs`);
 
 --
--- Indexes for table `rumah_sakit`
+-- Indeks untuk tabel `rumah_sakit`
 --
 ALTER TABLE `rumah_sakit`
   ADD PRIMARY KEY (`idrs`);
 
 --
--- Indexes for table `stok`
+-- Indeks untuk tabel `stok`
 --
 ALTER TABLE `stok`
   ADD PRIMARY KEY (`idbag`),
@@ -261,70 +271,70 @@ ALTER TABLE `stok`
   ADD KEY `idprodusen` (`idprodusen`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `distribusi`
+-- AUTO_INCREMENT untuk tabel `distribusi`
 --
 ALTER TABLE `distribusi`
   MODIFY `iddistribusi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `login`
+-- AUTO_INCREMENT untuk tabel `login`
 --
 ALTER TABLE `login`
-  MODIFY `iduser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `iduser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `pemusnahan`
+-- AUTO_INCREMENT untuk tabel `pemusnahan`
 --
 ALTER TABLE `pemusnahan`
   MODIFY `idpemusnahan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `produsen`
+-- AUTO_INCREMENT untuk tabel `produsen`
 --
 ALTER TABLE `produsen`
-  MODIFY `idprodusen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idprodusen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `return_darah`
+-- AUTO_INCREMENT untuk tabel `return_darah`
 --
 ALTER TABLE `return_darah`
   MODIFY `idreturn` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `rumah_sakit`
+-- AUTO_INCREMENT untuk tabel `rumah_sakit`
 --
 ALTER TABLE `rumah_sakit`
   MODIFY `idrs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `stok`
+-- AUTO_INCREMENT untuk tabel `stok`
 --
 ALTER TABLE `stok`
   MODIFY `idbag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `distribusi`
+-- Ketidakleluasaan untuk tabel `distribusi`
 --
 ALTER TABLE `distribusi`
   ADD CONSTRAINT `distribusi_ibfk_1` FOREIGN KEY (`idbag`) REFERENCES `stok` (`idbag`),
   ADD CONSTRAINT `distribusi_ibfk_2` FOREIGN KEY (`idrs`) REFERENCES `rumah_sakit` (`idrs`);
 
 --
--- Constraints for table `pemusnahan`
+-- Ketidakleluasaan untuk tabel `pemusnahan`
 --
 ALTER TABLE `pemusnahan`
   ADD CONSTRAINT `pemusnahan_ibfk_1` FOREIGN KEY (`idbag`) REFERENCES `stok` (`idbag`);
 
 --
--- Constraints for table `return_darah`
+-- Ketidakleluasaan untuk tabel `return_darah`
 --
 ALTER TABLE `return_darah`
   ADD CONSTRAINT `return_darah_ibfk_1` FOREIGN KEY (`iddistribusi`) REFERENCES `distribusi` (`iddistribusi`),
@@ -332,7 +342,7 @@ ALTER TABLE `return_darah`
   ADD CONSTRAINT `return_darah_ibfk_3` FOREIGN KEY (`idrs`) REFERENCES `rumah_sakit` (`idrs`);
 
 --
--- Constraints for table `stok`
+-- Ketidakleluasaan untuk tabel `stok`
 --
 ALTER TABLE `stok`
   ADD CONSTRAINT `stok_ibfk_1` FOREIGN KEY (`idprodusen`) REFERENCES `produsen` (`idprodusen`);
