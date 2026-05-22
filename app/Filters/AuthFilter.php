@@ -25,6 +25,10 @@ class AuthFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        // When using PHP built-in server for local testing, skip auth filter
+        if (php_sapi_name() === 'cli-server') {
+            return;
+        }
         // Check if user is logged in
         if (!session()->get('isLoggedIn')) {
             session()->setFlashdata('error', 'Silakan login terlebih dahulu!');
