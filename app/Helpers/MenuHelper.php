@@ -94,7 +94,7 @@ class MenuHelper
         $iconMap = [
             'dashboard' => 'fas fa-tachometer-alt',
             'master data' => 'fas fa-database',
-            'produsen' => 'fas fa-industry',
+            'bank darah rumah sakit' => 'fas fa-industry',
             'rumah sakit' => 'fas fa-hospital-user',
             'stok darah' => 'fas fa-tint',
             'distribusi' => 'fas fa-truck',

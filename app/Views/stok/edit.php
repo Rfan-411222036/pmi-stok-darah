@@ -47,9 +47,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="idprodusen">Produsen *</label>
+                                    <label for="idprodusen">Bank Darah Rumah Sakit *</label>
                                     <select class="form-control" id="idprodusen" name="idprodusen" required>
-                                        <option value="">Pilih Produsen</option>
+                                        <option value="">Pilih Bank Darah Rumah Sakit</option>
                                         <?php foreach ($produsen as $p): ?>
                                             <option value="<?= $p['idprodusen'] ?>" <?= old('idprodusen', $stok['idprodusen']) == $p['idprodusen'] ? 'selected' : '' ?>>
                                                 <?= $p['nama'] ?> (<?= $p['jenis'] ?>)

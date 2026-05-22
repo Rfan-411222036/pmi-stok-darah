@@ -71,7 +71,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>No Kantong</th>
-                                    <th>Produsen</th>
+                                    <th>Bank Darah Rumah Sakit</th>
                                     <th>Golongan Darah</th>
                                     <th>Jenis Darah</th>
                                     <th>Volume</th>

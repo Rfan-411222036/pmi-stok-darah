@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="<?= base_url('/dashboard') ?>">Dashboard</a></li>
-                        <li class="breadcrumb-item active">BDRS</li>
+                        <li class="breadcrumb-item active">Bank Darah Rumah Sakit</li>
                     </ol>
                 </div>
             </div>
@@ -37,10 +37,10 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Daftar BDRS</h3>
+                    <h3 class="card-title">Daftar Bank Darah Rumah Sakit</h3>
                     <div class="card-tools">
                         <a href="<?= base_url('/produsen/create') ?>" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> Tambah BDRS
+                            <i class="fas fa-plus"></i> Tambah Bank Darah Rumah Sakit
                         </a>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama BDRS</th>
+                                    <th>Nama Bank Darah Rumah Sakit</th>
                                     <th>Jenis</th>
                                     <th>No. Kantong</th>
                                     <th>Jenis Darah</th>
@@ -111,7 +111,7 @@
                                             <?php if ($active == 1): ?>
                                                 <a href="<?= base_url('/produsen/delete/' . $item['idprodusen']) ?>"
                                                     class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Yakin ingin menonaktifkan produsen ini?')">
+                                                    onclick="return confirm('Yakin ingin menonaktifkan Bank Darah Rumah Sakit ini?')">
                                                     <i class="fas fa-trash"></i> Nonaktifkan
                                                 </a>
                                             <?php else: ?>

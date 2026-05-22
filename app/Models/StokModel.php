@@ -61,7 +61,7 @@ class StokModel extends Model
     public function getStokMendekatiExpired()
     {
         $date = date('Y-m-d');
-        $expiredDate = date('Y-m-d', strtotime('+7 days'));
+        $expiredDate = date('Y-m-d', strtotime('+14 days'));
         
         return $this->where('status', 'tersedia')
                    ->where('tanggal_expired >=', $date)

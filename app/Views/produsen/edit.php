@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="<?= base_url('/dashboard') ?>">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="<?= base_url('/produsen') ?>">BDRS</a></li>
+                        <li class="breadcrumb-item"><a href="<?= base_url('/produsen') ?>">Bank Darah Rumah Sakit</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
@@ -40,14 +40,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nama">Nama BDRS *</label>
-                                    <input type="text" class="form-control" id="nama" name="nama" 
-                                           value="<?= old('nama', $produsen['nama']) ?>" 
-                                           placeholder="Masukkan nama BDRS" required>
+                                     <label for="nama">Nama Bank Darah Rumah Sakit *</label>
+                                     <input type="text" class="form-control" id="nama" name="nama" 
+                                         value="<?= old('nama', $produsen['nama']) ?>" 
+                                         placeholder="Masukkan nama Bank Darah Rumah Sakit" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="jenis">Jenis BDRS *</label>
+                                    <label for="jenis">Jenis Bank Darah Rumah Sakit *</label>
                                     <select class="form-control" id="jenis" name="jenis" required>
                                         <option value="">Pilih Jenis</option>
                                         <option value="perorangan" <?= old('jenis', $produsen['jenis']) == 'perorangan' ? 'selected' : '' ?>>Perorangan</option>
