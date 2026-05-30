@@ -3,6 +3,44 @@
 <?= $this->include('templates/sidebar') ?>
 
 <div class="content-wrapper">
+    <style>
+        .pmi-card {
+            background: #ffffff;
+            border: 1px solid #dc3545;
+            color: #111111;
+        }
+        .pmi-card .card-header {
+            background: #ffffff;
+            border-bottom: 1px solid #dc3545;
+            color: #111111;
+        }
+        .pmi-card .card-title,
+        .pmi-card .text-muted {
+            color: #111111 !important;
+        }
+        .pmi-box {
+            background: #dc3545 !important;
+            color: #ffffff !important;
+            border: none !important;
+        }
+        .pmi-box .icon {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        .small-box.pmi-bdrs-card {
+            background: #ffffff !important;
+            color: #111111 !important;
+            border: 1px solid #dc3545;
+        }
+        .small-box.pmi-bdrs-card .icon {
+            color: #dc3545;
+        }
+        .small-box.pmi-bdrs-card .icon i {
+            color: #dc3545;
+        }
+        .small-box.pmi-bdrs-card .small-box-footer {
+            color: #dc3545 !important;
+        }
+    </style>
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -11,7 +49,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right text-sm">
-                        <span class="badge badge-info"><?= date('d F Y') ?></span>
+                        <span class="badge badge-danger"><?= date('d F Y') ?></span>
                     </div>
                 </div>
             </div>
@@ -39,7 +77,7 @@
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-info">
+                    <div class="small-box pmi-box">
                         <div class="inner">
                             <h3><?= number_format($total_stok, 0, ',', '.') ?></h3>
                             <p>Stok Darah Tersedia</p>
@@ -52,7 +90,7 @@
                 </div>
 
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-success">
+                    <div class="small-box pmi-box">
                         <div class="inner">
                             <h3><?= number_format($total_distribusi, 0, ',', '.') ?></h3>
                             <p>Total Distribusi</p>
@@ -152,13 +190,13 @@
 
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-outline card-primary">
+                    <div class="card card-outline card-danger pmi-card">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <div>
-                                <!-- <h3 class="card-title"><?= $current_role === 'admin' ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3> -->
+                                <h3 class="card-title"><?= $current_role === 'admin' ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3>
                                 <p class="text-muted mb-0"><?php if ($current_role === 'admin'): ?>Menampilkan total stok darah untuk setiap BDRS yang terdaftar.<?php else: ?>Menampilkan total stok darah di BDRS Anda sendiri.<?php endif; ?></p>
                             </div>
-                            <!-- <span class="badge badge-pill badge-success"><?= $current_role === 'admin' ? 'Admin View' : 'BDRS View' ?></span> -->
+                            <span class="badge badge-pill badge-danger"><?= $current_role === 'admin' ? 'Admin View' : 'BDRS View' ?></span>
                         </div>
                         <div class="card-body">
                             <div class="chart-wrapper" style="min-height: 360px; position: relative;">
@@ -413,8 +451,8 @@
         var chartData = <?= json_encode($chart_data) ?>;
 
         var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 360);
-        gradient.addColorStop(0, 'rgba(40, 167, 69, 0.35)');
-        gradient.addColorStop(1, 'rgba(40, 167, 69, 0.05)');
+        gradient.addColorStop(0, 'rgba(220, 53, 69, 0.35)');
+        gradient.addColorStop(1, 'rgba(220, 53, 69, 0.05)');
 
         new Chart(ctx, {
             type: 'line',
@@ -424,13 +462,13 @@
                     {
                         label: 'Jumlah Stok Darah',
                         data: chartData,
-                        borderColor: '#28a745',
+                        borderColor: '#dc3545',
                         backgroundColor: gradient,
                         fill: true,
                         tension: 0.35,
                         pointRadius: 4,
                         pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#28a745',
+                        pointBorderColor: '#dc3545',
                         pointBorderWidth: 2
                     }
                 ]
