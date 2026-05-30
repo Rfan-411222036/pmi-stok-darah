@@ -16,7 +16,7 @@ class DistribusiModel extends Model
         $builder = $this->select('distribusi.*, stok.no_kantong, stok.goldar, stok.jenisdarah, rumah_sakit.nama_rs')
                        ->join('stok', 'stok.idbag = distribusi.idbag')
                        ->join('rumah_sakit', 'rumah_sakit.idrs = distribusi.idrs');
-        
+
         if ($search) {
             $builder->groupStart()
                    ->like('stok.no_kantong', $search)
@@ -27,7 +27,7 @@ class DistribusiModel extends Model
         }
 
         $builder->orderBy('distribusi.tanggal_distribusi', 'DESC');
-        
+
         return [
             'distribusi' => $builder->paginate($perPage),
             'pager' => $this->pager
@@ -62,7 +62,7 @@ class DistribusiModel extends Model
                    ->getResultArray();
     }
 
-    public function getStokPerBDRS()
+    public function getStokPerBDRS($iduser = null)
     {
         $builder = $this->db->table('login l')
                            ->select('l.nama,
@@ -71,9 +71,14 @@ class DistribusiModel extends Model
                                      SUM(CASE WHEN s.tanggal_expired < CURDATE() OR s.status = "expired" THEN 1 ELSE 0 END) as sudah_expired')
                            ->join('produsen p', 'l.iduser = p.iduser', 'left')
                            ->join('stok s', 'p.idprodusen = s.idprodusen', 'left')
-                           ->where('l.role', 'bdrs')
-                           ->groupBy('l.iduser, l.nama')
-                           ->orderBy('l.nama');
+                           ->where('l.role', 'bdrs');
+
+        if ($iduser) {
+            $builder->where('l.iduser', $iduser);
+        }
+
+        $builder->groupBy('l.iduser, l.nama')
+                ->orderBy('l.nama');
 
         return $builder->get()->getResultArray();
     }

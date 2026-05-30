@@ -50,7 +50,7 @@
                         <a href="<?= base_url('/stok') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
@@ -65,7 +65,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
@@ -78,7 +78,7 @@
                         <a href="<?= base_url('/produsen') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div> -->
-                
+
                 <!-- <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
@@ -149,6 +149,25 @@
                     </div>
                 </div>
             </div> -->
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header border-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <!-- <h3 class="card-title"><?= $current_role === 'admin' ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3> -->
+                                <p class="text-muted mb-0"><?php if ($current_role === 'admin'): ?>Menampilkan total stok darah untuk setiap BDRS yang terdaftar.<?php else: ?>Menampilkan total stok darah di BDRS Anda sendiri.<?php endif; ?></p>
+                            </div>
+                            <!-- <span class="badge badge-pill badge-success"><?= $current_role === 'admin' ? 'Admin View' : 'BDRS View' ?></span> -->
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-wrapper" style="min-height: 360px; position: relative;">
+                                <canvas id="dashboardStokDarahChart" style="height: 360px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Card Laporan PDF -->
             <!-- <div class="row">
@@ -230,7 +249,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-hospital"></i> Stok Darah di Setiap BDRS
+                                <i class="fas fa-hospital"></i> <?= $current_role === 'admin' ? 'Stok Darah di Setiap BDRS' : 'Stok Darah BDRS Anda' ?>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -383,5 +402,74 @@
         </div>
     </section>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('dashboardStokDarahChart');
+        if (!ctx) return;
+
+        var labels = <?= json_encode($chart_labels) ?>;
+        var chartData = <?= json_encode($chart_data) ?>;
+
+        var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 360);
+        gradient.addColorStop(0, 'rgba(40, 167, 69, 0.35)');
+        gradient.addColorStop(1, 'rgba(40, 167, 69, 0.05)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Jumlah Stok Darah',
+                        data: chartData,
+                        borderColor: '#28a745',
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#28a745',
+                        pointBorderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            boxWidth: 12,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#495057' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) { return value.toLocaleString('id-ID'); },
+                            color: '#495057'
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <?= $this->include('templates/footer') ?>

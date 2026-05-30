@@ -11,7 +11,7 @@
           "name": "master data",
           "children": [
             {
-              "name": "produsen",
+              "name": "BDRS",
               "path": "/produsen"
             },
             {

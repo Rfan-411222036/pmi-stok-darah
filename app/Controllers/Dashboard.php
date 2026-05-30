@@ -42,12 +42,24 @@ class Dashboard extends BaseController
         $distribusiHariIni = $this->distribusiModel->getDistribusiHariIni();
         $distribusiBulanIni = $this->distribusiModel->getDistribusiBulanIni();
 
-        // Data untuk charts
         $stokByGolongan = $this->stokModel->getStokByGolongan();
         $stokByJenis = $this->stokModel->getStokByJenis();
 
         // Data stok per bdrs
-        $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
+        $currentRole = session()->get('role');
+        $currentUserId = session()->get('iduser');
+        if ($currentRole === 'admin') {
+            $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
+        } else {
+            $stokPerBDRS = $this->distribusiModel->getStokPerBDRS($currentUserId);
+        }
+
+        $chartLabels = [];
+        $chartData = [];
+        foreach ($stokPerBDRS as $item) {
+            $chartLabels[] = $item['nama'];
+            $chartData[] = (int) $item['jumlah_stok'];
+        }
 
         // Data statistik user
         $totalUsers = $this->userModel->getTotalUsers();
@@ -72,6 +84,9 @@ class Dashboard extends BaseController
             'stok_by_golongan' => $stokByGolongan,
             'stok_by_jenis' => $stokByJenis,
             'stok_per_bdrs' => $stokPerBDRS,
+            'current_role' => $currentRole,
+            'chart_labels' => $chartLabels,
+            'chart_data' => $chartData,
             'total_users' => $totalUsers,
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
@@ -167,7 +182,7 @@ class Dashboard extends BaseController
                 // Get bag (stok) info to retrieve no_kantong
                 $bag = $this->stokModel->find($item['idbag']);
                 $noKantong = $bag['no_kantong'] ?? '-';
-                
+
                 $tableData[] = [
                     $no++,
                     $noKantong,

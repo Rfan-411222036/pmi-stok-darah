@@ -65,6 +65,48 @@
                         </div>
                     </form>
 
+                    <div class="row mb-4">
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="info-box bg-gradient-success">
+                                <span class="info-box-icon"><i class="fas fa-heartbeat"></i></span>
+                                <div class="info-box-content text-white">
+                                    <span class="info-box-text">Stok Tersedia</span>
+                                    <span class="info-box-number"><?= number_format($stockAvailable) ?> kantong</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-white" style="width: 100%"></div>
+                                    </div>
+                                    <span class="progress-description">Jumlah stok darah yang siap didistribusikan</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="info-box bg-gradient-warning">
+                                <span class="info-box-icon"><i class="fas fa-hourglass-half"></i></span>
+                                <div class="info-box-content text-white">
+                                    <span class="info-box-text">Mendekati Expired</span>
+                                    <span class="info-box-number"><?= number_format($stockNearExpire) ?> kantong</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-white" style="width: 100%"></div>
+                                    </div>
+                                    <span class="progress-description">Stok darah akan kedaluwarsa dalam 7 hari</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="info-box bg-gradient-danger">
+                                <span class="info-box-icon"><i class="fas fa-ban"></i></span>
+                                <div class="info-box-content text-white">
+                                    <span class="info-box-text">Stok Expired</span>
+                                    <span class="info-box-number"><?= number_format($stockExpired) ?> kantong</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-white" style="width: 100%"></div>
+                                    </div>
+                                    <span class="progress-description">Stok darah yang sudah melewati masa kedaluwarsa</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead>
@@ -96,12 +138,12 @@
                                         <td><?= $item['volume'] ?> ml</td>
                                         <td><?= date('d/m/Y', strtotime($item['tanggal_produksi'])) ?></td>
                                         <td>
-                                            <?php 
+                                            <?php
                                                 $expiredDate = strtotime($item['tanggal_expired']);
                                                 $today = strtotime(date('Y-m-d'));
                                                 $diff = $expiredDate - $today;
                                                 $daysLeft = floor($diff / (60 * 60 * 24));
-                                                
+
                                                 if ($daysLeft < 0) {
                                                     echo '<span class="badge badge-danger">' . date('d/m/Y', $expiredDate) . ' (EXPIRED)</span>';
                                                 } elseif ($daysLeft <= 7) {
