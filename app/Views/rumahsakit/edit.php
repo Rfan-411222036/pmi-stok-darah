@@ -76,7 +76,21 @@
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
                                     <textarea class="form-control" id="alamat" name="alamat"
-                                              placeholder="Masukkan alamat lengkap" rows="4"><?= old('alamat', $rumah_sakit['alamat']) ?></textarea>
+                                              placeholder="Masukkan alamat lengkap" rows="3"><?= old('alamat', $rumah_sakit['alamat']) ?></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_primary_bdrs">Primary BDRS Node</label>
+                                    <select class="form-control" id="id_primary_bdrs" name="id_primary_bdrs">
+                                        <option value="">— Pilih BDRS Utama —</option>
+                                        <?php foreach ($bdrs_list as $b): ?>
+                                            <option value="<?= $b['id_produsen'] ?>"
+                                                    <?= old('id_primary_bdrs', $rumah_sakit['id_primary_bdrs'] ?? '') == $b['id_produsen'] ? 'selected' : '' ?>>
+                                                <?= esc($b['nama']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <small class="form-text text-muted">BDRS yang akan dicek pertama saat rumah sakit ini meminta stok darah.</small>
                                 </div>
                             </div>
                         </div>

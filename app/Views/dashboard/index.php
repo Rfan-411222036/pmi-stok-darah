@@ -342,7 +342,7 @@
                                             <?php foreach ($stok_by_golongan as $stok): ?>
                                             <tr>
                                                 <td>
-                                                    <span class="badge badge-danger"><?= $stok['goldar'] ?></span>
+                                                    <span class="badge badge-danger"><?= $stok['gol_dar'] ?></span>
                                                 </td>
                                                 <td>
                                                     <strong><?= number_format($stok['total'], 0, ',', '.') ?></strong> kantong
@@ -378,7 +378,7 @@
                                         <tbody>
                                             <?php foreach ($stok_by_jenis as $stok): ?>
                                             <tr>
-                                                <td><?= $stok['jenisdarah'] ?></td>
+                                                <td><?= $stok['jenis_darah'] ?></td>
                                                 <td>
                                                     <strong><?= number_format($stok['total'], 0, ',', '.') ?></strong> kantong
                                                 </td>
@@ -420,7 +420,7 @@
                                             <tr>
                                                 <td><?= $dist['no_kantong'] ?></td>
                                                 <td>
-                                                    <span class="badge badge-danger"><?= $dist['goldar'] ?></span>
+                                                    <span class="badge badge-danger"><?= $dist['gol_dar'] ?></span>
                                                 </td>
                                                 <td><?= $dist['nama_rs'] ?></td>
                                                 <td><?= $dist['penerima'] ?></td>

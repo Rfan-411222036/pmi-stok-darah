@@ -47,32 +47,47 @@ class MenuHelper
      * @param string $baseUrl Base URL for links
      * @return string HTML menu items
      */
-    public static function renderMenuItems($menus, $baseUrl = '')
+    public static function renderMenuItems($menus, $baseUrl = '', $isChild = false)
     {
-        $html = '';
+        $html      = '';
+        $currentUri = '/' . ltrim(uri_string(), '/');
 
         foreach ($menus as $menu) {
             $hasChildren = isset($menu['children']) && count($menu['children']) > 0;
+            $label       = strtoupper($menu['name']);
 
             if ($hasChildren) {
-                $html .= '<li class="nav-item has-treeview">';
-                $html .= '  <a href="#" class="nav-link">';
-                $html .= '    <i class="nav-icon fas fa-database"></i>';
-                $html .= '    <p>';
-                $html .= '      ' . htmlspecialchars($menu['name']) . '';
-                $html .= '      <i class="right fas fa-angle-left"></i>';
-                $html .= '    </p>';
+                // Check if any child is active
+                $childActive = false;
+                foreach ($menu['children'] as $child) {
+                    if (isset($child['path']) && rtrim($currentUri, '/') === rtrim($child['path'], '/')) {
+                        $childActive = true;
+                        break;
+                    }
+                }
+                $openClass = $childActive ? ' menu-open' : '';
+                $activeClass = $childActive ? ' active' : '';
+
+                $icon = self::getIconForMenu($menu['name']);
+                $html .= '<li class="nav-item has-treeview' . $openClass . '">';
+                $html .= '  <a href="#" class="nav-link' . $activeClass . '">';
+                $html .= '    <i class="nav-icon ' . $icon . '"></i>';
+                $html .= '    <p>' . $label . '<i class="right fas fa-angle-left"></i></p>';
                 $html .= '  </a>';
                 $html .= '  <ul class="nav nav-treeview">';
-                $html .= self::renderMenuItems($menu['children'], $baseUrl);
+                $html .= self::renderMenuItems($menu['children'], $baseUrl, true);
                 $html .= '  </ul>';
                 $html .= '</li>';
             } else {
-                $icon = self::getIconForMenu($menu['name']);
+                $icon      = self::getIconForMenu($menu['name']);
+                $isActive  = isset($menu['path']) && rtrim($currentUri, '/') === rtrim($menu['path'], '/');
+                $activeClass = $isActive ? ' active' : '';
+                $indent    = $isChild ? 'pl-3' : '';
+
                 $html .= '<li class="nav-item">';
-                $html .= '  <a href="' . base_url($menu['path']) . '" class="nav-link">';
-                $html .= '    <i class="nav-icon ' . $icon . '"></i>';
-                $html .= '    <p>' . htmlspecialchars($menu['name']) . '</p>';
+                $html .= '  <a href="' . base_url($menu['path']) . '" class="nav-link' . $activeClass . '">';
+                $html .= '    <i class="nav-icon ' . $icon . ' ' . $indent . '"></i>';
+                $html .= '    <p>' . $label . '</p>';
                 $html .= '  </a>';
                 $html .= '</li>';
             }
@@ -92,17 +107,20 @@ class MenuHelper
         $menuName = strtolower($menuName);
 
         $iconMap = [
-            'dashboard' => 'fas fa-tachometer-alt',
-            'master data' => 'fas fa-database',
-            'bdrs' => 'fas fa-industry',
-            'rumah sakit' => 'fas fa-hospital-user',
-            'stok darah' => 'fas fa-tint',
-            'distribusi' => 'fas fa-truck',
-            'pemusnahan' => 'fas fa-trash',
-            'return' => 'fas fa-undo',
-            'retur' => 'fas fa-undo',
-            'user management' => 'fas fa-users',
-            'cek status' => 'fas fa-check-circle',
+            'dashboard'        => 'fas fa-tachometer-alt',
+            'master data'      => 'fas fa-layer-group',
+            'bdrs'             => 'fas fa-clinic-medical',
+            'rumah sakit'      => 'fas fa-hospital',
+            'stok darah'       => 'fas fa-tint',
+            'distribusi'       => 'fas fa-truck',
+            'pemusnahan'       => 'fas fa-biohazard',
+            'return'           => 'fas fa-undo-alt',
+            'retur'            => 'fas fa-undo-alt',
+            'user management'  => 'fas fa-users-cog',
+            'cek status'       => 'fas fa-check-circle',
+            'supply chain'     => 'fas fa-sitemap',
+            'replenishment'    => 'fas fa-boxes',
+            'recall stok'      => 'fas fa-exclamation-triangle',
         ];
 
         return $iconMap[$menuName] ?? 'fas fa-circle';

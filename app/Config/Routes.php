@@ -63,6 +63,21 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/return/create', 'Retur::create');
     $routes->post('/return/store', 'Retur::store');
     $routes->get('/return/getDistribusiInfo/(:num)', 'Retur::getDistribusiInfo/$1');
+
+    // Supply Chain — Distribusi failover check (AJAX)
+    $routes->get('/distribusi/checkAvailability', 'Distribusi::checkAvailability');
+
+    // Supply Chain — Replenishment tickets
+    $routes->get('/replenishment', 'Replenishment::index');
+    $routes->get('/replenishment/(:num)', 'Replenishment::show/$1');
+    $routes->post('/replenishment/fulfill/(:num)', 'Replenishment::fulfill/$1');
+    $routes->get('/replenishment/cancel/(:num)', 'Replenishment::cancel/$1');
+
+    // Supply Chain — Recall & Swap tickets
+    $routes->get('/recall', 'Recall::index');
+    $routes->get('/recall/(:num)', 'Recall::show/$1');
+    $routes->post('/recall/swap/(:num)', 'Recall::swap/$1');
+    $routes->post('/recall/destroy/(:num)', 'Recall::destroy/$1');
 });
 
 // Catch all - 404

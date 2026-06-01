@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\RumahSakitModel;
+use App\Models\ProdusenModel;
 
 class RumahSakit extends BaseController
 {
     protected $rumahSakitModel;
+    protected $produsenModel;
 
     public function __construct()
     {
         $this->rumahSakitModel = new RumahSakitModel();
+        $this->produsenModel   = new ProdusenModel();
     }
 
     public function index()
@@ -33,12 +36,12 @@ class RumahSakit extends BaseController
 
     public function create()
     {
-        $data = [
-            'title' => 'Tambah Rumah Sakit',
+        return view('rumahsakit/create', [
+            'title'      => 'Tambah Rumah Sakit',
             'page_title' => 'Tambah Data Rumah Sakit',
-            'validation' => \Config\Services::validation()
-        ];
-        return view('rumahsakit/create', $data);
+            'bdrs_list'  => $this->produsenModel->where('is_active', 1)->where('is_central_hub', 0)->findAll(),
+            'validation' => \Config\Services::validation(),
+        ]);
     }
 
     public function store()
@@ -55,11 +58,12 @@ class RumahSakit extends BaseController
         }
 
         $data = [
-            'nama_rs' => $this->request->getPost('nama_rs'),
-            'alamat' => $this->request->getPost('alamat'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email'),
-            'jenis_rs' => $this->request->getPost('jenis_rs')
+            'nama_rs'         => $this->request->getPost('nama_rs'),
+            'alamat'          => $this->request->getPost('alamat'),
+            'telepon'         => $this->request->getPost('telepon'),
+            'email'           => $this->request->getPost('email'),
+            'jenis_rs'        => $this->request->getPost('jenis_rs'),
+            'id_primary_bdrs' => $this->request->getPost('id_primary_bdrs') ?: null,
         ];
 
         if ($this->rumahSakitModel->save($data)) {
@@ -81,10 +85,11 @@ class RumahSakit extends BaseController
         }
 
         $data = [
-            'title' => 'Edit Rumah Sakit',
+            'title'      => 'Edit Rumah Sakit',
             'page_title' => 'Edit Data Rumah Sakit',
             'rumah_sakit' => $rumahSakit,
-            'validation' => \Config\Services::validation()
+            'bdrs_list'  => $this->produsenModel->where('is_active', 1)->where('is_central_hub', 0)->findAll(),
+            'validation' => \Config\Services::validation(),
         ];
         return view('rumahsakit/edit', $data);
     }
@@ -110,11 +115,12 @@ class RumahSakit extends BaseController
         }
 
         $data = [
-            'nama_rs' => $this->request->getPost('nama_rs'),
-            'alamat' => $this->request->getPost('alamat'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email'),
-            'jenis_rs' => $this->request->getPost('jenis_rs')
+            'nama_rs'         => $this->request->getPost('nama_rs'),
+            'alamat'          => $this->request->getPost('alamat'),
+            'telepon'         => $this->request->getPost('telepon'),
+            'email'           => $this->request->getPost('email'),
+            'jenis_rs'        => $this->request->getPost('jenis_rs'),
+            'id_primary_bdrs' => $this->request->getPost('id_primary_bdrs') ?: null,
         ];
 
         if ($this->rumahSakitModel->update($id, $data)) {

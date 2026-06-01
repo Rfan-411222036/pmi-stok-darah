@@ -56,12 +56,15 @@ class Produsen extends BaseController
         }
 
         $data = [
-            'nama' => $this->request->getPost('nama'),
-            'jenis' => $this->request->getPost('jenis'),
-            'jenis_darah' => $this->request->getPost('jenis_darah'),
-            'no_kantong' => $this->request->getPost('no_kantong'),
-            'status' => $this->request->getPost('status'),
-            'alamat' => $this->request->getPost('alamat')
+            'nama'           => $this->request->getPost('nama'),
+            'jenis'          => $this->request->getPost('jenis'),
+            'jenis_darah'    => $this->request->getPost('jenis_darah'),
+            'no_kantong'     => $this->request->getPost('no_kantong'),
+            'status'         => $this->request->getPost('status'),
+            'alamat'         => $this->request->getPost('alamat'),
+            'is_central_hub' => $this->request->getPost('is_central_hub') ? 1 : 0,
+            'min_threshold'  => (int) ($this->request->getPost('min_threshold') ?? 30),
+            'priority_order' => (int) ($this->request->getPost('priority_order') ?? 0),
         ];
 
         if ($this->produsenModel->save($data)) {
@@ -113,12 +116,15 @@ class Produsen extends BaseController
         }
 
         $data = [
-            'nama' => $this->request->getPost('nama'),
-            'jenis' => $this->request->getPost('jenis'),
-            'jenis_darah' => $this->request->getPost('jenis_darah'),
-            'no_kantong' => $this->request->getPost('no_kantong'),
-            'status' => $this->request->getPost('status'),
-            'alamat' => $this->request->getPost('alamat')
+            'nama'           => $this->request->getPost('nama'),
+            'jenis'          => $this->request->getPost('jenis'),
+            'jenis_darah'    => $this->request->getPost('jenis_darah'),
+            'no_kantong'     => $this->request->getPost('no_kantong'),
+            'status'         => $this->request->getPost('status'),
+            'alamat'         => $this->request->getPost('alamat'),
+            'is_central_hub' => $this->request->getPost('is_central_hub') ? 1 : 0,
+            'min_threshold'  => (int) ($this->request->getPost('min_threshold') ?? 30),
+            'priority_order' => (int) ($this->request->getPost('priority_order') ?? 0),
         ];
 
         if ($this->produsenModel->update($id, $data)) {

@@ -73,9 +73,7 @@ class ReturnModel extends Model
             FROM distribusi d
             JOIN stok s ON s.id_bag = d.id_bag
             JOIN rumah_sakit rs ON rs.id_rs = d.id_rs
-            WHERE s.status = 'terdistribusi'
-            AND s.tanggal_expired >= CURDATE()
-            AND d.id_bag NOT IN (SELECT id_bag FROM return_darah)
+            WHERE d.id_bag NOT IN (SELECT id_bag FROM return_darah)
             ORDER BY d.tanggal_distribusi DESC
         ")->getResultArray();
     }

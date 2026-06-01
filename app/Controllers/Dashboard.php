@@ -113,7 +113,7 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data stok darah.', 0, 1, 'C');
         } else {
-            $headers = ['No', 'No. Kantong', 'Jenis', 'Goldar', 'Volume', 'Expired Date'];
+            $headers = ['No', 'No. Kantong', 'Jenis', 'gol_dar', 'Volume', 'Expired Date'];
             $tableData = [];
 
             $no = 1;
@@ -165,11 +165,11 @@ class Dashboard extends BaseController
                 $rsName = $rs['nama_rs'] ?? '-';
 
                 $bag = $this->stokModel->find($item['id_bag']);
-                $noKantong = $bag['no_kantong'] ?? '-';
+                $no_kantong = $bag['no_kantong'] ?? '-';
 
                 $tableData[] = [
                     $no++,
-                    $noKantong,
+                    $no_kantong,
                     date('d-m-Y', strtotime($item['tanggal_distribusi'] ?? 'now')),
                     $item['penerima'] ?? '-',
                     substr($item['keperluan'] ?? '-', 0, 15),
@@ -211,11 +211,11 @@ class Dashboard extends BaseController
             $no = 1;
             foreach ($pemusnahanData as $item) {
                 $bag = $this->stokModel->find($item['id_bag']);
-                $noKantong = $bag['no_kantong'] ?? '-';
+                $no_kantong = $bag['no_kantong'] ?? '-';
 
                 $tableData[] = [
                     $no++,
-                    $noKantong,
+                    $no_kantong,
                     date('d-m-Y', strtotime($item['tanggal_pemusnahan'] ?? 'now')),
                     $item['alasan'] ?? '-',
                     $item['petugas'] ?? '-',
