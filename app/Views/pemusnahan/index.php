@@ -88,9 +88,9 @@
                                         <td><?= $no++ ?></td>
                                         <td><?= $item['no_kantong'] ?></td>
                                         <td>
-                                            <span class="badge badge-danger"><?= $item['goldar'] ?></span>
+                                            <span class="badge badge-danger"><?= $item['gol_dar'] ?></span>
                                         </td>
-                                        <td><?= $item['jenisdarah'] ?></td>
+                                        <td><?= $item['jenis_darah'] ?></td>
                                         <td><?= date('d/m/Y', strtotime($item['tanggal_expired'])) ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tanggal_pemusnahan'])) ?></td>
                                         <td>

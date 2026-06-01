@@ -87,7 +87,7 @@
                                         <td><?= $no++ ?></td>
                                         <td><?= $item['no_kantong'] ?></td>
                                         <td>
-                                            <span class="badge badge-danger"><?= $item['goldar'] ?></span>
+                                            <span class="badge badge-danger"><?= $item['gol_dar'] ?></span>
                                         </td>
                                         <td><?= $item['nama_rs'] ?></td>
                                         <td><?= $item['penerima'] ?></td>

@@ -89,10 +89,10 @@
                                     <td><?= $rs['telepon'] ?></td>
                                     <td><?= $rs['alamat'] ?></td>
                                     <td>
-                                        <a href="<?= base_url('/rumahsakit/edit/' . $rs['idrs']) ?>" class="btn btn-warning btn-sm">
+                                        <a href="<?= base_url('/rumahsakit/edit/' . $rs['id_rs']) ?>" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <a href="<?= base_url('/rumahsakit/delete/' . $rs['idrs']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus rumah sakit ini?')">
+                                        <a href="<?= base_url('/rumahsakit/delete/' . $rs['id_rs']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus rumah sakit ini?')">
                                             <i class="fas fa-trash"></i> Hapus
                                         </a>
                                     </td>

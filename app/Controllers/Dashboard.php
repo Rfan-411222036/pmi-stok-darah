@@ -31,7 +31,6 @@ class Dashboard extends BaseController
 
     public function index()
     {
-        // Data untuk statistik cards
         $totalStok = $this->stokModel->getStokTersedia();
         $totalProdusen = $this->produsenModel->countAll();
         $totalRS = $this->rsModel->countAll();
@@ -45,9 +44,8 @@ class Dashboard extends BaseController
         $stokByGolongan = $this->stokModel->getStokByGolongan();
         $stokByJenis = $this->stokModel->getStokByJenis();
 
-        // Data stok per bdrs
         $currentRole = session()->get('role');
-        $currentUserId = session()->get('iduser');
+        $currentUserId = session()->get('id_user');
         if ($currentRole === 'admin') {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
         } else {
@@ -61,12 +59,10 @@ class Dashboard extends BaseController
             $chartData[] = (int) $item['jumlah_stok'];
         }
 
-        // Data statistik user
         $totalUsers = $this->userModel->getTotalUsers();
         $totalAdmins = $this->userModel->getTotalAdmins();
         $totalStaff = $this->userModel->getTotalStaff();
 
-        // Data aktivitas terbaru
         $recentDistribusi = $this->distribusiModel->getRecentDistribusi(5);
 
         $data = [
@@ -96,12 +92,9 @@ class Dashboard extends BaseController
         return view('dashboard/index', $data);
     }
 
-    /**
-     * Download laporan stok PDF
-     */
     public function downloadLaporan()
     {
-        $stokData = $this->stokModel->select('idbag, no_kantong, jenisdarah, goldar, rhesus, volume, tanggal_produksi, tanggal_expired, status')
+        $stokData = $this->stokModel->select('id_bag, no_kantong, jenis_darah, gol_dar, rhesus, volume, tanggal_produksi, tanggal_expired, status')
                                      ->findAll();
 
         $pdf = new PdfGenerator();
@@ -111,7 +104,6 @@ class Dashboard extends BaseController
         $pdf->addTitle('LAPORAN STOK DARAH');
         $pdf->Ln(3);
 
-        // Statistik
         $stats = [
             ['label' => 'Total Unit', 'value' => count($stokData)],
         ];
@@ -121,7 +113,6 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data stok darah.', 0, 1, 'C');
         } else {
-            // Tabel
             $headers = ['No', 'No. Kantong', 'Jenis', 'Goldar', 'Volume', 'Expired Date'];
             $tableData = [];
 
@@ -130,8 +121,8 @@ class Dashboard extends BaseController
                 $tableData[] = [
                     $no++,
                     $item['no_kantong'] ?? '-',
-                    ($item['jenisdarah'] ?? '-') . ' ' . ($item['goldar'] ?? '-') . ($item['rhesus'] ?? '+'),
-                    $item['goldar'] ?? '-',
+                    ($item['jenis_darah'] ?? '-') . ' ' . ($item['gol_dar'] ?? '-') . ($item['rhesus'] ?? '+'),
+                    $item['gol_dar'] ?? '-',
                     ($item['volume'] ?? '-') . ' ml',
                     $item['tanggal_expired'] ?? '-',
                 ];
@@ -144,12 +135,9 @@ class Dashboard extends BaseController
         $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
     }
 
-    /**
-     * Download laporan distribusi PDF
-     */
     public function downloadDistribusi()
     {
-        $distribusiData = $this->distribusiModel->select('iddistribusi, idbag, idrs, tanggal_distribusi, penerima, keperluan')
+        $distribusiData = $this->distribusiModel->select('id_distribusi, id_bag, id_rs, tanggal_distribusi, penerima, keperluan')
                                                 ->findAll();
 
         $pdf = new PdfGenerator();
@@ -159,7 +147,6 @@ class Dashboard extends BaseController
         $pdf->addTitle('LAPORAN DISTRIBUSI DARAH');
         $pdf->Ln(3);
 
-        // Statistik
         $stats = [
             ['label' => 'Total Transaksi', 'value' => count($distribusiData)],
         ];
@@ -169,18 +156,15 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data distribusi.', 0, 1, 'C');
         } else {
-            // Tabel (tambahkan kolom No. Kantong)
             $headers = ['No', 'No. Kantong', 'Tanggal', 'Penerima', 'Keperluan', 'Rumah Sakit'];
             $tableData = [];
 
             $no = 1;
             foreach ($distribusiData as $item) {
-                // Get RS name
-                $rs = $this->rsModel->find($item['idrs']);
+                $rs = $this->rsModel->find($item['id_rs']);
                 $rsName = $rs['nama_rs'] ?? '-';
 
-                // Get bag (stok) info to retrieve no_kantong
-                $bag = $this->stokModel->find($item['idbag']);
+                $bag = $this->stokModel->find($item['id_bag']);
                 $noKantong = $bag['no_kantong'] ?? '-';
 
                 $tableData[] = [
@@ -200,12 +184,9 @@ class Dashboard extends BaseController
         $pdf->Output('Laporan_Distribusi_' . date('d-m-Y') . '.pdf', 'D');
     }
 
-    /**
-     * Download laporan pemusnahan PDF
-     */
     public function downloadPemusnahan()
     {
-        $pemusnahanData = $this->pemusnahanModel->select('idpemusnahan, idbag, tanggal_pemusnahan, alasan, keterangan, petugas')
+        $pemusnahanData = $this->pemusnahanModel->select('id_pemusnahan, id_bag, tanggal_pemusnahan, alasan, keterangan, petugas')
                                                 ->findAll();
 
         $pdf = new PdfGenerator();
@@ -215,7 +196,6 @@ class Dashboard extends BaseController
         $pdf->addTitle('LAPORAN PEMUSNAHAN DARAH');
         $pdf->Ln(3);
 
-        // Statistik
         $stats = [
             ['label' => 'Total Pemusnahan', 'value' => count($pemusnahanData)],
         ];
@@ -225,14 +205,12 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data pemusnahan.', 0, 1, 'C');
         } else {
-            // Tabel (tambahkan kolom No. Kantong)
             $headers = ['No', 'No. Kantong', 'Tanggal', 'Alasan', 'Petugas', 'Keterangan'];
             $tableData = [];
 
             $no = 1;
             foreach ($pemusnahanData as $item) {
-                // Get bag (stok) info to retrieve no_kantong
-                $bag = $this->stokModel->find($item['idbag']);
+                $bag = $this->stokModel->find($item['id_bag']);
                 $noKantong = $bag['no_kantong'] ?? '-';
 
                 $tableData[] = [
@@ -252,15 +230,11 @@ class Dashboard extends BaseController
         $pdf->Output('Laporan_Pemusnahan_' . date('d-m-Y') . '.pdf', 'D');
     }
 
-    /**
-     * Download laporan retur PDF
-     */
     public function downloadRetur()
     {
         $returnModel = new \App\Models\ReturnModel();
-        // Join stok to get no_kantong for each retur
-        $returData = $returnModel->select('return_darah.idreturn, return_darah.tanggal_retur, return_darah.alasan_return, return_darah.kondisi_darah, return_darah.ditangani_oleh, stok.no_kantong')
-                                 ->join('stok', 'stok.idbag = return_darah.idbag')
+        $returData = $returnModel->select('return_darah.id_return, return_darah.tanggal_retur, return_darah.alasan_return, return_darah.kondisi_darah, return_darah.ditangani_oleh, stok.no_kantong')
+                                 ->join('stok', 'stok.id_bag = return_darah.id_bag')
                                  ->findAll();
 
         $pdf = new PdfGenerator();
@@ -270,7 +244,6 @@ class Dashboard extends BaseController
         $pdf->addTitle('LAPORAN RETUR DARAH');
         $pdf->Ln(3);
 
-        // Statistik
         $stats = [
             ['label' => 'Total Retur', 'value' => count($returData)],
         ];
@@ -280,7 +253,6 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data retur.', 0, 1, 'C');
         } else {
-            // Tabel (tambahkan kolom No. Kantong)
             $headers = ['No', 'No. Kantong', 'Tanggal', 'Alasan Retur', 'Kondisi', 'Ditangani Oleh'];
             $tableData = [];
 

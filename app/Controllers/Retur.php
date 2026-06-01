@@ -59,9 +59,9 @@ class Retur extends BaseController
     {
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'iddistribusi' => 'required',
-            'idbag' => 'required',
-            'idrs' => 'required',
+            'id_distribusi' => 'required',
+            'id_bag' => 'required',
+            'id_rs' => 'required',
             'tanggal_retur' => 'required',
             'alasan_return' => 'required',
             'kondisi_darah' => 'required',
@@ -73,9 +73,9 @@ class Retur extends BaseController
         }
 
         $data = [
-            'iddistribusi' => $this->request->getPost('iddistribusi'),
-            'idbag' => $this->request->getPost('idbag'),
-            'idrs' => $this->request->getPost('idrs'),
+            'id_distribusi' => $this->request->getPost('id_distribusi'),
+            'id_bag' => $this->request->getPost('id_bag'),
+            'id_rs' => $this->request->getPost('id_rs'),
             'tanggal_retur' => $this->request->getPost('tanggal_retur'),
             'alasan_return' => $this->request->getPost('alasan_return'),
             'kondisi_darah' => $this->request->getPost('kondisi_darah'),
@@ -83,23 +83,15 @@ class Retur extends BaseController
             'keterangan' => $this->request->getPost('keterangan')
         ];
 
-        // Tentukan status stok berdasarkan kondisi darah
         $statusStok = $this->request->getPost('kondisi_darah') == 'baik' ? 'tersedia' : 'musnah';
-
-        $stokData = [
-            'status' => $statusStok
-        ];
+        $stokData = ['status' => $statusStok];
 
         try {
-            // Mulai transaction
             $db = \Config\Database::connect();
             $db->transStart();
 
-            // Simpan data return
             $returnSaved = $this->returnModel->save($data);
-            
-            // Update status stok
-            $stokUpdated = $this->stokModel->update($this->request->getPost('idbag'), $stokData);
+            $stokUpdated = $this->stokModel->update($this->request->getPost('id_bag'), $stokData);
 
             $db->transComplete();
 
@@ -115,12 +107,12 @@ class Retur extends BaseController
         return redirect()->to('/return');
     }
 
-    public function getDistribusiInfo($iddistribusi)
+    public function getDistribusiInfo($id_distribusi)
     {
-        $distribusi = $this->distribusiModel->select('distribusi.*, stok.no_kantong, stok.goldar, stok.jenisdarah, stok.tanggal_expired, rumah_sakit.nama_rs')
-                                           ->join('stok', 'stok.idbag = distribusi.idbag')
-                                           ->join('rumah_sakit', 'rumah_sakit.idrs = distribusi.idrs')
-                                           ->where('distribusi.iddistribusi', $iddistribusi)
+        $distribusi = $this->distribusiModel->select('distribusi.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, stok.tanggal_expired, rumah_sakit.nama_rs')
+                                           ->join('stok', 'stok.id_bag = distribusi.id_bag')
+                                           ->join('rumah_sakit', 'rumah_sakit.id_rs = distribusi.id_rs')
+                                           ->where('distribusi.id_distribusi', $id_distribusi)
                                            ->first();
 
         if ($distribusi) {

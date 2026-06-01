@@ -1,0 +1,38 @@
+# Environment & Config
+.env
+.env.*
+!.env.example
+
+# Vendor
+/vendor/
+
+# Claude
+.claude/
+
+# CodeIgniter writable directories
+/writable/cache/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+!/writable/cache/.gitkeep
+!/writable/logs/.gitkeep
+!/writable/session/.gitkeep
+!/writable/uploads/.gitkeep
+
+# IDE & OS
+.idea/
+.vscode/
+*.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+
+# Node (if any)
+node_modules/
+
+# SQL dumps (may contain sensitive data)
+*.sql
+
+# PHP debug files
+*.log

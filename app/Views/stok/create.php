@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <form action="<?= base_url('/stok/store') ?>" method="post">
                         <?= csrf_field() ?>
-                        
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -41,19 +41,19 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="no_kantong">No Kantong *</label>
-                                    <input type="text" class="form-control" id="no_kantong" name="no_kantong" 
-                                           value="<?= old('no_kantong') ?>" 
+                                    <input type="text" class="form-control" id="no_kantong" name="no_kantong"
+                                           value="<?= old('no_kantong') ?>"
                                            placeholder="Contoh: KB001/XI/2024" required>
                                     <small class="form-text text-muted">Format: KBxxx/bulan/tahun</small>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="idprodusen">Bank Darah Rumah Sakit *</label>
-                                    <select class="form-control" id="idprodusen" name="idprodusen" required>
+                                    <label for="id_produsen">Bank Darah Rumah Sakit *</label>
+                                    <select class="form-control" id="id_produsen" name="id_produsen" required>
                                         <option value="">Pilih Bank Darah Rumah Sakit</option>
                                         <?php foreach ($produsen as $p): ?>
                                             <?php $jenisLabel = ($p['jenis'] == 'pemerintah') ? 'Pemerintah' : (($p['jenis'] == 'swasta') ? 'Swasta' : 'Umum'); ?>
-                                            <option value="<?= $p['idprodusen'] ?>" <?= old('idprodusen') == $p['idprodusen'] ? 'selected' : '' ?>>
+                                            <option value="<?= $p['id_produsen'] ?>" <?= old('id_produsen') == $p['id_produsen'] ? 'selected' : '' ?>>
                                                 <?= $p['nama'] ?> (<?= $jenisLabel ?>)
                                             </option>
                                         <?php endforeach; ?>
@@ -61,13 +61,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="goldar">Golongan Darah *</label>
-                                    <select class="form-control" id="goldar" name="goldar" required>
+                                    <label for="gol_dar">Golongan Darah *</label>
+                                    <select class="form-control" id="gol_dar" name="gol_dar" required>
                                         <option value="">Pilih Golongan</option>
-                                        <option value="A" <?= old('goldar') == 'A' ? 'selected' : '' ?>>A</option>
-                                        <option value="B" <?= old('goldar') == 'B' ? 'selected' : '' ?>>B</option>
-                                        <option value="AB" <?= old('goldar') == 'AB' ? 'selected' : '' ?>>AB</option>
-                                        <option value="O" <?= old('goldar') == 'O' ? 'selected' : '' ?>>O</option>
+                                        <option value="A" <?= old('gol_dar') == 'A' ? 'selected' : '' ?>>A</option>
+                                        <option value="B" <?= old('gol_dar') == 'B' ? 'selected' : '' ?>>B</option>
+                                        <option value="AB" <?= old('gol_dar') == 'AB' ? 'selected' : '' ?>>AB</option>
+                                        <option value="O" <?= old('gol_dar') == 'O' ? 'selected' : '' ?>>O</option>
                                     </select>
                                 </div>
 
@@ -82,40 +82,40 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="jenisdarah">Jenis Darah *</label>
-                                    <select class="form-control" id="jenisdarah" name="jenisdarah" required>
+                                    <label for="jenis_darah">Jenis Darah *</label>
+                                    <select class="form-control" id="jenis_darah" name="jenis_darah" required>
                                         <option value="">Pilih Jenis</option>
-                                        <option value="Whole" <?= old('jenisdarah') == 'Whole' ? 'selected' : '' ?>>Whole Blood</option>
-                                        <option value="PRC" <?= old('jenisdarah') == 'PRC' ? 'selected' : '' ?>>Packed Red Cells</option>
-                                        <option value="TC" <?= old('jenisdarah') == 'TC' ? 'selected' : '' ?>>Thrombocyte Concentrate</option>
-                                        <option value="FFP" <?= old('jenisdarah') == 'FFP' ? 'selected' : '' ?>>Fresh Frozen Plasma</option>
+                                        <option value="Whole" <?= old('jenis_darah') == 'Whole' ? 'selected' : '' ?>>Whole Blood</option>
+                                        <option value="PRC" <?= old('jenis_darah') == 'PRC' ? 'selected' : '' ?>>Packed Red Cells</option>
+                                        <option value="TC" <?= old('jenis_darah') == 'TC' ? 'selected' : '' ?>>Thrombocyte Concentrate</option>
+                                        <option value="FFP" <?= old('jenis_darah') == 'FFP' ? 'selected' : '' ?>>Fresh Frozen Plasma</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="volume">Volume (ml) *</label>
-                                    <input type="number" class="form-control" id="volume" name="volume" 
-                                           value="<?= old('volume', 450) ?>" 
+                                    <input type="number" class="form-control" id="volume" name="volume"
+                                           value="<?= old('volume', 450) ?>"
                                            placeholder="Masukkan volume" min="1" required>
                                     <small class="form-text text-muted">Standar: 450ml untuk Whole Blood</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="tanggal_produksi">Tanggal Produksi *</label>
-                                    <input type="date" class="form-control" id="tanggal_produksi" name="tanggal_produksi" 
+                                    <input type="date" class="form-control" id="tanggal_produksi" name="tanggal_produksi"
                                            value="<?= old('tanggal_produksi', date('Y-m-d')) ?>" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="tanggal_expired">Tanggal Expired *</label>
-                                    <input type="date" class="form-control" id="tanggal_expired" name="tanggal_expired" 
+                                    <input type="date" class="form-control" id="tanggal_expired" name="tanggal_expired"
                                            value="<?= old('tanggal_expired', date('Y-m-d', strtotime('+35 days'))) ?>" required>
                                     <small class="form-text text-muted">Maksimal 35 hari dari tanggal produksi untuk Whole Blood</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan</label>
-                                    <textarea class="form-control" id="keterangan" name="keterangan" 
+                                    <textarea class="form-control" id="keterangan" name="keterangan"
                                               placeholder="Masukkan keterangan tambahan" rows="2"><?= old('keterangan') ?></textarea>
                                 </div>
                             </div>

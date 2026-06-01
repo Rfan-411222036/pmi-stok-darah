@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <form action="<?= base_url('/pemusnahan/store') ?>" method="post">
                         <?= csrf_field() ?>
-                        
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -40,14 +40,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="idbag">Pilih Stok Darah untuk Dimusnahkan *</label>
-                                    <select class="form-control" id="idbag" name="idbag" required>
+                                    <label for="id_bag">Pilih Stok Darah untuk Dimusnahkan *</label>
+                                    <select class="form-control" id="id_bag" name="id_bag" required>
                                         <option value="">Pilih Stok Darah</option>
                                         <?php if (!empty($stok_expired)): ?>
                                             <optgroup label="Stok Expired">
                                                 <?php foreach ($stok_expired as $stok): ?>
-                                                    <option value="<?= $stok['idbag'] ?>" <?= old('idbag') == $stok['idbag'] ? 'selected' : '' ?>>
-                                                        <?= $stok['no_kantong'] ?> - <?= $stok['goldar'] ?><?= $stok['rhesus'] ?> (<?= $stok['jenisdarah'] ?>)
+                                                    <option value="<?= $stok['id_bag'] ?>" <?= old('id_bag') == $stok['id_bag'] ? 'selected' : '' ?>>
+                                                        <?= $stok['no_kantong'] ?> - <?= $stok['gol_dar'] ?><?= $stok['rhesus'] ?> (<?= $stok['jenis_darah'] ?>)
                                                         - Expired: <?= date('d/m/Y', strtotime($stok['tanggal_expired'])) ?>
                                                     </option>
                                                 <?php endforeach; ?>
@@ -69,7 +69,7 @@
 
                                 <div class="form-group">
                                     <label for="tanggal_pemusnahan">Tanggal Pemusnahan *</label>
-                                    <input type="datetime-local" class="form-control" id="tanggal_pemusnahan" name="tanggal_pemusnahan" 
+                                    <input type="datetime-local" class="form-control" id="tanggal_pemusnahan" name="tanggal_pemusnahan"
                                            value="<?= old('tanggal_pemusnahan', date('Y-m-d\TH:i')) ?>" required>
                                 </div>
                             </div>
@@ -77,14 +77,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="petugas">Petugas *</label>
-                                    <input type="text" class="form-control" id="petugas" name="petugas" 
-                                           value="<?= old('petugas', session()->get('nama')) ?>" 
+                                    <input type="text" class="form-control" id="petugas" name="petugas"
+                                           value="<?= old('petugas', session()->get('nama')) ?>"
                                            placeholder="Masukkan nama petugas" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan</label>
-                                    <textarea class="form-control" id="keterangan" name="keterangan" 
+                                    <textarea class="form-control" id="keterangan" name="keterangan"
                                               placeholder="Masukkan keterangan pemusnahan" rows="4"><?= old('keterangan') ?></textarea>
                                     <small class="form-text text-muted">Jelaskan alasan detail pemusnahan jika diperlukan</small>
                                 </div>
@@ -118,9 +118,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const idbagSelect = document.getElementById('idbag');
+    const id_bagSelect = document.getElementById('id_bag');
     const alasanSelect = document.getElementById('alasan');
-    
+
     // Auto-fill petugas dengan nama user yang login
     const petugasField = document.getElementById('petugas');
     if (!petugasField.value) {

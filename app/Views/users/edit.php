@@ -27,7 +27,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <form action="<?= base_url('/users/update/' . $user['iduser']) ?>" method="post">
+                    <form action="<?= base_url('/users/update/' . $user['id_user']) ?>" method="post">
                         <?= csrf_field() ?>
 
                         <?php if (session()->getFlashdata('errors')): ?>

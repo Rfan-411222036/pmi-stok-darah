@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class RumahSakitModel extends Model
 {
     protected $table = 'rumah_sakit';
-    protected $primaryKey = 'idrs';
+    protected $primaryKey = 'id_rs';
     protected $allowedFields = ['nama_rs', 'alamat', 'telepon', 'email', 'jenis_rs', 'is_active'];
     protected $useTimestamps = false;
 

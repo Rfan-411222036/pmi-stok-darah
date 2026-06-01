@@ -7,8 +7,8 @@ use CodeIgniter\Model;
 class ProdusenModel extends Model
 {
     protected $table = 'produsen';
-    protected $primaryKey = 'idprodusen';
-    protected $allowedFields = ['iduser', 'nama', 'jenis', 'jenis_darah', 'no_kantong', 'status', 'alamat', 'is_active'];
+    protected $primaryKey = 'id_produsen';
+    protected $allowedFields = ['id_user', 'nama', 'jenis', 'jenis_darah', 'no_kantong', 'status', 'alamat', 'is_active'];
     protected $useTimestamps = false;
 
     public function getProdusen($search = '', $perPage = 10)
