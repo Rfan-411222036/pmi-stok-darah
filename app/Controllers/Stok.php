@@ -22,6 +22,22 @@ class Stok extends BaseController
         $perPage = 10;
 
         $result = $this->stokModel->getStokWithDetails($search, $perPage);
+        $golonganRhesus = $this->stokModel->getStokByGolonganRhesus();
+
+        $bloodGroups = ['A', 'B', 'AB', 'O'];
+        $rhesusCounts = [
+            '+' => array_fill_keys($bloodGroups, 0),
+            '-' => array_fill_keys($bloodGroups, 0),
+        ];
+
+        foreach ($golonganRhesus as $item) {
+            $group = $item['goldar'];
+            $rhesus = $item['rhesus'] ?? '+';
+
+            if (isset($rhesusCounts[$rhesus][$group])) {
+                $rhesusCounts[$rhesus][$group] = (int) $item['total'];
+            }
+        }
 
         // Debug: Cek struktur data yang dikembalikan
         // echo "<pre>"; print_r($result); echo "</pre>"; die();
@@ -31,7 +47,13 @@ class Stok extends BaseController
             'page_title' => 'Data Stok Darah',
             'stok' => $result['stok'] ?? [], // Gunakan null coalescing operator
             'pager' => $result['pager'] ?? $this->stokModel->pager,
-            'search' => $search
+            'search' => $search,
+            'chartLabels' => $bloodGroups,
+            'chartDataPlus' => array_values($rhesusCounts['+']),
+            'chartDataMinus' => array_values($rhesusCounts['-']),
+            'stockAvailable' => $this->stokModel->getStokTersedia(),
+            'stockNearExpire' => $this->stokModel->getStokMendekatiExpired(),
+            'stockExpired' => $this->stokModel->getStokExpired(),
         ];
 
         return view('stok/index', $data);

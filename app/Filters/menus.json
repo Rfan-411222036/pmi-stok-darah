@@ -11,7 +11,7 @@
           "name": "master data",
           "children": [
             {
-              "name": "Bank Darah Rumah Sakit",
+              "name": "BDRS",
               "path": "/produsen"
             },
             {

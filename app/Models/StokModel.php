@@ -15,7 +15,7 @@ class StokModel extends Model
     {
         $builder = $this->select('stok.*, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
                        ->join('produsen', 'produsen.idprodusen = stok.idprodusen');
-        
+
         if ($search) {
             $builder->groupStart()
                    ->like('stok.no_kantong', $search)
@@ -26,7 +26,7 @@ class StokModel extends Model
         }
 
         $builder->orderBy('stok.tanggal_expired', 'ASC');
-        
+
         $data = [
             'stok' => $builder->paginate($perPage),
             'pager' => $this->pager
@@ -58,11 +58,22 @@ class StokModel extends Model
                    ->getResultArray();
     }
 
+    public function getStokByGolonganRhesus()
+    {
+        return $this->select('goldar, rhesus, COUNT(*) as total')
+                   ->where('status', 'tersedia')
+                   ->groupBy('goldar, rhesus')
+                   ->orderBy('goldar', 'ASC')
+                   ->orderBy('rhesus', 'DESC')
+                   ->get()
+                   ->getResultArray();
+    }
+
     public function getStokMendekatiExpired()
     {
         $date = date('Y-m-d');
-        $expiredDate = date('Y-m-d', strtotime('+14 days'));
-        
+        $expiredDate = date('Y-m-d', strtotime('+7 days'));
+
         return $this->where('status', 'tersedia')
                    ->where('tanggal_expired >=', $date)
                    ->where('tanggal_expired <=', $expiredDate)
