@@ -188,24 +188,76 @@
                 </div>
             </div> -->
 
-            <div class="row">
+            <?php if ($current_role === 'admin'): ?>
+            <!-- Admin: Monthly Distribution Bar Chart -->
+            <div class="row mb-3" id="monthlyChartRow">
                 <div class="col-12">
                     <div class="card card-outline card-danger pmi-card">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <div>
-                                <h3 class="card-title"><?= $current_role === 'admin' ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3>
-                                <p class="text-muted mb-0"><?php if ($current_role === 'admin'): ?>Menampilkan total stok darah untuk setiap BDRS yang terdaftar.<?php else: ?>Menampilkan total stok darah di BDRS Anda sendiri.<?php endif; ?></p>
+                                <h3 class="card-title">Distribusi Darah Bulanan (12 Bulan Terakhir)</h3>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-hand-pointer mr-1"></i>
+                                    Klik bar bulan untuk melihat rincian per BDRS
+                                </p>
                             </div>
-                            <span class="badge badge-pill badge-danger"><?= $current_role === 'admin' ? 'Admin View' : 'BDRS View' ?></span>
+                            <span class="badge badge-pill badge-danger">Admin View</span>
                         </div>
                         <div class="card-body">
-                            <div class="chart-wrapper" style="min-height: 360px; position: relative;">
-                                <canvas id="dashboardStokDarahChart" style="height: 360px;"></canvas>
+                            <div style="min-height:320px; position:relative;">
+                                <canvas id="monthlyDistChart" style="height:320px;"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Admin: Drill-down per BDRS (hidden until bar clicked) -->
+            <div class="row mb-3" id="drilldownRow" style="display:none;">
+                <div class="col-12">
+                    <div class="card card-outline" style="border-color:#4682b9;">
+                        <div class="card-header border-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="card-title" id="drilldownTitle">Detail Distribusi per BDRS</h3>
+                                <p class="text-muted mb-0">Rincian jumlah distribusi pada bulan yang dipilih</p>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" id="drilldownBack">
+                                <i class="fas fa-arrow-left mr-1"></i> Kembali
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="drilldownEmpty" class="text-center text-muted py-4" style="display:none;">
+                                <i class="fas fa-inbox fa-2x mb-2"></i>
+                                <p>Tidak ada distribusi pada bulan ini.</p>
+                            </div>
+                            <div id="drilldownChartWrap" style="min-height:260px; position:relative;">
+                                <canvas id="drilldownChart" style="height:260px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- Non-admin: Stock per BDRS line chart -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-danger pmi-card">
+                        <div class="card-header border-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="card-title">Grafik Stok Darah BDRS Saya</h3>
+                                <p class="text-muted mb-0">Menampilkan total stok darah di BDRS Anda sendiri.</p>
+                            </div>
+                            <span class="badge badge-pill badge-danger">BDRS View</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="min-height:360px; position:relative;">
+                                <canvas id="dashboardStokDarahChart" style="height:360px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <!-- Card Laporan PDF -->
             <!-- <div class="row">
@@ -443,71 +495,199 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('dashboardStokDarahChart');
-        if (!ctx) return;
+document.addEventListener('DOMContentLoaded', function () {
 
-        var labels = <?= json_encode($chart_labels) ?>;
-        var chartData = <?= json_encode($chart_data) ?>;
+<?php if ($current_role === 'admin'): ?>
 
-        var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 360);
-        gradient.addColorStop(0, 'rgba(220, 53, 69, 0.35)');
-        gradient.addColorStop(1, 'rgba(220, 53, 69, 0.05)');
+    /* ── Monthly distribution bar chart ── */
+    var monthlyLabels = <?= json_encode($monthly_labels) ?>;
+    var monthlyData   = <?= json_encode($monthly_totals) ?>;
+    var monthlyMeta   = <?= json_encode($monthly_meta) ?>;
+    var drillInstance = null;
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Jumlah Stok Darah',
-                        data: chartData,
-                        borderColor: '#dc3545',
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.35,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#dc3545',
-                        pointBorderWidth: 2
+    var monthlyCtx = document.getElementById('monthlyDistChart').getContext('2d');
+    var monthlyChart = new Chart(monthlyCtx, {
+        type: 'bar',
+        data: {
+            labels: monthlyLabels,
+            datasets: [{
+                label: 'Total Distribusi',
+                data: monthlyData,
+                backgroundColor: 'rgba(185, 70, 70, 0.72)',
+                borderColor:     'rgba(185, 70, 70, 1)',
+                borderWidth: 1,
+                borderRadius: 4,
+                hoverBackgroundColor: 'rgba(185, 70, 70, 0.95)',
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            cursor: 'pointer',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function (ctx) {
+                            return '  ' + ctx.parsed.y.toLocaleString('id-ID') + ' distribusi';
+                        },
+                        afterLabel: function () {
+                            return '  ↗ Klik untuk detail per BDRS';
+                        }
                     }
-                ]
+                }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { color: '#495057' } },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (v) { return v.toLocaleString('id-ID'); },
+                        color: '#495057'
+                    },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                }
+            },
+            onClick: function (event, elements) {
+                if (!elements.length) return;
+                var idx  = elements[0].index;
+                var meta = monthlyMeta[idx];
+                var lbl  = monthlyLabels[idx];
+                loadDrilldown(meta.year, meta.month, lbl);
+            }
+        }
+    });
+
+    /* pointer cursor on hover */
+    document.getElementById('monthlyDistChart').style.cursor = 'pointer';
+
+    function loadDrilldown(year, month, label) {
+        document.getElementById('drilldownTitle').textContent = 'Distribusi per BDRS — ' + label;
+        document.getElementById('drilldownRow').style.display = '';
+        document.getElementById('drilldownEmpty').style.display = 'none';
+        document.getElementById('drilldownChartWrap').style.display = '';
+
+        var url = '<?= base_url('/dashboard/chart/drilldown') ?>/' + year + '/' + month;
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function (r) { return r.json(); })
+            .then(function (json) {
+                if (!json.labels.length) {
+                    document.getElementById('drilldownChartWrap').style.display = 'none';
+                    document.getElementById('drilldownEmpty').style.display = '';
+                    return;
+                }
+                renderDrilldown(json);
+                document.getElementById('drilldownRow').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+    }
+
+    function renderDrilldown(json) {
+        if (drillInstance) drillInstance.destroy();
+        var ctx = document.getElementById('drilldownChart').getContext('2d');
+        drillInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: json.labels,
+                datasets: [{
+                    label: 'Distribusi',
+                    data: json.data,
+                    backgroundColor: 'rgba(70, 130, 185, 0.72)',
+                    borderColor:     'rgba(70, 130, 185, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
             },
             options: {
+                indexAxis: 'y',
                 maintainAspectRatio: false,
                 responsive: true,
                 plugins: {
-                    legend: {
-                        labels: {
-                            boxWidth: 12,
-                            padding: 20
-                        }
-                    },
+                    legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: function (context) {
-                                return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID');
+                            label: function (ctx) {
+                                return '  ' + ctx.parsed.x.toLocaleString('id-ID') + ' distribusi';
                             }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        grid: { display: false },
-                        ticks: { color: '#495057' }
-                    },
-                    y: {
                         beginAtZero: true,
-                        ticks: {
-                            callback: function (value) { return value.toLocaleString('id-ID'); },
-                            color: '#495057'
-                        },
+                        ticks: { callback: function (v) { return v.toLocaleString('id-ID'); }, color: '#495057' },
                         grid: { color: 'rgba(0,0,0,0.05)' }
-                    }
+                    },
+                    y: { grid: { display: false }, ticks: { color: '#495057' } }
                 }
             }
         });
+    }
+
+    document.getElementById('drilldownBack').addEventListener('click', function () {
+        document.getElementById('drilldownRow').style.display = 'none';
+        if (drillInstance) { drillInstance.destroy(); drillInstance = null; }
     });
+
+<?php else: ?>
+
+    /* ── Non-admin: stock per BDRS line chart ── */
+    var ctx = document.getElementById('dashboardStokDarahChart');
+    if (!ctx) return;
+
+    var labels    = <?= json_encode($chart_labels) ?>;
+    var chartData = <?= json_encode($chart_data) ?>;
+
+    var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 360);
+    gradient.addColorStop(0, 'rgba(220, 53, 69, 0.35)');
+    gradient.addColorStop(1, 'rgba(220, 53, 69, 0.05)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah Stok Darah',
+                data: chartData,
+                borderColor: '#dc3545',
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.35,
+                pointRadius: 4,
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#dc3545',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: { labels: { boxWidth: 12, padding: 20 } },
+                tooltip: {
+                    callbacks: {
+                        label: function (ctx) {
+                            return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('id-ID');
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { color: '#495057' } },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (v) { return v.toLocaleString('id-ID'); },
+                        color: '#495057'
+                    },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                }
+            }
+        }
+    });
+
+<?php endif; ?>
+
+});
 </script>
 
 <?= $this->include('templates/footer') ?>

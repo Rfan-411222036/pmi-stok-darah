@@ -59,6 +59,12 @@ class Dashboard extends BaseController
             $chartData[] = (int) $item['jumlah_stok'];
         }
 
+        // Monthly distribution data for admin drill-down chart
+        $monthlyRows   = $this->distribusiModel->getMonthlyDistribusi(12);
+        $monthlyLabels = array_column($monthlyRows, 'label');
+        $monthlyTotals = array_map('intval', array_column($monthlyRows, 'total'));
+        $monthlyMeta   = array_map(fn($r) => ['year' => (int)$r['year'], 'month' => (int)$r['month']], $monthlyRows);
+
         $totalUsers = $this->userModel->getTotalUsers();
         $totalAdmins = $this->userModel->getTotalAdmins();
         $totalStaff = $this->userModel->getTotalStaff();
@@ -81,8 +87,11 @@ class Dashboard extends BaseController
             'stok_by_jenis' => $stokByJenis,
             'stok_per_bdrs' => $stokPerBDRS,
             'current_role' => $currentRole,
-            'chart_labels' => $chartLabels,
-            'chart_data' => $chartData,
+            'chart_labels'    => $chartLabels,
+            'chart_data'      => $chartData,
+            'monthly_labels'  => $monthlyLabels,
+            'monthly_totals'  => $monthlyTotals,
+            'monthly_meta'    => $monthlyMeta,
             'total_users' => $totalUsers,
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
@@ -90,6 +99,15 @@ class Dashboard extends BaseController
         ];
 
         return view('dashboard/index', $data);
+    }
+
+    public function chartDrilldown(int $year, int $month)
+    {
+        $rows = $this->distribusiModel->getMonthlyDistribusiPerBDRS($year, $month);
+        return $this->response->setJSON([
+            'labels' => array_column($rows, 'bdrs_nama'),
+            'data'   => array_map('intval', array_column($rows, 'total')),
+        ]);
     }
 
     public function downloadLaporan()

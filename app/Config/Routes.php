@@ -15,6 +15,7 @@ $routes->get('/logout', 'Auth::logout');
 // Protected routes - require authentication
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/dashboard', 'Dashboard::index');
+    $routes->get('/dashboard/chart/drilldown/(:num)/(:num)', 'Dashboard::chartDrilldown/$1/$2');
     $routes->get('/dashboard/laporan/download', 'Dashboard::downloadLaporan');
     $routes->get('/dashboard/laporan/distribusi', 'Dashboard::downloadDistribusi');
     $routes->get('/dashboard/laporan/pemusnahan', 'Dashboard::downloadPemusnahan');

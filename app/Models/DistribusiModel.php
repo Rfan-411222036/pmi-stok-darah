@@ -82,4 +82,69 @@ class DistribusiModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    /**
+     * Get monthly distribution totals for the last N months (including months with 0).
+     * Returns array of ['label', 'year', 'month', 'total'].
+     */
+    public function getMonthlyDistribusi(int $months = 12): array
+    {
+        $query = $this->db->query("
+            SELECT
+                YEAR(tanggal_distribusi)  AS `year`,
+                MONTH(tanggal_distribusi) AS `month`,
+                COUNT(*)                 AS total
+            FROM distribusi
+            WHERE tanggal_distribusi >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL ? MONTH), '%Y-%m-01')
+            GROUP BY YEAR(tanggal_distribusi), MONTH(tanggal_distribusi)
+        ", [$months]);
+
+        $rows = $query->getResultArray();
+
+        // Index fetched rows by 'YYYY-MM' key
+        $map = [];
+        foreach ($rows as $r) {
+            $key = $r['year'] . '-' . str_pad($r['month'], 2, '0', STR_PAD_LEFT);
+            $map[$key] = (int) $r['total'];
+        }
+
+        // Fill all N months, oldest first
+        $result = [];
+        for ($i = $months - 1; $i >= 0; $i--) {
+            $ts    = strtotime("-{$i} months");
+            $y     = (int) date('Y', $ts);
+            $m     = (int) date('n', $ts);
+            $key   = $y . '-' . str_pad($m, 2, '0', STR_PAD_LEFT);
+            $result[] = [
+                'label' => date('M Y', $ts),
+                'year'  => $y,
+                'month' => $m,
+                'total' => $map[$key] ?? 0,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get per-BDRS distribution count for a specific year/month.
+     * Returns array of ['bdrs_nama', 'total'].
+     */
+    public function getMonthlyDistribusiPerBDRS(int $year, int $month): array
+    {
+        $query = $this->db->query("
+            SELECT
+                p.nama   AS bdrs_nama,
+                COUNT(*) AS total
+            FROM distribusi d
+            JOIN stok s     ON s.id_bag      = d.id_bag
+            JOIN produsen p ON p.id_produsen = s.id_produsen
+            WHERE YEAR(d.tanggal_distribusi)  = ?
+              AND MONTH(d.tanggal_distribusi) = ?
+            GROUP BY p.id_produsen, p.nama
+            ORDER BY total DESC
+        ", [$year, $month]);
+
+        return $query->getResultArray();
+    }
 }
