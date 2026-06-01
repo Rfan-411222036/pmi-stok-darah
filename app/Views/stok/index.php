@@ -132,9 +132,9 @@
                                         <td><?= $item['no_kantong'] ?></td>
                                         <td><?= $item['nama_produsen'] ?? 'N/A' ?></td>
                                         <td>
-                                            <span class="badge badge-danger"><?= $item['goldar'] ?><?= $item['rhesus'] ?></span>
+                                            <span class="badge badge-danger"><?= $item['gol_dar'] ?><?= $item['rhesus'] ?></span>
                                         </td>
-                                        <td><?= $item['jenisdarah'] ?></td>
+                                        <td><?= $item['jenis_darah'] ?></td>
                                         <td><?= $item['volume'] ?> ml</td>
                                         <td><?= date('d/m/Y', strtotime($item['tanggal_produksi'])) ?></td>
                                         <td>
@@ -167,11 +167,11 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a href="<?= base_url('/stok/edit/' . $item['idbag']) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('/stok/edit/' . $item['id_bag']) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
                                             <?php if ($item['status'] == 'tersedia'): ?>
-                                                <a href="<?= base_url('/stok/delete/' . $item['idbag']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus stok ini?')">
+                                                <a href="<?= base_url('/stok/delete/' . $item['id_bag']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus stok ini?')">
                                                     <i class="fas fa-trash"></i> Hapus
                                                 </a>
                                             <?php else: ?>

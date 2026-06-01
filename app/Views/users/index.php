@@ -98,11 +98,11 @@
                                     </td>
                                     <td><?= date('d/m/Y H:i', strtotime($user['created_at'])) ?></td>
                                     <td>
-                                        <a href="<?= base_url('/users/edit/' . $user['iduser']) ?>" class="btn btn-warning btn-sm">
+                                        <a href="<?= base_url('/users/edit/' . $user['id_user']) ?>" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <?php if ($user['iduser'] != session()->get('iduser')): ?>
-                                            <a href="<?= base_url('/users/delete/' . $user['iduser']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')">
+                                        <?php if ($user['id_user'] != session()->get('id_user')): ?>
+                                            <a href="<?= base_url('/users/delete/' . $user['id_user']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus user ini?')">
                                                 <i class="fas fa-trash"></i> Hapus
                                             </a>
                                         <?php else: ?>

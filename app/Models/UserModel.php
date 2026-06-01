@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class UserModel extends Model
 {
     protected $table = 'login';
-    protected $primaryKey = 'iduser';
+    protected $primaryKey = 'id_user';
     protected $allowedFields = ['email', 'password', 'nama', 'role'];
     protected $useTimestamps = false;
 
@@ -19,7 +19,7 @@ class UserModel extends Model
     public function getUsers($search = '', $perPage = 10)
     {
         $builder = $this;
-        
+
         if ($search) {
             $builder->groupStart()
                    ->like('email', $search)
@@ -27,9 +27,9 @@ class UserModel extends Model
                    ->orLike('role', $search)
                    ->groupEnd();
         }
-        
+
         $builder->orderBy('created_at', 'DESC');
-        
+
         return [
             'users' => $builder->paginate($perPage),
             'pager' => $builder->pager

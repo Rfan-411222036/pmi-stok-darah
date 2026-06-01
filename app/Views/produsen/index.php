@@ -68,7 +68,6 @@
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
-                            <!-- Di dalam tabel, tambahkan kolom status -->
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -105,12 +104,12 @@
                                         </td>
                                         <td>
                                             <?php $active = isset($item['is_active']) ? $item['is_active'] : 1; ?>
-                                            <a href="<?= base_url('/produsen/edit/' . $item['idprodusen']) ?>"
+                                            <a href="<?= base_url('/produsen/edit/' . $item['id_produsen']) ?>"
                                                 class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
                                             <?php if ($active == 1): ?>
-                                                <a href="<?= base_url('/produsen/delete/' . $item['idprodusen']) ?>"
+                                                <a href="<?= base_url('/produsen/delete/' . $item['id_produsen']) ?>"
                                                     class="btn btn-danger btn-sm"
                                                     onclick="return confirm('Yakin ingin menonaktifkan Bank Darah Rumah Sakit ini?')">
                                                     <i class="fas fa-trash"></i> Nonaktifkan

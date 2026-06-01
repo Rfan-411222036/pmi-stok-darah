@@ -139,9 +139,8 @@ class Produsen extends BaseController
             return redirect()->to('/produsen');
         }
 
-        // Cek apakah produsen memiliki data stok
         $stokModel = new \App\Models\StokModel();
-        $stokCount = $stokModel->where('idprodusen', $id)->where('status', 'tersedia')->countAllResults();
+        $stokCount = $stokModel->where('id_produsen', $id)->where('status', 'tersedia')->countAllResults();
 
         if ($stokCount > 0) {
             session()->setFlashdata('error', 'Tidak dapat menghapus produsen karena masih memiliki data stok darah aktif. Hapus atau distribusikan terlebih dahulu data stok yang terkait.');
@@ -149,7 +148,6 @@ class Produsen extends BaseController
         }
 
         try {
-            // Gunakan soft delete
             if ($this->produsenModel->softDelete($id)) {
                 session()->setFlashdata('success', 'Data produsen berhasil dihapus');
             } else {

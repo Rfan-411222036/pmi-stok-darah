@@ -56,8 +56,8 @@ class Distribusi extends BaseController
     {
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'idbag' => 'required',
-            'idrs' => 'required',
+            'id_bag' => 'required',
+            'id_rs' => 'required',
             'penerima' => 'required',
             'tanggal_distribusi' => 'required'
         ]);
@@ -67,20 +67,17 @@ class Distribusi extends BaseController
         }
 
         $data = [
-            'idbag' => $this->request->getPost('idbag'),
-            'idrs' => $this->request->getPost('idrs'),
+            'id_bag' => $this->request->getPost('id_bag'),
+            'id_rs' => $this->request->getPost('id_rs'),
             'tanggal_distribusi' => $this->request->getPost('tanggal_distribusi'),
             'penerima' => $this->request->getPost('penerima'),
             'keperluan' => $this->request->getPost('keperluan'),
             'no_permintaan' => $this->request->getPost('no_permintaan')
         ];
 
-        // Update status stok menjadi terdistribusi
-        $stokData = [
-            'status' => 'terdistribusi'
-        ];
+        $stokData = ['status' => 'terdistribusi'];
 
-        if ($this->distribusiModel->save($data) && $this->stokModel->update($this->request->getPost('idbag'), $stokData)) {
+        if ($this->distribusiModel->save($data) && $this->stokModel->update($this->request->getPost('id_bag'), $stokData)) {
             session()->setFlashdata('success', 'Distribusi darah berhasil dicatat');
         } else {
             session()->setFlashdata('error', 'Gagal mencatat distribusi darah');

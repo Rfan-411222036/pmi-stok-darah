@@ -135,9 +135,8 @@ class RumahSakit extends BaseController
             return redirect()->to('/rumahsakit');
         }
 
-        // Cek apakah rumah sakit memiliki data distribusi aktif
         $distribusiModel = new \App\Models\DistribusiModel();
-        $distribusiCount = $distribusiModel->where('idrs', $id)->countAllResults();
+        $distribusiCount = $distribusiModel->where('id_rs', $id)->countAllResults();
 
         if ($distribusiCount > 0) {
             session()->setFlashdata('error', 'Tidak dapat menghapus rumah sakit karena masih memiliki riwayat distribusi.');
@@ -145,7 +144,6 @@ class RumahSakit extends BaseController
         }
 
         try {
-            // Gunakan soft delete
             if ($this->rumahSakitModel->softDelete($id)) {
                 session()->setFlashdata('success', 'Data rumah sakit berhasil dihapus');
             } else {

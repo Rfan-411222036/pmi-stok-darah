@@ -34,7 +34,7 @@ class Auth extends BaseController
 
         if ($user && $password === $user['password']) {
             $sessionData = [
-                'iduser' => $user['iduser'],
+                'id_user' => $user['id_user'],
                 'email' => $user['email'],
                 'nama' => $user['nama'],
                 'role' => $user['role'],

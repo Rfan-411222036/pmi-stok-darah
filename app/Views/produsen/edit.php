@@ -24,9 +24,9 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <form action="<?= base_url('/produsen/update/' . $produsen['idprodusen']) ?>" method="post">
+                    <form action="<?= base_url('/produsen/update/' . $produsen['id_produsen']) ?>" method="post">
                         <?= csrf_field() ?>
-                        
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -41,8 +41,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                      <label for="nama">Nama Bank Darah Rumah Sakit *</label>
-                                     <input type="text" class="form-control" id="nama" name="nama" 
-                                         value="<?= old('nama', $produsen['nama']) ?>" 
+                                     <input type="text" class="form-control" id="nama" name="nama"
+                                         value="<?= old('nama', $produsen['nama']) ?>"
                                          placeholder="Masukkan nama Bank Darah Rumah Sakit" required>
                                 </div>
 
@@ -58,15 +58,15 @@
 
                                 <div class="form-group">
                                     <label for="jenis_darah">Jenis Darah</label>
-                                    <input type="text" class="form-control" id="jenis_darah" name="jenis_darah" 
-                                           value="<?= old('jenis_darah', $produsen['jenis_darah']) ?>" 
+                                    <input type="text" class="form-control" id="jenis_darah" name="jenis_darah"
+                                           value="<?= old('jenis_darah', $produsen['jenis_darah']) ?>"
                                            placeholder="Masukkan jenis darah (contoh: A+, B-, O+)">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="no_kantong">No. Kantong Darah *</label>
-                                    <input type="text" class="form-control" id="no_kantong" name="no_kantong" 
-                                           value="<?= old('no_kantong', $produsen['no_kantong']) ?>" 
+                                    <input type="text" class="form-control" id="no_kantong" name="no_kantong"
+                                           value="<?= old('no_kantong', $produsen['no_kantong']) ?>"
                                            placeholder="Masukkan nomor kantong darah" required>
                                 </div>
 
@@ -83,7 +83,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
-                                    <textarea class="form-control" id="alamat" name="alamat" 
+                                    <textarea class="form-control" id="alamat" name="alamat"
                                               placeholder="Masukkan alamat lengkap" rows="4"><?= old('alamat', $produsen['alamat']) ?></textarea>
                                 </div>
                             </div>

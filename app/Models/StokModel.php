@@ -7,20 +7,20 @@ use CodeIgniter\Model;
 class StokModel extends Model
 {
     protected $table = 'stok';
-    protected $primaryKey = 'idbag';
-    protected $allowedFields = ['no_kantong', 'idprodusen', 'jenisdarah', 'goldar', 'rhesus', 'volume', 'tanggal_produksi', 'tanggal_expired', 'status', 'keterangan'];
+    protected $primaryKey = 'id_bag';
+    protected $allowedFields = ['no_kantong', 'id_produsen', 'jenis_darah', 'gol_dar', 'rhesus', 'volume', 'tanggal_produksi', 'tanggal_expired', 'status', 'keterangan'];
     protected $useTimestamps = false;
 
     public function getStokWithDetails($search = '', $perPage = 10)
     {
         $builder = $this->select('stok.*, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
-                       ->join('produsen', 'produsen.idprodusen = stok.idprodusen');
+                       ->join('produsen', 'produsen.id_produsen = stok.id_produsen');
 
         if ($search) {
             $builder->groupStart()
                    ->like('stok.no_kantong', $search)
-                   ->orLike('stok.goldar', $search)
-                   ->orLike('stok.jenisdarah', $search)
+                   ->orLike('stok.gol_dar', $search)
+                   ->orLike('stok.jenis_darah', $search)
                    ->orLike('produsen.nama', $search)
                    ->groupEnd();
         }
@@ -42,28 +42,28 @@ class StokModel extends Model
 
     public function getStokByGolongan()
     {
-        return $this->select('goldar, COUNT(*) as total')
+        return $this->select('gol_dar, COUNT(*) as total')
                    ->where('status', 'tersedia')
-                   ->groupBy('goldar')
+                   ->groupBy('gol_dar')
                    ->get()
                    ->getResultArray();
     }
 
     public function getStokByJenis()
     {
-        return $this->select('jenisdarah, COUNT(*) as total')
+        return $this->select('jenis_darah, COUNT(*) as total')
                    ->where('status', 'tersedia')
-                   ->groupBy('jenisdarah')
+                   ->groupBy('jenis_darah')
                    ->get()
                    ->getResultArray();
     }
 
     public function getStokByGolonganRhesus()
     {
-        return $this->select('goldar, rhesus, COUNT(*) as total')
+        return $this->select('gol_dar, rhesus, COUNT(*) as total')
                    ->where('status', 'tersedia')
-                   ->groupBy('goldar, rhesus')
-                   ->orderBy('goldar', 'ASC')
+                   ->groupBy('gol_dar, rhesus')
+                   ->orderBy('gol_dar', 'ASC')
                    ->orderBy('rhesus', 'DESC')
                    ->get()
                    ->getResultArray();

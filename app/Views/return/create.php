@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <form action="<?= base_url('/return/store') ?>" method="post">
                         <?= csrf_field() ?>
-                        
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -40,12 +40,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="iddistribusi">Pilih Distribusi untuk Direturn *</label>
-                                    <select class="form-control" id="iddistribusi" name="iddistribusi" required>
+                                    <label for="id_distribusi">Pilih Distribusi untuk Direturn *</label>
+                                    <select class="form-control" id="id_distribusi" name="id_distribusi" required>
                                         <option value="">Pilih Distribusi</option>
                                         <?php foreach ($distribusi as $d): ?>
-                                            <option value="<?= $d['iddistribusi'] ?>" data-idbag="<?= $d['idbag'] ?>" data-idrs="<?= $d['idrs'] ?>">
-                                                <?= $d['no_kantong'] ?> - <?= $d['goldar'] ?> (<?= $d['jenisdarah'] ?>)
+                                            <option value="<?= $d['id_distribusi'] ?>" data-id_bag="<?= $d['id_bag'] ?>" data-id_rs="<?= $d['id_rs'] ?>">
+                                                <?= $d['no_kantong'] ?> - <?= $d['gol_dar'] ?> (<?= $d['jenis_darah'] ?>)
                                                 - RS: <?= $d['nama_rs'] ?>
                                                 - Distribusi: <?= date('d/m/Y', strtotime($d['tanggal_distribusi'])) ?>
                                             </option>
@@ -55,13 +55,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="idbag">ID Kantong Darah *</label>
-                                    <input type="text" class="form-control" id="idbag" name="idbag" readonly required>
+                                    <label for="id_bag">ID Kantong Darah *</label>
+                                    <input type="text" class="form-control" id="id_bag" name="id_bag" readonly required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="idrs">Rumah Sakit *</label>
-                                    <input type="text" class="form-control" id="idrs" name="idrs" readonly required>
+                                    <label for="id_rs">Rumah Sakit *</label>
+                                    <input type="text" class="form-control" id="id_rs" name="id_rs" readonly required>
                                 </div>
 
                                 <div class="form-group">
@@ -80,7 +80,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="tanggal_retur">Tanggal Return *</label>
-                                    <input type="datetime-local" class="form-control" id="tanggal_retur" name="tanggal_retur" 
+                                    <input type="datetime-local" class="form-control" id="tanggal_retur" name="tanggal_retur"
                                            value="<?= old('tanggal_retur', date('Y-m-d\TH:i')) ?>" required>
                                 </div>
 
@@ -95,14 +95,14 @@
 
                                 <div class="form-group">
                                     <label for="ditangani_oleh">Ditangani Oleh *</label>
-                                    <input type="text" class="form-control" id="ditangani_oleh" name="ditangani_oleh" 
-                                           value="<?= old('ditangani_oleh', session()->get('nama')) ?>" 
+                                    <input type="text" class="form-control" id="ditangani_oleh" name="ditangani_oleh"
+                                           value="<?= old('ditangani_oleh', session()->get('nama')) ?>"
                                            placeholder="Masukkan nama petugas" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan Tambahan</label>
-                                    <textarea class="form-control" id="keterangan" name="keterangan" 
+                                    <textarea class="form-control" id="keterangan" name="keterangan"
                                               placeholder="Masukkan keterangan tambahan" rows="3"><?= old('keterangan') ?></textarea>
                                 </div>
 
@@ -131,21 +131,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const distribusiSelect = document.getElementById('iddistribusi');
-    const idbagInput = document.getElementById('idbag');
-    const idrsInput = document.getElementById('idrs');
+    const distribusiSelect = document.getElementById('id_distribusi');
+    const id_bagInput = document.getElementById('id_bag');
+    const id_rsInput = document.getElementById('id_rs');
     const infoDiv = document.getElementById('distribusi-info');
     const infoContent = document.getElementById('info-content');
 
     distribusiSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
-        
+
         if (selectedOption.value) {
-            const idbag = selectedOption.getAttribute('data-idbag');
-            const idrs = selectedOption.getAttribute('data-idrs');
-            
-            idbagInput.value = idbag;
-            idrsInput.value = idrs;
+            const id_bag = selectedOption.getAttribute('data-id_bag');
+            const id_rs = selectedOption.getAttribute('data-id_rs');
+
+            id_bagInput.value = id_bag;
+            id_rsInput.value = id_rs;
 
             // Tampilkan info distribusi
             infoDiv.style.display = 'block';
@@ -162,8 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             infoDiv.style.display = 'none';
-            idbagInput.value = '';
-            idrsInput.value = '';
+            id_bagInput.value = '';
+            id_rsInput.value = '';
         }
     });
 

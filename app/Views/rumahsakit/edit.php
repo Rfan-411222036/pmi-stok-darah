@@ -24,9 +24,9 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <form action="<?= base_url('/rumahsakit/update/' . $rumah_sakit['idrs']) ?>" method="post">
+                    <form action="<?= base_url('/rumahsakit/update/' . $rumah_sakit['id_rs']) ?>" method="post">
                         <?= csrf_field() ?>
-                        
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -41,8 +41,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nama_rs">Nama Rumah Sakit *</label>
-                                    <input type="text" class="form-control" id="nama_rs" name="nama_rs" 
-                                           value="<?= old('nama_rs', $rumah_sakit['nama_rs']) ?>" 
+                                    <input type="text" class="form-control" id="nama_rs" name="nama_rs"
+                                           value="<?= old('nama_rs', $rumah_sakit['nama_rs']) ?>"
                                            placeholder="Masukkan nama rumah sakit" required>
                                 </div>
 
@@ -59,8 +59,8 @@
 
                                 <div class="form-group">
                                     <label for="telepon">Telepon *</label>
-                                    <input type="text" class="form-control" id="telepon" name="telepon" 
-                                           value="<?= old('telepon', $rumah_sakit['telepon']) ?>" 
+                                    <input type="text" class="form-control" id="telepon" name="telepon"
+                                           value="<?= old('telepon', $rumah_sakit['telepon']) ?>"
                                            placeholder="Masukkan nomor telepon" required>
                                 </div>
                             </div>
@@ -68,14 +68,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           value="<?= old('email', $rumah_sakit['email']) ?>" 
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           value="<?= old('email', $rumah_sakit['email']) ?>"
                                            placeholder="Masukkan email">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
-                                    <textarea class="form-control" id="alamat" name="alamat" 
+                                    <textarea class="form-control" id="alamat" name="alamat"
                                               placeholder="Masukkan alamat lengkap" rows="4"><?= old('alamat', $rumah_sakit['alamat']) ?></textarea>
                                 </div>
                             </div>

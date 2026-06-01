@@ -31,7 +31,7 @@ class Stok extends BaseController
         ];
 
         foreach ($golonganRhesus as $item) {
-            $group = $item['goldar'];
+            $group = $item['gol_dar'];
             $rhesus = $item['rhesus'] ?? '+';
 
             if (isset($rhesusCounts[$rhesus][$group])) {
@@ -39,13 +39,10 @@ class Stok extends BaseController
             }
         }
 
-        // Debug: Cek struktur data yang dikembalikan
-        // echo "<pre>"; print_r($result); echo "</pre>"; die();
-
         $data = [
             'title' => 'Management Stok Darah',
             'page_title' => 'Data Stok Darah',
-            'stok' => $result['stok'] ?? [], // Gunakan null coalescing operator
+            'stok' => $result['stok'] ?? [],
             'pager' => $result['pager'] ?? $this->stokModel->pager,
             'search' => $search,
             'chartLabels' => $bloodGroups,
@@ -77,9 +74,9 @@ class Stok extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'no_kantong' => 'required|is_unique[stok.no_kantong]',
-            'idprodusen' => 'required',
-            'jenisdarah' => 'required',
-            'goldar' => 'required',
+            'id_produsen' => 'required',
+            'jenis_darah' => 'required',
+            'gol_dar' => 'required',
             'volume' => 'required|numeric',
             'tanggal_produksi' => 'required',
             'tanggal_expired' => 'required'
@@ -91,9 +88,9 @@ class Stok extends BaseController
 
         $data = [
             'no_kantong' => $this->request->getPost('no_kantong'),
-            'idprodusen' => $this->request->getPost('idprodusen'),
-            'jenisdarah' => $this->request->getPost('jenisdarah'),
-            'goldar' => $this->request->getPost('goldar'),
+            'id_produsen' => $this->request->getPost('id_produsen'),
+            'jenis_darah' => $this->request->getPost('jenis_darah'),
+            'gol_dar' => $this->request->getPost('gol_dar'),
             'rhesus' => $this->request->getPost('rhesus'),
             'volume' => $this->request->getPost('volume'),
             'tanggal_produksi' => $this->request->getPost('tanggal_produksi'),
@@ -146,9 +143,9 @@ class Stok extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'no_kantong' => $noKantongRules,
-            'idprodusen' => 'required',
-            'jenisdarah' => 'required',
-            'goldar' => 'required',
+            'id_produsen' => 'required',
+            'jenis_darah' => 'required',
+            'gol_dar' => 'required',
             'volume' => 'required|numeric',
             'tanggal_produksi' => 'required',
             'tanggal_expired' => 'required'
@@ -160,9 +157,9 @@ class Stok extends BaseController
 
         $data = [
             'no_kantong' => $this->request->getPost('no_kantong'),
-            'idprodusen' => $this->request->getPost('idprodusen'),
-            'jenisdarah' => $this->request->getPost('jenisdarah'),
-            'goldar' => $this->request->getPost('goldar'),
+            'id_produsen' => $this->request->getPost('id_produsen'),
+            'jenis_darah' => $this->request->getPost('jenis_darah'),
+            'gol_dar' => $this->request->getPost('gol_dar'),
             'rhesus' => $this->request->getPost('rhesus'),
             'volume' => $this->request->getPost('volume'),
             'tanggal_produksi' => $this->request->getPost('tanggal_produksi'),
@@ -188,30 +185,26 @@ class Stok extends BaseController
             return redirect()->to('/stok');
         }
 
-        // Cek apakah stok sudah didistribusikan
         if ($stok['status'] === 'terdistribusi') {
             session()->setFlashdata('error', 'Tidak dapat menghapus stok yang sudah didistribusikan');
             return redirect()->to('/stok');
         }
 
-        // Cek apakah stok sudah dimusnahkan
         if ($stok['status'] === 'musnah') {
             session()->setFlashdata('error', 'Tidak dapat menghapus stok yang sudah dimusnahkan');
             return redirect()->to('/stok');
         }
 
-        // Cek apakah stok memiliki data distribusi
         $distribusiModel = new \App\Models\DistribusiModel();
-        $distribusiCount = $distribusiModel->where('idbag', $id)->countAllResults();
+        $distribusiCount = $distribusiModel->where('id_bag', $id)->countAllResults();
 
         if ($distribusiCount > 0) {
             session()->setFlashdata('error', 'Tidak dapat menghapus stok karena sudah didistribusikan');
             return redirect()->to('/stok');
         }
 
-        // Cek apakah stok memiliki data pemusnahan
         $pemusnahanModel = new \App\Models\PemusnahanModel();
-        $pemusnahanCount = $pemusnahanModel->where('idbag', $id)->countAllResults();
+        $pemusnahanCount = $pemusnahanModel->where('id_bag', $id)->countAllResults();
 
         if ($pemusnahanCount > 0) {
             session()->setFlashdata('error', 'Tidak dapat menghapus stok karena sudah dimusnahkan');
