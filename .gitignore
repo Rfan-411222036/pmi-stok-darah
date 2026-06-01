@@ -6,6 +6,9 @@
 # Vendor
 /vendor/
 
+# Claude
+.claude/
+
 # CodeIgniter writable directories
 /writable/cache/*
 /writable/logs/*
