@@ -108,7 +108,7 @@ CREATE TABLE `produsen` (
   `idprodusen` int(11) NOT NULL,
   `iduser` int(11) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
-  `jenis` enum('perorangan','perusahaan','instansi') DEFAULT 'perorangan',
+  `jenis` enum('umum','pemerintah','swasta') DEFAULT 'umum',
   `jenis_darah` varchar(10) DEFAULT NULL,
   `no_kantong` varchar(20) DEFAULT NULL,
   `status` enum('masih layak','expired') DEFAULT 'masih layak',
@@ -122,12 +122,12 @@ CREATE TABLE `produsen` (
 --
 
 INSERT INTO `produsen` (`idprodusen`, `iduser`, `nama`, `jenis`, `jenis_darah`, `no_kantong`, `status`, `alamat`, `is_active`, `created_at`) VALUES
-(1, NULL, 'Donor Umum', 'perorangan', 'A+', 'KB001/XI/2024', 'masih layak', 'PMI Kota', 1, '2025-11-29 08:33:38'),
-(2, 2, 'BDRS Siloam Hospital', 'instansi', 'O+', 'KB003/XI/2024', 'masih layak', 'Jl. Siloam No. 3', 1, '2025-11-29 08:33:38'),
-(3, NULL, 'Universitas Sehat', 'instansi', 'O+', 'KB002/XI/2024', 'masih layak', 'Jl. Kampus No. 45', 1, '2025-11-29 08:33:38'),
-(4, 4, 'BDRS Eka Hospital', 'instansi', 'A+', 'KB005/XI/2024', 'expired', 'Jl. Eka No. 10', 1, '2025-11-29 08:33:38'),
-(5, NULL, 'PT. Donor Sehat', 'perusahaan', 'B+', NULL, 'masih layak', 'Jl. Perusahaan No. 123', 1, '2025-11-29 08:33:38'),
-(6, NULL, 'Karyawan PT. Maju', 'perorangan', 'AB+', NULL, 'masih layak', 'Jl. Industri No. 67', 1, '2025-11-29 08:33:38');
+(1, NULL, 'Donor Umum', 'umum', 'A+', 'KB001/XI/2024', 'masih layak', 'PMI Kota', 1, '2025-11-29 08:33:38'),
+(2, 2, 'BDRS Siloam Hospital', 'pemerintah', 'O+', 'KB003/XI/2024', 'masih layak', 'Jl. Siloam No. 3', 1, '2025-11-29 08:33:38'),
+(3, NULL, 'Universitas Sehat', 'pemerintah', 'O+', 'KB002/XI/2024', 'masih layak', 'Jl. Kampus No. 45', 1, '2025-11-29 08:33:38'),
+(4, 4, 'BDRS Eka Hospital', 'pemerintah', 'A+', 'KB005/XI/2024', 'expired', 'Jl. Eka No. 10', 1, '2025-11-29 08:33:38'),
+(5, NULL, 'PT. Donor Sehat', 'swasta', 'B+', NULL, 'masih layak', 'Jl. Perusahaan No. 123', 1, '2025-11-29 08:33:38'),
+(6, NULL, 'Karyawan PT. Maju', 'umum', 'AB+', NULL, 'masih layak', 'Jl. Industri No. 67', 1, '2025-11-29 08:33:38');
 
 -- --------------------------------------------------------
 

@@ -50,9 +50,9 @@
                                     <label for="jenis">Jenis Bank Darah Rumah Sakit *</label>
                                     <select class="form-control" id="jenis" name="jenis" required>
                                         <option value="">Pilih Jenis</option>
-                                        <option value="perorangan" <?= old('jenis', $produsen['jenis']) == 'perorangan' ? 'selected' : '' ?>>Perorangan</option>
-                                        <option value="perusahaan" <?= old('jenis', $produsen['jenis']) == 'perusahaan' ? 'selected' : '' ?>>Perusahaan</option>
-                                        <option value="instansi" <?= old('jenis', $produsen['jenis']) == 'instansi' ? 'selected' : '' ?>>Instansi</option>
+                                        <option value="umum" <?= old('jenis', $produsen['jenis']) == 'umum' ? 'selected' : '' ?>>Umum</option>
+                                        <option value="pemerintah" <?= old('jenis', $produsen['jenis']) == 'pemerintah' ? 'selected' : '' ?>>Pemerintah</option>
+                                        <option value="swasta" <?= old('jenis', $produsen['jenis']) == 'swasta' ? 'selected' : '' ?>>Swasta</option>
                                     </select>
                                 </div>
 

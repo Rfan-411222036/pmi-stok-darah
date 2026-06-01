@@ -61,3 +61,7 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 
 
 D:\Application\laragon\laragon\bin\php\php-8.3.26-Win32-vs16-x64\php spark serve
+
+
+yang kurang:
+1. login sebelah kiri full image

@@ -52,8 +52,9 @@
                                     <select class="form-control" id="idprodusen" name="idprodusen" required>
                                         <option value="">Pilih Bank Darah Rumah Sakit</option>
                                         <?php foreach ($produsen as $p): ?>
+                                            <?php $jenisLabel = ($p['jenis'] == 'pemerintah') ? 'Pemerintah' : (($p['jenis'] == 'swasta') ? 'Swasta' : 'Umum'); ?>
                                             <option value="<?= $p['idprodusen'] ?>" <?= old('idprodusen') == $p['idprodusen'] ? 'selected' : '' ?>>
-                                                <?= $p['nama'] ?> (<?= $p['jenis'] ?>)
+                                                <?= $p['nama'] ?> (<?= $jenisLabel ?>)
                                             </option>
                                         <?php endforeach; ?>
                                     </select>

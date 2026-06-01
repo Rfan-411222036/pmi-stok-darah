@@ -73,7 +73,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Nama Bank Darah Rumah Sakit</th>
-                                    <th>Jenis</th>
+                                    <th>Jenis Bank Darah Rumah Sakit</th>
                                     <th>No. Kantong</th>
                                     <th>Jenis Darah</th>
                                     <th>Status</th>
@@ -83,11 +83,12 @@
                             <tbody>
                                 <?php $no = 1 + (($pager->getCurrentPage() - 1) * 10); ?>
                                 <?php foreach ($produsen as $item): ?>
+                                    <?php $jenisLabel = ($item['jenis'] == 'pemerintah') ? 'Pemerintah' : (($item['jenis'] == 'swasta') ? 'Swasta' : 'Umum'); ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
                                         <td><?= $item['nama'] ?></td>
                                         <td>
-                                            <span class="badge badge-info"><?= $item['jenis'] ?></span>
+                                            <span class="badge badge-info"><?= $jenisLabel ?></span>
                                         </td>
                                         <td><?= $item['no_kantong'] ?? '-' ?></td>
                                         <td>
