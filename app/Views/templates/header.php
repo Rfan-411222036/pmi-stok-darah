@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $title ?? 'AdminLTE 3' ?></title>
+    <title>Bloodjek - <?= $title ?? 'Dashboard' ?></title>
+    <link rel="icon" type="image/png" href="<?= base_url('/icon.png') ?>">
     <!-- Created by rikisetiyopambudi@gmail.com -->
 
     <!-- Google Font: Source Sans Pro -->
