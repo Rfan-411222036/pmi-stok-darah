@@ -84,7 +84,32 @@
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
                                     <textarea class="form-control" id="alamat" name="alamat"
-                                              placeholder="Masukkan alamat lengkap" rows="4"><?= old('alamat', $produsen['alamat']) ?></textarea>
+                                              placeholder="Masukkan alamat lengkap" rows="3"><?= old('alamat', $produsen['alamat']) ?></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="min_threshold">Minimum Threshold (unit)</label>
+                                    <input type="number" class="form-control" id="min_threshold" name="min_threshold"
+                                           value="<?= old('min_threshold', $produsen['min_threshold'] ?? 30) ?>" min="1">
+                                    <small class="form-text text-muted">Auto-request replenishment jika stok di bawah nilai ini.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="priority_order">Prioritas Failover</label>
+                                    <input type="number" class="form-control" id="priority_order" name="priority_order"
+                                           value="<?= old('priority_order', $produsen['priority_order'] ?? 0) ?>" min="0">
+                                    <small class="form-text text-muted">Urutan saat failover routing (0 = prioritas tertinggi).</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="is_central_hub"
+                                               name="is_central_hub" value="1"
+                                               <?= old('is_central_hub', $produsen['is_central_hub'] ?? 0) ? 'checked' : '' ?>>
+                                        <label class="custom-control-label" for="is_central_hub">
+                                            Tandai sebagai Central Hub (PMI Pusat / Tier 1)
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

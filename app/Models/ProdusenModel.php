@@ -8,7 +8,7 @@ class ProdusenModel extends Model
 {
     protected $table = 'produsen';
     protected $primaryKey = 'id_produsen';
-    protected $allowedFields = ['id_user', 'nama', 'jenis', 'jenis_darah', 'no_kantong', 'status', 'alamat', 'is_active'];
+    protected $allowedFields = ['id_user', 'nama', 'jenis', 'jenis_darah', 'no_kantong', 'status', 'alamat', 'is_active', 'is_central_hub', 'min_threshold', 'priority_order'];
     protected $useTimestamps = false;
 
     public function getProdusen($search = '', $perPage = 10)

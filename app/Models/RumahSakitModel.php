@@ -8,7 +8,7 @@ class RumahSakitModel extends Model
 {
     protected $table = 'rumah_sakit';
     protected $primaryKey = 'id_rs';
-    protected $allowedFields = ['nama_rs', 'alamat', 'telepon', 'email', 'jenis_rs', 'is_active'];
+    protected $allowedFields = ['nama_rs', 'alamat', 'telepon', 'email', 'jenis_rs', 'is_active', 'id_primary_bdrs'];
     protected $useTimestamps = false;
 
     public function getRumahSakit($search = '', $perPage = 10)

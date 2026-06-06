@@ -61,11 +61,3 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 
 
 D:\Application\laragon\laragon\bin\php\php-8.3.26-Win32-vs16-x64\php spark serve
-
-
-yang kurang:
-1. login sebelah kiri full image
-2. jika admin grafik bulanan dan klik lalu muncul grafik tsb - per gudang
-3. di data distibusi darah harus nya ada data darahnya bersumber dari bdrs mana
-4. di page retur harusnya retur dari bdrs ke pmi bukan rumah sakit - remove Ditangani Oleh
-5. form permintaan darah dari rs ke bdrs -> akan ada flow persetujuan dari role bdrs

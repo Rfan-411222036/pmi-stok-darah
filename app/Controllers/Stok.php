@@ -137,12 +137,12 @@ class Stok extends BaseController
             return redirect()->to('/stok');
         }
 
-        $noKantongRules = $stok['no_kantong'] === $this->request->getPost('no_kantong') ?
+        $no_kantongRules = $stok['no_kantong'] === $this->request->getPost('no_kantong') ?
             'required' : 'required|is_unique[stok.no_kantong]';
 
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'no_kantong' => $noKantongRules,
+            'no_kantong' => $no_kantongRules,
             'id_produsen' => 'required',
             'jenis_darah' => 'required',
             'gol_dar' => 'required',

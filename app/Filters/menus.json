@@ -37,6 +37,19 @@
           "path": "/return"
         },
         {
+          "name": "supply chain",
+          "children": [
+            {
+              "name": "replenishment",
+              "path": "/replenishment"
+            },
+            {
+              "name": "recall stok",
+              "path": "/recall"
+            }
+          ]
+        },
+        {
           "name": "user management",
           "path": "/users"
         }
