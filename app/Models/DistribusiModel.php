@@ -8,7 +8,7 @@ class DistribusiModel extends Model
 {
     protected $table = 'distribusi';
     protected $primaryKey = 'id_distribusi';
-    protected $allowedFields = ['id_bag', 'id_rs', 'tanggal_distribusi', 'penerima', 'keperluan', 'no_permintaan'];
+    protected $allowedFields = ['id_bag', 'id_rs', 'id_produsen', 'tanggal_distribusi', 'penerima', 'keperluan', 'no_permintaan'];
     protected $useTimestamps = false;
 
     public function getDistribusiWithDetails($search = '', $perPage = 10)

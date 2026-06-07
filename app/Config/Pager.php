@@ -21,7 +21,8 @@ class Pager extends BaseConfig
      * @var array<string, string>
      */
     public array $templates = [
-        'default_full'   => 'CodeIgniter\Pager\Views\default_full',
+        // Override default_full with a Bootstrap 4 friendly template in our app
+        'default_full'   => 'templates/pager_bootstrap',
         'default_simple' => 'CodeIgniter\Pager\Views\default_simple',
         'default_head'   => 'CodeIgniter\Pager\Views\default_head',
     ];

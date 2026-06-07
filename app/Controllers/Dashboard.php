@@ -8,6 +8,7 @@ use App\Models\RumahSakitModel;
 use App\Models\DistribusiModel;
 use App\Models\PemusnahanModel;
 use App\Models\UserModel;
+use App\Models\NotificationModel;
 use App\Libraries\PdfGenerator;
 
 class Dashboard extends BaseController
@@ -18,6 +19,7 @@ class Dashboard extends BaseController
     protected $distribusiModel;
     protected $pemusnahanModel;
     protected $userModel;
+    protected $notificationModel;
 
     public function __construct()
     {
@@ -27,6 +29,25 @@ class Dashboard extends BaseController
         $this->distribusiModel = new DistribusiModel();
         $this->pemusnahanModel = new PemusnahanModel();
         $this->userModel = new UserModel();
+        $this->notificationModel = new NotificationModel();
+
+        $db = \Config\Database::connect();
+        $forge = \Config\Database::forge();
+        try {
+            if (!$db->tableExists('notifications')) {
+                $forge->addField([
+                    'id' => [ 'type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
+                    'user_id' => [ 'type' => 'INT', 'constraint' => 11, 'null' => false ],
+                    'title' => [ 'type' => 'VARCHAR', 'constraint' => 255, 'null' => false ],
+                    'message' => [ 'type' => 'TEXT', 'null' => false ],
+                    'created_at' => [ 'type' => 'DATETIME', 'null' => false ]
+                ]);
+                $forge->addKey('id', true);
+                $forge->createTable('notifications', true);
+            }
+        } catch (\Exception $e) {
+            // Tabel notifikasi tidak tersedia; akan ditangani di view jika perlu.
+        }
     }
 
     public function index()
@@ -64,6 +85,11 @@ class Dashboard extends BaseController
         $totalAdmins = $this->userModel->getTotalAdmins();
         $totalStaff = $this->userModel->getTotalStaff();
 
+        $lowStockNotifications = [];
+        if ($currentRole === 'admin') {
+            $lowStockNotifications = $this->notificationModel->orderBy('created_at', 'DESC')->findAll(5);
+        }
+
         $recentDistribusi = $this->distribusiModel->getRecentDistribusi(5);
 
         // Monthly distribusi chart (for admin)
@@ -98,6 +124,7 @@ class Dashboard extends BaseController
             'total_users' => $totalUsers,
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
+            'low_stock_notifications' => $lowStockNotifications,
             'recent_distribusi' => $recentDistribusi,
             'monthly_distribusi' => $monthlyDistribusi,
         ];

@@ -94,4 +94,76 @@ class StokModel extends Model
                    ->orderBy('tanggal_expired', 'ASC')
                    ->findAll();
     }
+
+    /**
+     * Return distinct golongan darah values from stok table as simple array
+     */
+    public function getDistinctGolongan()
+    {
+        $rows = $this->select('gol_dar')
+                     ->distinct()
+                     ->where('gol_dar IS NOT NULL')
+                     ->orderBy('gol_dar')
+                     ->get()
+                     ->getResultArray();
+
+        return array_column($rows, 'gol_dar');
+    }
+
+    /**
+     * Return distinct jenis_darah values from stok table as simple array
+     */
+    public function getDistinctJenis()
+    {
+        $rows = $this->select('jenis_darah')
+                     ->distinct()
+                     ->where('jenis_darah IS NOT NULL')
+                     ->orderBy('jenis_darah')
+                     ->get()
+                     ->getResultArray();
+
+        return array_column($rows, 'jenis_darah');
+    }
+
+    public function getDistinctGolonganByProdusen($id_produsen)
+    {
+        $rows = $this->select('gol_dar')
+                     ->distinct()
+                     ->where('id_produsen', $id_produsen)
+                     ->where('status', 'tersedia')
+                     ->where('gol_dar IS NOT NULL')
+                     ->where('tanggal_expired >=', date('Y-m-d'))
+                     ->orderBy('gol_dar')
+                     ->get()
+                     ->getResultArray();
+
+        return array_column($rows, 'gol_dar');
+    }
+
+    public function getAvailableStockForProdusen($id_produsen, $gol_dar = null, $jenis = null)
+    {
+        $builder = $this->where('id_produsen', $id_produsen)
+                        ->where('status', 'tersedia')
+                        ->where('tanggal_expired >=', date('Y-m-d'));
+
+        if ($gol_dar) {
+            $builder->where('gol_dar', $gol_dar);
+        }
+
+        if ($jenis) {
+            $builder->where('jenis_darah', $jenis);
+        }
+
+        return $builder->orderBy('tanggal_expired', 'ASC')->findAll();
+    }
+
+    public function countAvailableByProdusenGolonganJenis($id_produsen, $gol_dar, $jenis)
+    {
+        return $this->where('id_produsen', $id_produsen)
+                    ->where('status', 'tersedia')
+                    ->where('tanggal_expired >=', date('Y-m-d'))
+                    ->where('gol_dar', $gol_dar)
+                    ->where('jenis_darah', $jenis)
+                    ->countAllResults();
+    }
 }

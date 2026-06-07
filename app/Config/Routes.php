@@ -55,6 +55,14 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/distribusi/create', 'Distribusi::create');
     $routes->post('/distribusi/store', 'Distribusi::store');
 
+    // Permintaan (Requests)
+    $routes->get('/permintaan', 'Permintaan::index');
+    $routes->get('/permintaan/create', 'Permintaan::create');
+    $routes->post('/permintaan/store', 'Permintaan::store');
+    $routes->get('/permintaan/approve/(:num)', 'Permintaan::approve/$1');
+    $routes->post('/permintaan/approve/(:num)', 'Permintaan::approve/$1');
+    $routes->get('/permintaan/reject/(:num)', 'Permintaan::reject/$1');
+
     $routes->get('/pemusnahan', 'Pemusnahan::index');
     $routes->get('/pemusnahan/create', 'Pemusnahan::create');
     $routes->post('/pemusnahan/store', 'Pemusnahan::store');

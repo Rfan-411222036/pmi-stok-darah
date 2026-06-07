@@ -74,6 +74,32 @@
             </div>
             <?php endif; ?>
 
+            <?php if ($current_role === 'admin'): ?>
+            <div class="card card-outline card-danger mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Notifikasi Stok Rendah</h3>
+                </div>
+                <div class="card-body">
+                    <?php if (!empty($low_stock_notifications)): ?>
+                        <ul class="list-group list-group-flush">
+                            <?php foreach ($low_stock_notifications as $notification): ?>
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span><?= esc($notification['message']) ?></span>
+                                        <small class="text-muted"><?= date('d/m/Y H:i', strtotime($notification['created_at'])) ?></small>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <div class="alert alert-success mb-0">
+                            Tidak ada notifikasi stok rendah saat ini.
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-6">

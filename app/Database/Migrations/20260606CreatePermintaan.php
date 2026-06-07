@@ -21,6 +21,7 @@ class CreatePermintaan extends Migration
             'gol_dar' => [ 'type' => 'VARCHAR', 'constraint' => 10, 'null' => true ],
             'jenis' => [ 'type' => 'VARCHAR', 'constraint' => 50, 'null' => true ],
             'keterangan' => [ 'type' => 'TEXT', 'null' => true ],
+            'nama_penerima' => [ 'type' => 'VARCHAR', 'constraint' => 255, 'null' => true ],
             'status' => [ 'type' => 'VARCHAR', 'constraint' => 20, 'default' => 'pending' ],
             'created_by' => [ 'type' => 'INT', 'constraint' => 11, 'null' => true ],
             'approved_by' => [ 'type' => 'INT', 'constraint' => 11, 'null' => true ],

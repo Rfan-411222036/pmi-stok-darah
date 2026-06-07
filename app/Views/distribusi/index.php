@@ -65,13 +65,31 @@
                         </div>
                     </form>
 
+                    <div class="card mb-3">
+                        <div class="card-body d-flex flex-wrap align-items-center justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Permintaan Darah</h5>
+                                <p class="text-muted mb-0">Form permintaan hanya tersedia di halaman Permintaan.</p>
+                            </div>
+                            <div class="btn-group">
+                                <a href="<?= base_url('/permintaan/create') ?>" class="btn btn-primary">
+                                    <i class="fas fa-file-alt"></i> Ajukan Permintaan
+                                </a>
+                                <a href="<?= base_url('/permintaan') ?>" class="btn btn-secondary">
+                                    <i class="fas fa-list"></i> Lihat Daftar Permintaan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <table class="table table-bordered table-striped table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>No Kantong</th>
                                     <th>Golongan Darah</th>
+                                    <th>Sumber (BDRS)</th>
                                     <th>Rumah Sakit</th>
                                     <th>Penerima</th>
                                     <th>Keperluan</th>
@@ -89,6 +107,7 @@
                                         <td>
                                             <span class="badge badge-danger"><?= $item['gol_dar'] ?></span>
                                         </td>
+                                        <td><?= $item['nama_produsen'] ?: '-' ?></td>
                                         <td><?= $item['nama_rs'] ?></td>
                                         <td><?= $item['penerima'] ?></td>
                                         <td><?= $item['keperluan'] ?: '-' ?></td>

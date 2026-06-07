@@ -27,7 +27,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-striped table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -35,6 +35,11 @@
                                     <th>BDRS</th>
                                     <th>Jumlah</th>
                                     <th>Gol</th>
+                                    <th>No Kantong</th>
+                                    <th>Diagnosa</th>
+                                    <th>Nama Penerima</th>
+                                    <th>Keterangan Setujui</th>
+                                    <th>Tanggal Permintaan</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -44,10 +49,15 @@
                                     <?php foreach ($list as $row): ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
-                                        <td><?= $row['id_rs'] ?></td>
-                                        <td><?= $row['id_produsen'] ?></td>
+                                        <td><?= $row['nama_rs'] ?? $row['id_rs'] ?></td>
+                                        <td><?= $row['nama_produsen'] ?? $row['id_produsen'] ?></td>
                                         <td><?= $row['jumlah'] ?></td>
                                         <td><?= $row['gol_dar'] ?></td>
+                                        <td><?= esc($row['no_kantong'] ?? '-') ?></td>
+                                        <td><?= esc($row['keterangan'] ?? '-') ?></td>
+                                        <td><?= esc($row['nama_penerima'] ?? '-') ?></td>
+                                        <td><?= esc($row['approval_note'] ?? '-') ?></td>
+                                        <td><?= isset($row['created_at']) ? date('d/m/Y H:i', strtotime($row['created_at'])) : '-' ?></td>
                                         <td><?= ucfirst($row['status']) ?></td>
                                         <td>
                                             <?php if (session()->get('role') === 'bdrs' && $row['status'] === 'pending'): ?>
@@ -60,7 +70,7 @@
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <tr><td colspan="7" class="text-center text-muted">Tidak ada permintaan</td></tr>
+                                    <tr><td colspan="10" class="text-center text-muted">Tidak ada permintaan</td></tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>
