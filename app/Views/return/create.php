@@ -44,9 +44,9 @@
                                     <select class="form-control" id="id_distribusi" name="id_distribusi" required>
                                         <option value="">Pilih Distribusi</option>
                                         <?php foreach ($distribusi as $d): ?>
-                                            <option value="<?= $d['id_distribusi'] ?>" data-id_bag="<?= $d['id_bag'] ?>" data-id_rs="<?= $d['id_rs'] ?>">
+                                            <option value="<?= $d['id_distribusi'] ?>" data-id_bag="<?= $d['id_bag'] ?>" data-id_rs="<?= $d['id_rs'] ?>" data-nama_produsen="<?= $d['nama_produsen'] ?>">
                                                 <?= $d['no_kantong'] ?> - <?= $d['gol_dar'] ?> (<?= $d['jenis_darah'] ?>)
-                                                - RS: <?= $d['nama_rs'] ?>
+                                                - Sumber BDRS: <?= $d['nama_produsen'] ?>
                                                 - Distribusi: <?= date('d/m/Y', strtotime($d['tanggal_distribusi'])) ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -60,8 +60,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="id_rs">Rumah Sakit *</label>
-                                    <input type="text" class="form-control" id="id_rs" name="id_rs" readonly required>
+                                    <label for="sumber_bdrs">Sumber BDRS</label>
+                                    <input type="text" class="form-control" id="sumber_bdrs" name="sumber_bdrs" readonly>
                                 </div>
 
                                 <div class="form-group">
@@ -93,12 +93,7 @@
                                     <small class="form-text text-muted">Kondisi darah menentukan apakah akan kembali ke stok atau dimusnahkan</small>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="ditangani_oleh">Ditangani Oleh *</label>
-                                    <input type="text" class="form-control" id="ditangani_oleh" name="ditangani_oleh"
-                                           value="<?= old('ditangani_oleh', session()->get('nama')) ?>"
-                                           placeholder="Masukkan nama petugas" required>
-                                </div>
+                                <!-- Removed 'Ditangani Oleh' per BDRS->PMI return workflow -->
 
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan Tambahan</label>
@@ -143,23 +138,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectedOption.value) {
             const id_bag = selectedOption.getAttribute('data-id_bag');
             const id_rs = selectedOption.getAttribute('data-id_rs');
+            const namaProdusen = selectedOption.getAttribute('data-nama_produsen') || '';
 
             id_bagInput.value = id_bag;
             id_rsInput.value = id_rs;
+            document.getElementById('sumber_bdrs').value = namaProdusen;
 
-            // Tampilkan info distribusi
+            // Tampilkan info distribusi (sumber BDRS)
             infoDiv.style.display = 'block';
             infoContent.innerHTML = `
                 <strong>No Kantong:</strong> ${selectedOption.text.split(' - ')[0]}<br>
-                <strong>Rumah Sakit:</strong> ${selectedOption.text.split('RS: ')[1].split(' - Distribusi:')[0]}<br>
+                <strong>Sumber BDRS:</strong> ${namaProdusen}<br>
                 <strong>Tanggal Distribusi:</strong> ${selectedOption.text.split('Distribusi: ')[1]}
             `;
-
-            // Auto-fill petugas
-            const ditanganiOleh = document.getElementById('ditangani_oleh');
-            if (!ditanganiOleh.value) {
-                ditanganiOleh.value = '<?= session()->get("nama") ?>';
-            }
         } else {
             infoDiv.style.display = 'none';
             id_bagInput.value = '';

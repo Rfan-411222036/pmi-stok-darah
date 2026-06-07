@@ -338,11 +338,11 @@
 
                 <div class="brand-divider"></div>
 
-                <p class="tagline">
+                <!-- <p class="tagline">
                     Platform manajemen produk darah PMI — dari stok masuk, distribusi ke rumah sakit, hingga pemusnahan darah kedaluwarsa.
-                </p>
+                </p> -->
 
-                <div class="info-list">
+                <!-- <div class="info-list">
                     <div class="info-item">
                         <i class="fas fa-tint info-icon"></i>
                         <span class="info-text">Pantau stok darah secara real-time berdasarkan golongan, jenis, dan tanggal kedaluwarsa.</span>
@@ -355,7 +355,7 @@
                         <i class="fas fa-file-alt info-icon"></i>
                         <span class="info-text">Laporan pemusnahan otomatis untuk darah kedaluwarsa atau rusak, lengkap dengan audit trail.</span>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <!-- Right: Login form -->

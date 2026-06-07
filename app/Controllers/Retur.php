@@ -64,22 +64,23 @@ class Retur extends BaseController
             'id_rs' => 'required',
             'tanggal_retur' => 'required',
             'alasan_return' => 'required',
-            'kondisi_darah' => 'required',
-            'ditangani_oleh' => 'required'
+            'kondisi_darah' => 'required'
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
+        $id_distribusi = $this->request->getPost('id_distribusi');
+        $distribusiRecord = $this->distribusiModel->find($id_distribusi);
+
         $data = [
-            'id_distribusi' => $this->request->getPost('id_distribusi'),
+            'id_distribusi' => $id_distribusi,
             'id_bag' => $this->request->getPost('id_bag'),
-            'id_rs' => $this->request->getPost('id_rs'),
+            'id_rs' => $distribusiRecord['id_rs'] ?? null,
             'tanggal_retur' => $this->request->getPost('tanggal_retur'),
             'alasan_return' => $this->request->getPost('alasan_return'),
             'kondisi_darah' => $this->request->getPost('kondisi_darah'),
-            'ditangani_oleh' => $this->request->getPost('ditangani_oleh'),
             'keterangan' => $this->request->getPost('keterangan')
         ];
 

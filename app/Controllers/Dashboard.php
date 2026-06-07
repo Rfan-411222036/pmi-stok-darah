@@ -55,8 +55,9 @@ class Dashboard extends BaseController
         $chartLabels = [];
         $chartData = [];
         foreach ($stokPerBDRS as $item) {
-            $chartLabels[] = $item['nama'];
-            $chartData[] = (int) $item['jumlah_stok'];
+            $label = $item['nama_produsen'] ?? $item['nama'] ?? ($item['nama_rs'] ?? 'Unknown');
+            $chartLabels[] = $label;
+            $chartData[] = (int) ($item['jumlah_stok'] ?? 0);
         }
 
         $totalUsers = $this->userModel->getTotalUsers();
@@ -64,6 +65,17 @@ class Dashboard extends BaseController
         $totalStaff = $this->userModel->getTotalStaff();
 
         $recentDistribusi = $this->distribusiModel->getRecentDistribusi(5);
+
+        // Monthly distribusi chart (for admin)
+        $monthlyDistribusi = [];
+        if ($currentRole === 'admin') {
+            $monthlyCounts = $this->distribusiModel->getDistribusiPerMonth();
+            $monthlyLabels = array_map(function($m){ return date('F', mktime(0,0,0,$m,1)); }, range(1,12));
+            $monthlyDistribusi = [
+                'labels' => $monthlyLabels,
+                'data' => array_values($monthlyCounts)
+            ];
+        }
 
         $data = [
             'title' => 'Dashboard',
@@ -87,9 +99,23 @@ class Dashboard extends BaseController
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
             'recent_distribusi' => $recentDistribusi,
+            'monthly_distribusi' => $monthlyDistribusi,
         ];
 
         return view('dashboard/index', $data);
+    }
+
+    public function distribusiPerGudang()
+    {
+        $month = (int) $this->request->getGet('month');
+        $year = (int) $this->request->getGet('year') ?: date('Y');
+
+        if (!$month || $month < 1 || $month > 12) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid month']);
+        }
+
+        $rows = $this->distribusiModel->getDistribusiPerGudangForMonth($month, $year);
+        return $this->response->setJSON(['success' => true, 'data' => $rows]);
     }
 
     public function downloadLaporan()
@@ -233,9 +259,10 @@ class Dashboard extends BaseController
     public function downloadRetur()
     {
         $returnModel = new \App\Models\ReturnModel();
-        $returData = $returnModel->select('return_darah.id_return, return_darah.tanggal_retur, return_darah.alasan_return, return_darah.kondisi_darah, return_darah.ditangani_oleh, stok.no_kantong')
-                                 ->join('stok', 'stok.id_bag = return_darah.id_bag')
-                                 ->findAll();
+        $returData = $returnModel->select('return_darah.id_return, return_darah.tanggal_retur, return_darah.alasan_return, return_darah.kondisi_darah, stok.no_kantong, produsen.nama as nama_produsen')
+                     ->join('stok', 'stok.id_bag = return_darah.id_bag')
+                     ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
+                     ->findAll();
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();
@@ -253,7 +280,7 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data retur.', 0, 1, 'C');
         } else {
-            $headers = ['No', 'No. Kantong', 'Tanggal', 'Alasan Retur', 'Kondisi', 'Ditangani Oleh'];
+            $headers = ['No', 'No. Kantong', 'Tanggal', 'Alasan Retur', 'Kondisi'];
             $tableData = [];
 
             $no = 1;
@@ -264,7 +291,6 @@ class Dashboard extends BaseController
                     date('d-m-Y', strtotime($item['tanggal_retur'] ?? 'now')),
                     $item['alasan_return'] ?? '-',
                     $item['kondisi_darah'] ?? '-',
-                    $item['ditangani_oleh'] ?? '-',
                 ];
             }
 

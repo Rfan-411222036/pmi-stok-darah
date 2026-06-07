@@ -72,12 +72,11 @@
                                     <th>#</th>
                                     <th>No Kantong</th>
                                     <th>Golongan Darah</th>
-                                    <th>Rumah Sakit</th>
+                                    <th>Sumber BDRS</th>
                                     <th>Tanggal Distribusi</th>
                                     <th>Tanggal Return</th>
                                     <th>Alasan Return</th>
                                     <th>Kondisi Darah</th>
-                                    <th>Ditangani Oleh</th>
                                     <th>Status Stok</th>
                                 </tr>
                             </thead>
@@ -91,7 +90,7 @@
                                         <td>
                                             <span class="badge badge-danger"><?= $item['gol_dar'] ?></span>
                                         </td>
-                                        <td><?= $item['nama_rs'] ?></td>
+                                        <td><?= $item['nama_produsen'] ?? ($item['nama_rs'] ?? '-') ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tanggal_distribusi'])) ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tanggal_retur'])) ?></td>
                                         <td><?= $item['alasan_return'] ?></td>
@@ -102,7 +101,6 @@
                                                 <span class="badge badge-danger">Rusak</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= $item['ditangani_oleh'] ?></td>
                                         <td>
                                             <?php if ($item['kondisi_darah'] == 'baik'): ?>
                                                 <span class="badge badge-info">Kembali ke Stok</span>

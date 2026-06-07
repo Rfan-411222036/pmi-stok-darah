@@ -207,6 +207,23 @@
                 </div>
             </div>
 
+            <?php if (!empty($monthly_distribusi) && $current_role === 'admin'): ?>
+            <!-- <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card card-outline card-danger pmi-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title">Grafik Distribusi Bulanan (Klik bar untuk lihat per gudang)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-wrapper" style="min-height: 300px; position: relative;">
+                                <canvas id="monthlyDistribusiChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <?php endif; ?>
+
             <!-- Card Laporan PDF -->
             <!-- <div class="row">
                 <div class="col-md-3">
@@ -298,7 +315,7 @@
                                         <div class="small-box bg-primary">
                                             <div class="inner">
                                                 <h3><?= number_format($stok['jumlah_stok'], 0, ',', '.') ?></h3>
-                                                <p><?= $stok['nama'] ?></p>
+                                                <p><?= $stok['nama_produsen'] ?? $stok['nama'] ?? 'Unknown' ?></p>
                                                 <p class="mb-1">
                                                     <small>Masih layak pakai: <strong><?= number_format($stok['layak_pakai'], 0, ',', '.') ?></strong></small>
                                                 </p>
@@ -342,7 +359,7 @@
                                             <?php foreach ($stok_by_golongan as $stok): ?>
                                             <tr>
                                                 <td>
-                                                    <span class="badge badge-danger"><?= $stok['goldar'] ?></span>
+                                                    <span class="badge badge-danger"><?= $stok['gol_dar'] ?></span>
                                                 </td>
                                                 <td>
                                                     <strong><?= number_format($stok['total'], 0, ',', '.') ?></strong> kantong
@@ -378,7 +395,7 @@
                                         <tbody>
                                             <?php foreach ($stok_by_jenis as $stok): ?>
                                             <tr>
-                                                <td><?= $stok['jenisdarah'] ?></td>
+                                                <td><?= $stok['jenis_darah'] ?></td>
                                                 <td>
                                                     <strong><?= number_format($stok['total'], 0, ',', '.') ?></strong> kantong
                                                 </td>
@@ -420,7 +437,7 @@
                                             <tr>
                                                 <td><?= $dist['no_kantong'] ?></td>
                                                 <td>
-                                                    <span class="badge badge-danger"><?= $dist['goldar'] ?></span>
+                                                    <span class="badge badge-danger"><?= $dist['gol_dar'] ?></span>
                                                 </td>
                                                 <td><?= $dist['nama_rs'] ?></td>
                                                 <td><?= $dist['penerima'] ?></td>
@@ -507,6 +524,82 @@
                 }
             }
         });
+
+                // Monthly distribusi chart (admin) with click -> per-gudang
+                <?php if (!empty($monthly_distribusi) && $current_role === 'admin'): ?>
+                (function(){
+                        var mCtx = document.getElementById('monthlyDistribusiChart');
+                        if (!mCtx) return;
+
+                        var mLabels = <?= json_encode($monthly_distribusi['labels']) ?>;
+                        var mData = <?= json_encode($monthly_distribusi['data']) ?>;
+
+                        var monthlyChart = new Chart(mCtx, {
+                                type: 'bar',
+                                data: {
+                                        labels: mLabels,
+                                        datasets: [{
+                                                label: 'Jumlah Distribusi',
+                                                data: mData,
+                                                backgroundColor: '#dc3545',
+                                                borderColor: '#b21f2b'
+                                        }]
+                                },
+                                options: {
+                                        maintainAspectRatio: false,
+                                        onClick: function (evt, activeEls) {
+                                                var points = this.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+                                                if (!points.length) return;
+                                                var idx = points[0].index; // month index 0..11
+                                                var month = idx + 1;
+
+                                                // fetch per-gudang data
+                                                fetch('<?= base_url('/dashboard/distribusi-per-gudang') ?>?month=' + month)
+                                                        .then(res => res.json())
+                                                        .then(json => {
+                                                                if (!json.success) return alert('Data tidak tersedia');
+                                                                var labels = json.data.map(function(i){ return i.nama_produsen || 'Unknown'; });
+                                                                var data = json.data.map(function(i){ return parseInt(i.jumlah) || 0; });
+
+                                                                // show modal with chart
+                                                                var modalId = 'perGudangModal';
+                                                                var existing = document.getElementById(modalId);
+                                                                if (existing) existing.remove();
+
+                                                                var modalHtml = `
+                                                                <div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
+                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title">Distribusi per Gudang - ${mLabels[idx]}</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <canvas id="perGudangChartCanvas" style="height:360px"></canvas>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>`;
+
+                                                                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                                                                $('#'+modalId).modal('show');
+
+                                                                setTimeout(function(){
+                                                                        var pc = document.getElementById('perGudangChartCanvas');
+                                                                        new Chart(pc, {
+                                                                                type: 'bar',
+                                                                                data: { labels: labels, datasets: [{ label: 'Jumlah Distribusi', data: data, backgroundColor: '#dc3545' }] },
+                                                                                options: { maintainAspectRatio: false }
+                                                                        });
+                                                                }, 300);
+                                                        })
+                                                        .catch(err => { console.error(err); alert('Gagal mengambil data.'); });
+                                        },
+                                        plugins: { legend: { display: false } }
+                                }
+                        });
+                })();
+                <?php endif; ?>
     });
 </script>
 
