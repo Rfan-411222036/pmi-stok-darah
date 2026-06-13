@@ -97,4 +97,91 @@ class Pemusnahan extends BaseController
 
         return redirect()->to('/pemusnahan');
     }
+
+    public function delete($id)
+    {
+        $pemusnahan = $this->pemusnahanModel->find($id);
+        if (!$pemusnahan) {
+            session()->setFlashdata('error', 'Data pemusnahan tidak ditemukan');
+            return redirect()->to('/pemusnahan');
+        }
+
+        try {
+            $db = \Config\Database::connect();
+            $db->transStart();
+
+            $stokRestored = false;
+            if (!empty($pemusnahan['id_bag'])) {
+                $stokRestored = $this->stokModel->update($pemusnahan['id_bag'], ['status' => 'tersedia']);
+            }
+
+            $deleted = $this->pemusnahanModel->delete($id);
+            $db->transComplete();
+
+            if ($deleted) {
+                session()->setFlashdata('success', 'Data pemusnahan berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data pemusnahan');
+            }
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+
+        return redirect()->to('/pemusnahan');
+    }
+
+    public function edit($id)
+    {
+        $pemusnahan = $this->pemusnahanModel->select('pemusnahan.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, stok.tanggal_expired')
+                                           ->join('stok', 'stok.id_bag = pemusnahan.id_bag')
+                                           ->where('pemusnahan.id_pemusnahan', $id)
+                                           ->first();
+
+        if (!$pemusnahan) {
+            session()->setFlashdata('error', 'Data pemusnahan tidak ditemukan');
+            return redirect()->to('/pemusnahan');
+        }
+
+        return view('pemusnahan/edit', [
+            'title' => 'Edit Pemusnahan',
+            'page_title' => 'Edit Data Pemusnahan',
+            'pemusnahan' => $pemusnahan,
+            'validation' => \Config\Services::validation()
+        ]);
+    }
+
+    public function update($id)
+    {
+        $pemusnahan = $this->pemusnahanModel->find($id);
+        if (!$pemusnahan) {
+            session()->setFlashdata('error', 'Data pemusnahan tidak ditemukan');
+            return redirect()->to('/pemusnahan');
+        }
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'tanggal_pemusnahan' => 'required',
+            'alasan' => 'required',
+            'petugas' => 'required'
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        $data = [
+            'tanggal_pemusnahan' => $this->request->getPost('tanggal_pemusnahan'),
+            'alasan' => $this->request->getPost('alasan'),
+            'keterangan' => $this->request->getPost('keterangan'),
+            'petugas' => $this->request->getPost('petugas')
+        ];
+
+        if ($this->pemusnahanModel->update($id, $data)) {
+            session()->setFlashdata('success', 'Data pemusnahan berhasil diupdate');
+        } else {
+            session()->setFlashdata('error', 'Gagal mengupdate data pemusnahan');
+        }
+
+        return redirect()->to('/pemusnahan');
+    }
 }

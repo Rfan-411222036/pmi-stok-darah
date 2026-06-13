@@ -64,8 +64,24 @@ D:\Application\laragon\laragon\bin\php\php-8.3.26-Win32-vs16-x64\php spark serve
 
 
 yang kurang:
-1. login sebelah kiri full image
-2. jika admin grafik bulanan dan klik lalu muncul grafik tsb - per gudang
-3. di data distibusi darah harus nya ada data darahnya bersumber dari bdrs mana
-4. di page retur harusnya retur dari bdrs ke pmi bukan rumah sakit - remove Ditangani Oleh
-5. form permintaan darah dari rs ke bdrs -> akan ada flow persetujuan dari role bdrs
+1. jika sudah di approved berarti kantong darah sudah tidak bisa di gunakan lagi
+	- Implementasi: status kantong diubah menjadi `terdistribusi` sehingga tidak dapat dipilih ulang.
+2. ketentuan minimal stok berdasarkan gol darah:
+	- A PRC: 10
+	- B PRC: 10
+	- O PRC: 15
+	- AB PRC: 5
+	- Jika stok tersisa turun di bawah batas minimal, sistem membuat notifikasi untuk role `admin`.
+
+UI / Design improvements:
+- Pagination and list UIs were standardized across index pages to use a Bootstrap-styled pager.
+- Tables have been made more compact (`table-sm`) with hover states and consistent badges.
+- Small CSS polish was added in `app/Views/templates/footer.php` to ensure consistent spacing and responsive adjustments.
+
+TAMBAHAN : 
+- Menu master bdrs table tidak perlu jenis darah tolong tambahkan Telepon, alamat, aksi edit, hapus
+- di user BDRS,setelah RS melakukan permintaan darah ke BDRS belum ada notifikasi nya.
+- pada user RS, di menu cek status belum ada status permintaan darahnya.
+- tambahkan pilihan edit untuk menu distribusi, pemusnahan dan retur
+- data  Stok Darah di Setiap BDRS belom match contoh bdrs eka hospital ada 11 padahal detail nya ada 3
+

@@ -57,17 +57,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="jenis_darah">Jenis Darah</label>
-                                    <input type="text" class="form-control" id="jenis_darah" name="jenis_darah"
-                                           value="<?= old('jenis_darah', $produsen['jenis_darah']) ?>"
-                                           placeholder="Masukkan jenis darah (contoh: A+, B-, O+)">
-                                </div>
-
-                                <div class="form-group">
                                     <label for="no_kantong">No. Kantong Darah *</label>
                                     <input type="text" class="form-control" id="no_kantong" name="no_kantong"
                                            value="<?= old('no_kantong', $produsen['no_kantong']) ?>"
                                            placeholder="Masukkan nomor kantong darah" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="telepon">Telepon</label>
+                                    <input type="text" class="form-control" id="telepon" name="telepon"
+                                           value="<?= old('telepon', $produsen['telepon'] ?? '') ?>"
+                                           placeholder="Masukkan nomor telepon">
                                 </div>
 
                                 <div class="form-group">

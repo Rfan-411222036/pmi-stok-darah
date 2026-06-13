@@ -352,7 +352,7 @@
                                             <div class="icon">
                                                 <i class="fas fa-tint"></i>
                                             </div>
-                                            <a href="<?= base_url('/distribusi') ?>" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+                                            <a href="<?= base_url('/stok?id_produsen=' . $stok['id_produsen']) ?>" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
                                         </div>
                                     </div>
                                     <?php endforeach; ?>

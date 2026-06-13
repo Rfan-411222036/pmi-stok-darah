@@ -36,25 +36,33 @@
             <?php endif; ?>
 
             <div class="card">
-                <div class="card-header">
+                    <div class="card-header">
                     <h3 class="card-title">Daftar Stok Darah</h3>
+                    <?php if (session()->get('role') !== 'rs'): ?>
                     <div class="card-tools">
                         <a href="<?= base_url('/stok/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Stok
                         </a>
                     </div>
+                    <?php endif; ?>
                 </div>
-                <div class="card-body">
+                  <?php $role = session()->get('role'); $userId = session()->get('id_user');
+                      $ownProdusen = (new \App\Models\ProdusenModel())->getProdusenByUser($userId);
+                      $ownProdusenId = $ownProdusen['id_produsen'] ?? null; ?>
+                  <div class="card-body">
                     <form method="get" action="<?= base_url('/stok') ?>" class="mb-3">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" placeholder="Cari no kantong, golongan, jenis..." value="<?= $search ?>">
+                                    <?php if (!empty($filter_produsen)): ?>
+                                        <input type="hidden" name="id_produsen" value="<?= esc($filter_produsen) ?>">
+                                    <?php endif; ?>
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
                                         </button>
-                                        <?php if ($search): ?>
+                                        <?php if ($search || !empty($filter_produsen)): ?>
                                             <a href="<?= base_url('/stok') ?>" class="btn btn-default">
                                                 <i class="fas fa-times"></i>
                                             </a>
@@ -62,6 +70,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php if (!empty($filter_produsen_name)): ?>
+                                <div class="col-md-4">
+                                    <div class="alert alert-info mb-0">
+                                        <strong>Filter BDRS:</strong> <?= esc($filter_produsen_name) ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </form>
 
@@ -88,7 +103,7 @@
                                     <div class="progress">
                                         <div class="progress-bar bg-white" style="width: 100%"></div>
                                     </div>
-                                    <span class="progress-description">Stok darah akan kedaluwarsa dalam 7 hari</span>
+                                    <span class="progress-description">Stok darah akan kedaluwarsa dalam 14 hari</span>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +161,7 @@
 
                                                 if ($daysLeft < 0) {
                                                     echo '<span class="badge badge-danger">' . date('d/m/Y', $expiredDate) . ' (EXPIRED)</span>';
-                                                } elseif ($daysLeft <= 7) {
+                                                } elseif ($daysLeft <= 14) {
                                                     echo '<span class="badge badge-warning">' . date('d/m/Y', $expiredDate) . ' (' . $daysLeft . ' hari)</span>';
                                                 } else {
                                                     echo '<span class="badge badge-success">' . date('d/m/Y', $expiredDate) . '</span>';
@@ -167,17 +182,22 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a href="<?= base_url('/stok/edit/' . $item['id_bag']) ?>" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                            <?php if ($item['status'] == 'tersedia'): ?>
-                                                <a href="<?= base_url('/stok/delete/' . $item['id_bag']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus stok ini?')">
-                                                    <i class="fas fa-trash"></i> Hapus
+                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($ownProdusenId) && $item['id_produsen'] == $ownProdusenId); ?>
+                                            <?php if ($canManage): ?>
+                                                <a href="<?= base_url('/stok/edit/' . $item['id_bag']) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit"></i> Edit
                                                 </a>
+                                                <?php if ($item['status'] == 'tersedia'): ?>
+                                                    <a href="<?= base_url('/stok/delete/' . $item['id_bag']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus stok ini?')">
+                                                        <i class="fas fa-trash"></i> Hapus
+                                                    </a>
+                                                <?php else: ?>
+                                                    <button class="btn btn-secondary btn-sm" disabled title="Stok tidak dapat dihapus">
+                                                        <i class="fas fa-trash"></i> Hapus
+                                                    </button>
+                                                <?php endif; ?>
                                             <?php else: ?>
-                                                <button class="btn btn-secondary btn-sm" disabled title="Stok tidak dapat dihapus">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
+                                                -
                                             <?php endif; ?>
                                         </td>
                                     </tr>

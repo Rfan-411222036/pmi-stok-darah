@@ -43,7 +43,15 @@ class Retur extends BaseController
     public function create()
     {
         $distribusi = $this->returnModel->getDistribusiForReturn();
-        $rumahSakit = $this->rumahSakitModel->findAll();
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+
+        if ($role === 'rs') {
+            $rs = $this->rumahSakitModel->getRumahSakitByUser($userId);
+            $rumahSakit = $rs ? [$rs] : [];
+        } else {
+            $rumahSakit = $this->rumahSakitModel->findAll();
+        }
 
         $data = [
             'title' => 'Tambah Return Darah',
@@ -100,6 +108,111 @@ class Retur extends BaseController
                 session()->setFlashdata('success', 'Data return berhasil dicatat. Status stok diperbarui.');
             } else {
                 session()->setFlashdata('error', 'Gagal mencatat data return');
+            }
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+
+        return redirect()->to('/return');
+    }
+
+    public function delete($id)
+    {
+        $retur = $this->returnModel->find($id);
+        if (!$retur) {
+            session()->setFlashdata('error', 'Data return tidak ditemukan');
+            return redirect()->to('/return');
+        }
+
+        try {
+            $db = \Config\Database::connect();
+            $db->transStart();
+
+            $status = 'terdistribusi';
+            if (!empty($retur['id_bag'])) {
+                $this->stokModel->update($retur['id_bag'], ['status' => $status]);
+            }
+
+            $deleted = $this->returnModel->delete($id);
+            $db->transComplete();
+
+            if ($deleted) {
+                session()->setFlashdata('success', 'Data return berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data return');
+            }
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+
+        return redirect()->to('/return');
+    }
+
+    public function edit($id)
+    {
+        $retur = $this->returnModel->select('return_darah.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, stok.tanggal_expired, rumah_sakit.nama_rs, distribusi.penerima')
+                                   ->join('stok', 'stok.id_bag = return_darah.id_bag')
+                                   ->join('rumah_sakit', 'rumah_sakit.id_rs = return_darah.id_rs', 'left')
+                                   ->join('distribusi', 'distribusi.id_distribusi = return_darah.id_distribusi', 'left')
+                                   ->where('return_darah.id_return', $id)
+                                   ->first();
+
+        if (!$retur) {
+            session()->setFlashdata('error', 'Data return tidak ditemukan');
+            return redirect()->to('/return');
+        }
+
+        return view('return/edit', [
+            'title' => 'Edit Return',
+            'page_title' => 'Edit Data Return',
+            'return' => $retur,
+            'validation' => \Config\Services::validation()
+        ]);
+    }
+
+    public function update($id)
+    {
+        $retur = $this->returnModel->find($id);
+        if (!$retur) {
+            session()->setFlashdata('error', 'Data return tidak ditemukan');
+            return redirect()->to('/return');
+        }
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'tanggal_retur' => 'required',
+            'alasan_return' => 'required',
+            'kondisi_darah' => 'required'
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        $oldReturn = $this->returnModel->find($id);
+        $newCondition = $this->request->getPost('kondisi_darah');
+        $stokStatus = $newCondition === 'baik' ? 'tersedia' : 'musnah';
+
+        $data = [
+            'tanggal_retur' => $this->request->getPost('tanggal_retur'),
+            'alasan_return' => $this->request->getPost('alasan_return'),
+            'kondisi_darah' => $newCondition,
+            'keterangan' => $this->request->getPost('keterangan')
+        ];
+
+        try {
+            $db = \Config\Database::connect();
+            $db->transStart();
+
+            $returnUpdated = $this->returnModel->update($id, $data);
+            $stokUpdated = $this->stokModel->update($retur['id_bag'], ['status' => $stokStatus]);
+
+            $db->transComplete();
+
+            if ($returnUpdated && $stokUpdated) {
+                session()->setFlashdata('success', 'Data return berhasil diupdate');
+            } else {
+                session()->setFlashdata('error', 'Gagal mengupdate data return');
             }
         } catch (\Exception $e) {
             session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());

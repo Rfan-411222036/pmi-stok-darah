@@ -36,13 +36,16 @@
             <?php endif; ?>
 
             <div class="card">
+                <?php $role = session()->get('role'); $userId = session()->get('id_user'); $ownProdusen = (new \App\Models\ProdusenModel())->getProdusenByUser($userId); $ownProdusenId = $ownProdusen['id_produsen'] ?? null; ?>
                 <div class="card-header">
                     <h3 class="card-title">Daftar Pemusnahan Darah</h3>
+                    <?php if ($role === 'admin' || $role === 'bdrs'): ?>
                     <div class="card-tools">
                         <a href="<?= base_url('/pemusnahan/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Pemusnahan
                         </a>
                     </div>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <form method="get" action="<?= base_url('/pemusnahan') ?>" class="mb-3">
@@ -78,6 +81,7 @@
                                     <th>Alasan</th>
                                     <th>Petugas</th>
                                     <th>Keterangan</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,11 +108,24 @@
                                         </td>
                                         <td><?= $item['petugas'] ?></td>
                                         <td><?= $item['keterangan'] ?: '-' ?></td>
+                                        <td>
+                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($ownProdusenId) && isset($item['id_produsen']) && $item['id_produsen'] == $ownProdusenId); ?>
+                                            <?php if ($canManage): ?>
+                                                <a href="<?= base_url('/pemusnahan/edit/' . $item['id_pemusnahan']) ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="<?= base_url('/pemusnahan/delete/' . $item['id_pemusnahan']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data pemusnahan ini?')">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </a>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted">Tidak ada data pemusnahan</td>
+                                        <td colspan="10" class="text-center text-muted">Tidak ada data pemusnahan</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

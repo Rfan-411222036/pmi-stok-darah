@@ -38,11 +38,13 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Daftar Rumah Sakit</h3>
+                    <?php if (session()->get('role') !== 'bdrs'): ?>
                     <div class="card-tools">
-                        <a href="<?= base_url('/rumahsakit/create') ?>" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> Tambah Rumah Sakit
-                        </a>
-                    </div>
+                            <a href="<?= base_url('/rumahsakit/create') ?>" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Tambah Rumah Sakit
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <form method="get" action="<?= base_url('/rumahsakit') ?>" class="mb-3">

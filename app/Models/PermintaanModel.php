@@ -54,4 +54,16 @@ class PermintaanModel extends Model
                     ->orderBy('permintaan.created_at', 'DESC')
                     ->findAll();
     }
+
+    // Added: get requests by Rumah Sakit id
+    public function getByRs($id_rs)
+    {
+        return $this->select('permintaan.*, rumah_sakit.nama_rs, produsen.nama as nama_produsen, stok.no_kantong')
+                    ->join('rumah_sakit', 'rumah_sakit.id_rs = permintaan.id_rs', 'left')
+                    ->join('produsen', 'produsen.id_produsen = permintaan.id_produsen', 'left')
+                    ->join('stok', 'stok.id_bag = permintaan.id_bag', 'left')
+                    ->where('permintaan.id_rs', $id_rs)
+                    ->orderBy('permintaan.created_at', 'DESC')
+                    ->findAll();
+    }
 }

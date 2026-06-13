@@ -52,9 +52,18 @@ class Dashboard extends BaseController
 
     public function index()
     {
-        $totalStok = $this->stokModel->getStokTersedia();
-        $totalProdusen = $this->produsenModel->countAll();
-        $totalRS = $this->rsModel->countAll();
+        $currentRole = session()->get('role');
+        $currentUserId = session()->get('id_user');
+
+        $produsenId = null;
+        if ($currentRole === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser($currentUserId);
+            $produsenId = $ownProdusen['id_produsen'] ?? null;
+        }
+
+        $totalStok = $this->stokModel->getStokTersedia($produsenId);
+        $totalProdusen = $this->produsenModel->getTotalProdusen($currentRole === 'admin' ? null : $currentUserId);
+        $totalRS = $this->rsModel->getTotalRumahSakit($currentRole === 'admin' ? null : $currentUserId);
         $totalDistribusi = $this->distribusiModel->getTotalDistribusi();
         $totalPemusnahan = $this->pemusnahanModel->getTotalPemusnahan();
         $stokExpired = $this->stokModel->getStokExpired();
@@ -62,11 +71,9 @@ class Dashboard extends BaseController
         $distribusiHariIni = $this->distribusiModel->getDistribusiHariIni();
         $distribusiBulanIni = $this->distribusiModel->getDistribusiBulanIni();
 
-        $stokByGolongan = $this->stokModel->getStokByGolongan();
-        $stokByJenis = $this->stokModel->getStokByJenis();
+        $stokByGolongan = $this->stokModel->getStokByGolongan($produsenId);
+        $stokByJenis = $this->stokModel->getStokByJenis($produsenId);
 
-        $currentRole = session()->get('role');
-        $currentUserId = session()->get('id_user');
         if ($currentRole === 'admin') {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
         } else {

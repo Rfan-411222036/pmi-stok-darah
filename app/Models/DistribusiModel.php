@@ -11,12 +11,20 @@ class DistribusiModel extends Model
     protected $allowedFields = ['id_bag', 'id_rs', 'id_produsen', 'tanggal_distribusi', 'penerima', 'keperluan', 'no_permintaan'];
     protected $useTimestamps = false;
 
-    public function getDistribusiWithDetails($search = '', $perPage = 10)
+    public function getDistribusiWithDetails($search = '', $perPage = 10, $produsenId = null, $rsId = null)
     {
         $builder = $this->select('distribusi.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
                        ->join('stok', 'stok.id_bag = distribusi.id_bag')
                        ->join('rumah_sakit', 'rumah_sakit.id_rs = distribusi.id_rs')
                        ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+
+        if ($produsenId) {
+            $builder = $builder->where('stok.id_produsen', $produsenId);
+        }
+
+        if ($rsId) {
+            $builder = $builder->where('distribusi.id_rs', $rsId);
+        }
 
         if ($search) {
             $builder->groupStart()
@@ -111,11 +119,11 @@ class DistribusiModel extends Model
     {
         // Aggregate by produsen (BDRS) so producers without linked login users are still shown
         $builder = $this->db->table('produsen p')
-                           ->select('p.id_produsen, p.nama as nama_produsen,
-                                     COUNT(s.no_kantong) as jumlah_stok,
-                                     SUM(CASE WHEN s.tanggal_expired >= CURDATE() AND s.status = "tersedia" THEN 1 ELSE 0 END) as layak_pakai,
-                                     SUM(CASE WHEN s.tanggal_expired < CURDATE() OR s.status = "expired" THEN 1 ELSE 0 END) as sudah_expired')
-                           ->join('stok s', 'p.id_produsen = s.id_produsen', 'left');
+                   ->select('p.id_produsen, p.nama as nama_produsen,
+                         COALESCE(SUM(CASE WHEN s.status = "tersedia" THEN 1 ELSE 0 END), 0) as jumlah_stok,
+                         COALESCE(SUM(CASE WHEN s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as layak_pakai,
+                         COALESCE(SUM(CASE WHEN (s.status = "tersedia" AND s.tanggal_expired < CURDATE()) OR s.status = "expired" THEN 1 ELSE 0 END), 0) as sudah_expired')
+                   ->join('stok s', 'p.id_produsen = s.id_produsen', 'left');
 
         if ($id_user) {
             $builder->where('p.id_user', $id_user);

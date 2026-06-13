@@ -27,10 +27,43 @@ class Distribusi extends BaseController
         $search = $this->request->getGet('search');
         $perPage = 10;
 
-        $result = $this->distribusiModel->getDistribusiWithDetails($search, $perPage);
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+        $produsenFilter = null;
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
+            $produsenFilter = $ownProdusen['id_produsen'] ?? null;
+        }
+
+        $rsFilter = null;
+        if ($role === 'rs') {
+            $ownRs = $this->rumahSakitModel->getRumahSakitByUser($userId);
+            if (!$ownRs && session()->has('id_rs')) {
+                $ownRs = $this->rumahSakitModel->find(session()->get('id_rs'));
+            }
+            // If still null, fall back to raw session value (some installs map only session id)
+            if (!$ownRs && session()->has('id_rs')) {
+                $rsFilter = session()->get('id_rs');
+            }
+            $rsFilter = $ownRs['id_rs'] ?? $rsFilter ?? null;
+            // Final fallback: try matching by session nama -> rumah_sakit.nama_rs
+            if (empty($rsFilter) && session()->has('nama')) {
+                $name = session()->get('nama');
+                $rsByName = $this->rumahSakitModel->where('nama_rs', $name)->first();
+                if ($rsByName) {
+                    $rsFilter = $rsByName['id_rs'];
+                }
+            }
+        }
+
+        $result = $this->distribusiModel->getDistribusiWithDetails($search, $perPage, $produsenFilter, $rsFilter);
 
         // provide list of produsen for request form
-        $produsenList = $this->produsenModel->orderBy('nama')->findAll();
+        if ($role === 'bdrs' && isset($ownProdusen) && $ownProdusen) {
+            $produsenList = [$ownProdusen];
+        } else {
+            $produsenList = $this->produsenModel->orderBy('nama')->findAll();
+        }
 
         // provide list of RS for request form fallback
         $rumahSakitList = $this->rumahSakitModel->orderBy('nama_rs')->findAll();
@@ -59,6 +92,7 @@ class Distribusi extends BaseController
             'search' => $search,
             'produsen_list' => $produsenList,
             'current_rs' => $rs,
+            'own_rs_id' => $rsFilter ?? null,
             'rumah_sakit' => $rumahSakitList
             ,'golongan_list' => $golonganList
             ,'jenis_list' => $jenisList
@@ -69,7 +103,22 @@ class Distribusi extends BaseController
 
     public function create()
     {
-        $stok = $this->stokModel->getStokForDistribusi();
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+        $produsenFilter = null;
+        $produsenList = [];
+
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
+            if ($ownProdusen) {
+                $produsenFilter = $ownProdusen['id_produsen'];
+                $produsenList = [$ownProdusen];
+            }
+        } else {
+            $produsenList = $this->produsenModel->orderBy('nama')->findAll();
+        }
+
+        $stok = $this->stokModel->getStokForDistribusi($produsenFilter);
         $rumahSakit = $this->rumahSakitModel->findAll();
 
         $data = [
@@ -77,6 +126,8 @@ class Distribusi extends BaseController
             'page_title' => 'Tambah Distribusi Darah',
             'stok' => $stok,
             'rumah_sakit' => $rumahSakit,
+            'produsen_list' => $produsenList,
+            'current_rs' => null,
             'validation' => \Config\Services::validation()
         ];
         return view('distribusi/create', $data);
@@ -96,19 +147,26 @@ class Distribusi extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
+        $role = session()->get('role');
         $id_bag = $this->request->getPost('id_bag');
-        $id_produsen = null;
-        if ($id_bag) {
+
+        if ($role === 'rs') {
+            session()->setFlashdata('error', 'Akses tidak diizinkan.');
+            return redirect()->to('/distribusi');
+        }
+
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser(session()->get('id_user'));
             $stok = $this->stokModel->find($id_bag);
-            if ($stok && isset($stok['id_produsen'])) {
-                $id_produsen = $stok['id_produsen'];
+            if (!$ownProdusen || !$stok || $stok['id_produsen'] != $ownProdusen['id_produsen']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
             }
         }
 
         $data = [
             'id_bag' => $id_bag,
             'id_rs' => $this->request->getPost('id_rs'),
-            'id_produsen' => $id_produsen,
             'tanggal_distribusi' => $this->request->getPost('tanggal_distribusi'),
             'penerima' => $this->request->getPost('penerima'),
             'keperluan' => $this->request->getPost('keperluan'),
@@ -121,6 +179,168 @@ class Distribusi extends BaseController
             session()->setFlashdata('success', 'Distribusi darah berhasil dicatat');
         } else {
             session()->setFlashdata('error', 'Gagal mencatat distribusi darah');
+        }
+
+        return redirect()->to('/distribusi');
+    }
+
+    public function delete($id)
+    {
+        $distribusi = $this->distribusiModel->find($id);
+        if (!$distribusi) {
+            session()->setFlashdata('error', 'Data distribusi tidak ditemukan');
+            return redirect()->to('/distribusi');
+        }
+
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
+            if (!$ownProdusen || $distribusi['id_produsen'] != $ownProdusen['id_produsen']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
+            }
+        }
+        if ($role === 'rs') {
+            $ownRs = $this->rumahSakitModel->getRumahSakitByUser($userId);
+            if (!$ownRs && session()->has('id_rs')) {
+                $ownRs = $this->rumahSakitModel->find(session()->get('id_rs'));
+            }
+            if (!$ownRs && session()->has('nama')) {
+                $ownRs = $this->rumahSakitModel->where('nama_rs', session()->get('nama'))->first();
+            }
+            if (!$ownRs || $distribusi['id_rs'] != $ownRs['id_rs']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
+            }
+        }
+
+        try {
+            $db = \Config\Database::connect();
+            $db->transStart();
+
+            $stokUpdated = false;
+            if (!empty($distribusi['id_bag'])) {
+                $stokUpdated = $this->stokModel->update($distribusi['id_bag'], ['status' => 'tersedia']);
+            }
+
+            $deleted = $this->distribusiModel->delete($id);
+            $db->transComplete();
+
+            if ($deleted) {
+                session()->setFlashdata('success', 'Data distribusi berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data distribusi');
+            }
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+
+        return redirect()->to('/distribusi');
+    }
+
+    public function edit($id)
+    {
+        $distribusi = $this->distribusiModel->select('distribusi.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, stok.rhesus, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
+                                           ->join('stok', 'stok.id_bag = distribusi.id_bag')
+                                           ->join('rumah_sakit', 'rumah_sakit.id_rs = distribusi.id_rs', 'left')
+                                           ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
+                                           ->where('distribusi.id_distribusi', $id)
+                                           ->first();
+
+        if (!$distribusi) {
+            session()->setFlashdata('error', 'Data distribusi tidak ditemukan');
+            return redirect()->to('/distribusi');
+        }
+
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
+            if (!$ownProdusen || $distribusi['id_produsen'] != $ownProdusen['id_produsen']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
+            }
+        }
+        if ($role === 'rs') {
+            $ownRs = $this->rumahSakitModel->getRumahSakitByUser($userId);
+            if (!$ownRs && session()->has('id_rs')) {
+                $ownRs = $this->rumahSakitModel->find(session()->get('id_rs'));
+            }
+            if (!$ownRs && session()->has('nama')) {
+                $ownRs = $this->rumahSakitModel->where('nama_rs', session()->get('nama'))->first();
+            }
+            if (!$ownRs || $distribusi['id_rs'] != $ownRs['id_rs']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
+            }
+        }
+
+        $rumahSakit = $this->rumahSakitModel->findAll();
+
+        return view('distribusi/edit', [
+            'title' => 'Edit Distribusi',
+            'page_title' => 'Edit Data Distribusi',
+            'distribusi' => $distribusi,
+            'rumah_sakit' => $rumahSakit,
+            'validation' => \Config\Services::validation()
+        ]);
+    }
+
+    public function update($id)
+    {
+        $distribusi = $this->distribusiModel->find($id);
+        if (!$distribusi) {
+            session()->setFlashdata('error', 'Data distribusi tidak ditemukan');
+            return redirect()->to('/distribusi');
+        }
+
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
+            if (!$ownProdusen || $distribusi['id_produsen'] != $ownProdusen['id_produsen']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
+            }
+        }
+        if ($role === 'rs') {
+            $ownRs = $this->rumahSakitModel->getRumahSakitByUser($userId);
+            if (!$ownRs && session()->has('id_rs')) {
+                $ownRs = $this->rumahSakitModel->find(session()->get('id_rs'));
+            }
+            if (!$ownRs && session()->has('nama')) {
+                $ownRs = $this->rumahSakitModel->where('nama_rs', session()->get('nama'))->first();
+            }
+            if (!$ownRs || $distribusi['id_rs'] != $ownRs['id_rs']) {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/distribusi');
+            }
+        }
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'id_rs' => 'required',
+            'penerima' => 'required',
+            'tanggal_distribusi' => 'required'
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        $data = [
+            'id_rs' => $this->request->getPost('id_rs'),
+            'tanggal_distribusi' => $this->request->getPost('tanggal_distribusi'),
+            'penerima' => $this->request->getPost('penerima'),
+            'keperluan' => $this->request->getPost('keperluan'),
+            'no_permintaan' => $this->request->getPost('no_permintaan')
+        ];
+
+        if ($this->distribusiModel->update($id, $data)) {
+            session()->setFlashdata('success', 'Data distribusi berhasil diupdate');
+        } else {
+            session()->setFlashdata('error', 'Gagal mengupdate data distribusi');
         }
 
         return redirect()->to('/distribusi');

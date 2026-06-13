@@ -38,13 +38,16 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Daftar Bank Darah Rumah Sakit</h3>
+                    <?php if (session()->get('role') !== 'rs'): ?>
                     <div class="card-tools">
                         <a href="<?= base_url('/produsen/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Bank Darah Rumah Sakit
                         </a>
                     </div>
+                    <?php endif; ?>
                 </div>
-                <div class="card-body">
+                    <?php $role = session()->get('role'); $userId = session()->get('id_user'); ?>
+                    <div class="card-body">
                     <form method="get" action="<?= base_url('/produsen') ?>" class="mb-3">
                         <div class="row">
                             <div class="col-md-4">
@@ -73,8 +76,8 @@
                                     <th>#</th>
                                     <th>Nama Bank Darah Rumah Sakit</th>
                                     <th>Jenis Bank Darah Rumah Sakit</th>
-                                    <th>No. Kantong</th>
-                                    <th>Jenis Darah</th>
+                                    <th>Telepon</th>
+                                    <th>Alamat</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -89,10 +92,8 @@
                                         <td>
                                             <span class="badge badge-info"><?= $jenisLabel ?></span>
                                         </td>
-                                        <td><?= $item['no_kantong'] ?? '-' ?></td>
-                                        <td>
-                                            <span class="badge badge-primary"><?= $item['jenis_darah'] ?? '-' ?></span>
-                                        </td>
+                                        <td><?= esc($item['telepon'] ?? '-') ?></td>
+                                        <td><?= esc($item['alamat'] ?? '-') ?></td>
                                         <td>
                                             <?php if (isset($item['status']) && $item['status'] == 'expired'): ?>
                                                 <span class="badge badge-danger">Expired</span>
@@ -104,18 +105,20 @@
                                         </td>
                                         <td>
                                             <?php $active = isset($item['is_active']) ? $item['is_active'] : 1; ?>
-                                            <a href="<?= base_url('/produsen/edit/' . $item['id_produsen']) ?>"
-                                                class="btn btn-warning btn-sm">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                            <?php if ($active == 1): ?>
-                                                <a href="<?= base_url('/produsen/delete/' . $item['id_produsen']) ?>"
-                                                    class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Yakin ingin menonaktifkan Bank Darah Rumah Sakit ini?')">
-                                                    <i class="fas fa-trash"></i> Nonaktifkan
+                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($item['id_user']) && $item['id_user'] == $userId); ?>
+                                            <?php if ($canManage): ?>
+                                                <a href="<?= base_url('/produsen/edit/' . $item['id_produsen']) ?>" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit"></i> Edit
                                                 </a>
+                                                <?php if ($active == 1): ?>
+                                                    <a href="<?= base_url('/produsen/delete/' . $item['id_produsen']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menonaktifkan Bank Darah Rumah Sakit ini?')">
+                                                        <i class="fas fa-trash"></i> Nonaktifkan
+                                                    </a>
+                                                <?php else: ?>
+                                                    <button class="btn btn-secondary btn-sm" disabled>Non-Aktif</button>
+                                                <?php endif; ?>
                                             <?php else: ?>
-                                                <button class="btn btn-secondary btn-sm" disabled>Non-Aktif</button>
+                                                -
                                             <?php endif; ?>
                                         </td>
                                     </tr>

@@ -80,10 +80,17 @@ class Permintaan extends BaseController
                     'user_id' => [ 'type' => 'INT', 'constraint' => 11, 'null' => false ],
                     'title' => [ 'type' => 'VARCHAR', 'constraint' => 255, 'null' => false ],
                     'message' => [ 'type' => 'TEXT', 'null' => false ],
+                    'is_read' => [ 'type' => 'TINYINT', 'constraint' => 1, 'default' => 0 ],
                     'created_at' => [ 'type' => 'DATETIME', 'null' => false ]
                 ]);
                 $forge->addKey('id', true);
                 $forge->createTable('notifications', true);
+            } else {
+                if (!$db->fieldExists('is_read', 'notifications')) {
+                    $forge->addColumn('notifications', [
+                        'is_read' => [ 'type' => 'TINYINT', 'constraint' => 1, 'default' => 0 ]
+                    ]);
+                }
             }
         } catch (\Exception $e) {
             // swallow and allow controller to handle errors gracefully later
@@ -142,8 +149,21 @@ class Permintaan extends BaseController
 
     public function create()
     {
-        $produsen = $this->produsenModel->findAll();
-        $rumahSakit = $this->rsModel->findAll();
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+
+        if ($role === 'bdrs') {
+            $prod = $this->produsenModel->getProdusenByUser($userId);
+            $produsen = $prod ? [$prod] : [];
+            $rumahSakit = $this->rsModel->findAll();
+        } elseif ($role === 'rs') {
+            $rs = $this->rsModel->getRumahSakitByUser($userId);
+            $rumahSakit = $rs ? [$rs] : [];
+            $produsen = $this->produsenModel->findAll();
+        } else {
+            $produsen = $this->produsenModel->findAll();
+            $rumahSakit = $this->rsModel->findAll();
+        }
 
         // get dropdown lists for golongan and jenis
         $golongan = $this->stokModel->getDistinctGolongan();
@@ -184,9 +204,31 @@ class Permintaan extends BaseController
             'created_at' => date('Y-m-d H:i:s')
         ];
 
-        $this->permintaanModel->insert($data);
-        session()->setFlashdata('success', 'Permintaan berhasil diajukan. Menunggu persetujuan BDRS.');
+        $insertId = $this->permintaanModel->insert($data);
+        if ($insertId) {
+            $this->notifyBdrsNewRequest($data['id_produsen'], $insertId, $data['no_permintaan'] ?? null);
+            session()->setFlashdata('success', 'Permintaan berhasil diajukan. Menunggu persetujuan BDRS.');
+        } else {
+            session()->setFlashdata('error', 'Gagal mengajukan permintaan. Silakan coba lagi.');
+        }
+
         return redirect()->to('/permintaan');
+    }
+
+    protected function notifyBdrsNewRequest($produsenId, $permintaanId = null, $noPermintaan = null)
+    {
+        $produsen = $this->produsenModel->find($produsenId);
+        if (!$produsen || empty($produsen['id_user'])) {
+            return;
+        }
+
+        $this->notificationModel->insert([
+            'user_id' => $produsen['id_user'],
+            'title' => 'Permintaan Baru Dari RS',
+            'message' => 'Permintaan baru telah diajukan untuk BDRS Anda' . ($noPermintaan ? ' (No: ' . $noPermintaan . ')' : '') . '. Cek halaman Permintaan untuk melihat detail.',
+            'is_read' => 0,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
     }
 
     public function approve($id)
@@ -285,8 +327,9 @@ class Permintaan extends BaseController
             $this->notificationModel->insert([
                 'user_id' => $admin['id_user'],
                 'title' => 'Stok Rendah: ' . $golongan . ' ' . $jenis,
-                'message' => 'Stok kantong darah ' . $golongan . ' ' . $jenis . ' untuk BDRS #' . $produsenId . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
-                'created_at' => date('Y-m-d H:i:s')
+                    'message' => 'Stok kantong darah ' . $golongan . ' ' . $jenis . ' untuk BDRS #' . $produsenId . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
+                    'is_read' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
             ]);
         }
     }

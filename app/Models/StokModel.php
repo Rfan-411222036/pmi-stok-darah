@@ -11,10 +11,14 @@ class StokModel extends Model
     protected $allowedFields = ['no_kantong', 'id_produsen', 'jenis_darah', 'gol_dar', 'rhesus', 'volume', 'tanggal_produksi', 'tanggal_expired', 'status', 'keterangan'];
     protected $useTimestamps = false;
 
-    public function getStokWithDetails($search = '', $perPage = 10)
+    public function getStokWithDetails($search = '', $perPage = 10, $produsenId = null)
     {
         $builder = $this->select('stok.*, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
                        ->join('produsen', 'produsen.id_produsen = stok.id_produsen');
+
+        if ($produsenId) {
+            $builder->where('stok.id_produsen', $produsenId);
+        }
 
         if ($search) {
             $builder->groupStart()
@@ -35,64 +39,100 @@ class StokModel extends Model
         return $data;
     }
 
-    public function getStokTersedia()
+    public function getStokTersedia($produsenId = null)
     {
-        return $this->where('status', 'tersedia')->countAllResults();
+        $builder = $this->where('status', 'tersedia');
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->countAllResults();
     }
 
-    public function getStokByGolongan()
+    public function getStokByGolongan($produsenId = null)
     {
-        return $this->select('gol_dar, COUNT(*) as total')
-                   ->where('status', 'tersedia')
-                   ->groupBy('gol_dar')
-                   ->get()
-                   ->getResultArray();
+        $builder = $this->select('gol_dar, COUNT(*) as total')
+                        ->where('status', 'tersedia');
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->groupBy('gol_dar')
+                       ->get()
+                       ->getResultArray();
     }
 
-    public function getStokByJenis()
+    public function getStokByJenis($produsenId = null)
     {
-        return $this->select('jenis_darah, COUNT(*) as total')
-                   ->where('status', 'tersedia')
-                   ->groupBy('jenis_darah')
-                   ->get()
-                   ->getResultArray();
+        $builder = $this->select('jenis_darah, COUNT(*) as total')
+                        ->where('status', 'tersedia');
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->groupBy('jenis_darah')
+                       ->get()
+                       ->getResultArray();
     }
 
-    public function getStokByGolonganRhesus()
+    public function getStokByGolonganRhesus($produsenId = null)
     {
-        return $this->select('gol_dar, rhesus, COUNT(*) as total')
-                   ->where('status', 'tersedia')
-                   ->groupBy('gol_dar, rhesus')
-                   ->orderBy('gol_dar', 'ASC')
-                   ->orderBy('rhesus', 'DESC')
-                   ->get()
-                   ->getResultArray();
+        $builder = $this->select('gol_dar, rhesus, COUNT(*) as total')
+                        ->where('status', 'tersedia');
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->groupBy('gol_dar, rhesus')
+                       ->orderBy('gol_dar', 'ASC')
+                       ->orderBy('rhesus', 'DESC')
+                       ->get()
+                       ->getResultArray();
     }
 
-    public function getStokMendekatiExpired()
+    public function getStokMendekatiExpired($produsenId = null)
     {
         $date = date('Y-m-d');
-        $expiredDate = date('Y-m-d', strtotime('+7 days'));
+        $expiredDate = date('Y-m-d', strtotime('+14 days'));
 
-        return $this->where('status', 'tersedia')
-                   ->where('tanggal_expired >=', $date)
-                   ->where('tanggal_expired <=', $expiredDate)
-                   ->countAllResults();
+        $builder = $this->where('status', 'tersedia')
+                        ->where('tanggal_expired >=', $date)
+                        ->where('tanggal_expired <=', $expiredDate);
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->countAllResults();
     }
 
-    public function getStokExpired()
+    public function getStokExpired($produsenId = null)
     {
-        return $this->where('status', 'tersedia')
-                   ->where('tanggal_expired <', date('Y-m-d'))
-                   ->countAllResults();
+        $builder = $this->where('status', 'tersedia')
+                        ->where('tanggal_expired <', date('Y-m-d'));
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->countAllResults();
     }
 
-    public function getStokForDistribusi()
+    public function getStokForDistribusi($produsenId = null)
     {
-        return $this->where('status', 'tersedia')
-                   ->where('tanggal_expired >=', date('Y-m-d'))
-                   ->orderBy('tanggal_expired', 'ASC')
-                   ->findAll();
+        $builder = $this->where('status', 'tersedia')
+                        ->where('tanggal_expired >=', date('Y-m-d'));
+
+        if ($produsenId) {
+            $builder = $builder->where('id_produsen', $produsenId);
+        }
+
+        return $builder->orderBy('tanggal_expired', 'ASC')
+                       ->findAll();
     }
 
     /**

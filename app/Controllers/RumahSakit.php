@@ -17,8 +17,19 @@ class RumahSakit extends BaseController
     {
         $search = $this->request->getGet('search');
         $perPage = 10;
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
 
-        $result = $this->rumahSakitModel->getRumahSakit($search, $perPage);
+        if ($role === 'admin') {
+            $result = $this->rumahSakitModel->getRumahSakit($search, $perPage);
+        } elseif ($role === 'rs') {
+            $result = $this->rumahSakitModel->getRumahSakit($search, $perPage, $userId);
+        } else {
+            $result = [
+                'rumah_sakit' => [],
+                'pager' => $this->rumahSakitModel->pager
+            ];
+        }
 
         $data = [
             'title' => 'Management Rumah Sakit',
@@ -33,6 +44,13 @@ class RumahSakit extends BaseController
 
     public function create()
     {
+        $role = session()->get('role');
+
+        if ($role === 'bdrs') {
+            session()->setFlashdata('error', 'Akses tidak diizinkan.');
+            return redirect()->to('/rumahsakit');
+        }
+
         $data = [
             'title' => 'Tambah Rumah Sakit',
             'page_title' => 'Tambah Data Rumah Sakit',
@@ -43,6 +61,12 @@ class RumahSakit extends BaseController
 
     public function store()
     {
+        $role = session()->get('role');
+
+        if ($role === 'bdrs') {
+            session()->setFlashdata('error', 'Akses tidak diizinkan.');
+            return redirect()->to('/rumahsakit');
+        }
         $validation = \Config\Services::validation();
         $validation->setRules([
             'nama_rs' => 'required',
@@ -74,10 +98,23 @@ class RumahSakit extends BaseController
     public function edit($id)
     {
         $rumahSakit = $this->rumahSakitModel->find($id);
+        $role = session()->get('role');
 
         if (!$rumahSakit) {
             session()->setFlashdata('error', 'Data rumah sakit tidak ditemukan');
             return redirect()->to('/rumahsakit');
+        }
+
+        if ($role !== 'admin') {
+            if ($role === 'rs') {
+                if (isset($rumahSakit['id_user']) && $rumahSakit['id_user'] != session()->get('id_user')) {
+                    session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                    return redirect()->to('/rumahsakit');
+                }
+            } else {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/rumahsakit');
+            }
         }
 
         $data = [
@@ -92,10 +129,23 @@ class RumahSakit extends BaseController
     public function update($id)
     {
         $rumahSakit = $this->rumahSakitModel->find($id);
+        $role = session()->get('role');
 
         if (!$rumahSakit) {
             session()->setFlashdata('error', 'Data rumah sakit tidak ditemukan');
             return redirect()->to('/rumahsakit');
+        }
+
+        if ($role !== 'admin') {
+            if ($role === 'rs') {
+                if (isset($rumahSakit['id_user']) && $rumahSakit['id_user'] != session()->get('id_user')) {
+                    session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                    return redirect()->to('/rumahsakit');
+                }
+            } else {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/rumahsakit');
+            }
         }
 
         $validation = \Config\Services::validation();
@@ -129,10 +179,23 @@ class RumahSakit extends BaseController
     public function delete($id)
     {
         $rumahSakit = $this->rumahSakitModel->find($id);
+        $role = session()->get('role');
 
         if (!$rumahSakit) {
             session()->setFlashdata('error', 'Data rumah sakit tidak ditemukan');
             return redirect()->to('/rumahsakit');
+        }
+
+        if ($role !== 'admin') {
+            if ($role === 'rs') {
+                if (isset($rumahSakit['id_user']) && $rumahSakit['id_user'] != session()->get('id_user')) {
+                    session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                    return redirect()->to('/rumahsakit');
+                }
+            } else {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/rumahsakit');
+            }
         }
 
         $distribusiModel = new \App\Models\DistribusiModel();

@@ -36,13 +36,16 @@
             <?php endif; ?>
 
             <div class="card">
+                <?php $role = session()->get('role'); $userId = session()->get('id_user'); $ownRs = (new \App\Models\RumahSakitModel())->getRumahSakitByUser($userId); $ownRsId = $ownRs['id_rs'] ?? null; ?>
                 <div class="card-header">
                     <h3 class="card-title">Daftar Return Darah</h3>
+                    <?php if ($role === 'admin' || $role === 'rs'): ?>
                     <div class="card-tools">
                         <a href="<?= base_url('/return/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-undo"></i> Tambah Return
                         </a>
                     </div>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <form method="get" action="<?= base_url('/return') ?>" class="mb-3">
@@ -78,6 +81,7 @@
                                     <th>Alasan Return</th>
                                     <th>Kondisi Darah</th>
                                     <th>Status Stok</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -106,6 +110,19 @@
                                                 <span class="badge badge-info">Kembali ke Stok</span>
                                             <?php else: ?>
                                                 <span class="badge badge-secondary">Dimusnahkan</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php $canManage = ($role === 'admin') || ($role === 'rs' && isset($ownRsId) && isset($item['id_rs']) && $item['id_rs'] == $ownRsId); ?>
+                                            <?php if ($canManage): ?>
+                                                <a href="<?= base_url('/return/edit/' . $item['id_return']) ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="<?= base_url('/return/delete/' . $item['id_return']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data return ini?')">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </a>
+                                            <?php else: ?>
+                                                -
                                             <?php endif; ?>
                                         </td>
                                     </tr>

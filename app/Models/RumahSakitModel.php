@@ -8,12 +8,12 @@ class RumahSakitModel extends Model
 {
     protected $table = 'rumah_sakit';
     protected $primaryKey = 'id_rs';
-    protected $allowedFields = ['nama_rs', 'alamat', 'telepon', 'email', 'jenis_rs', 'is_active'];
+    protected $allowedFields = ['id_user', 'nama_rs', 'alamat', 'telepon', 'email', 'jenis_rs', 'is_active'];
     protected $useTimestamps = false;
 
-    public function getRumahSakit($search = '', $perPage = 10)
+    public function getRumahSakit($search = '', $perPage = 10, $userId = null)
     {
-        // Check whether the `is_active` column exists in the table.
+        // Check whether the `is_active` and `id_user` columns exist in the table.
         $fields = [];
         try {
             $fields = $this->db->getFieldNames($this->table);
@@ -22,12 +22,17 @@ class RumahSakitModel extends Model
         }
 
         $hasIsActive = in_array('is_active', $fields);
+        $hasIdUser = in_array('id_user', $fields);
 
         // Use the model instance as the query builder so paginate() works.
         $builder = $this;
 
         if ($hasIsActive) {
             $builder = $builder->where('is_active', 1);
+        }
+
+        if ($userId && $hasIdUser) {
+            $builder = $builder->where('id_user', $userId);
         }
 
         if ($search) {
@@ -44,7 +49,7 @@ class RumahSakitModel extends Model
         ];
     }
 
-    public function getTotalRumahSakit()
+    public function getTotalRumahSakit($userId = null)
     {
         // Only filter by is_active when the column exists.
         try {
@@ -53,11 +58,36 @@ class RumahSakitModel extends Model
             $fields = [];
         }
 
+        $builder = $this;
         if (in_array('is_active', $fields)) {
-            return $this->where('is_active', 1)->countAllResults();
+            $builder = $builder->where('is_active', 1);
         }
 
-        return $this->countAllResults();
+        if ($userId && in_array('id_user', $fields)) {
+            $builder = $builder->where('id_user', $userId);
+        }
+
+        return $builder->countAllResults();
+    }
+
+    public function getRumahSakitByUser($userId)
+    {
+        if (!$userId) {
+            return null;
+        }
+
+        $fields = [];
+        try {
+            $fields = $this->db->getFieldNames($this->table);
+        } catch (\Exception $e) {
+            $fields = [];
+        }
+
+        if (!in_array('id_user', $fields)) {
+            return null;
+        }
+
+        return $this->where('id_user', $userId)->where('is_active', 1)->first();
     }
 
     // Soft delete method

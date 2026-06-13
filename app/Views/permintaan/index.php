@@ -11,7 +11,10 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <a href="<?= base_url('/permintaan/create') ?>" class="btn btn-primary btn-sm">Buat Permintaan</a>
+                        <?php $role = session()->get('role'); ?>
+                        <?php if ($role === 'rs' || $role === 'admin'): ?>
+                            <a href="<?= base_url('/permintaan/create') ?>" class="btn btn-primary btn-sm">Buat Permintaan</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -58,7 +61,15 @@
                                         <td><?= esc($row['nama_penerima'] ?? '-') ?></td>
                                         <td><?= esc($row['approval_note'] ?? '-') ?></td>
                                         <td><?= isset($row['created_at']) ? date('d/m/Y H:i', strtotime($row['created_at'])) : '-' ?></td>
-                                        <td><?= ucfirst($row['status']) ?></td>
+                                        <td>
+                                            <?php if ($row['status'] === 'approved'): ?>
+                                                <span class="badge badge-success">Disetujui</span>
+                                            <?php elseif ($row['status'] === 'rejected'): ?>
+                                                <span class="badge badge-danger">Ditolak</span>
+                                            <?php else: ?>
+                                                <span class="badge badge-warning">Menunggu</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <?php if (session()->get('role') === 'bdrs' && $row['status'] === 'pending'): ?>
                                                 <a href="<?= base_url('/permintaan/approve/'.$row['id_permintaan']) ?>" class="btn btn-sm btn-success">Setujui</a>
@@ -70,7 +81,7 @@
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <tr><td colspan="10" class="text-center text-muted">Tidak ada permintaan</td></tr>
+                                    <tr><td colspan="12" class="text-center text-muted">Tidak ada permintaan</td></tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>

@@ -54,6 +54,9 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/distribusi', 'Distribusi::index');
     $routes->get('/distribusi/create', 'Distribusi::create');
     $routes->post('/distribusi/store', 'Distribusi::store');
+    $routes->get('/distribusi/edit/(:num)', 'Distribusi::edit/$1');
+    $routes->post('/distribusi/update/(:num)', 'Distribusi::update/$1');
+    $routes->get('/distribusi/delete/(:num)', 'Distribusi::delete/$1');
 
     // Permintaan (Requests)
     $routes->get('/permintaan', 'Permintaan::index');
@@ -63,13 +66,23 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('/permintaan/approve/(:num)', 'Permintaan::approve/$1');
     $routes->get('/permintaan/reject/(:num)', 'Permintaan::reject/$1');
 
+    // Notifications
+    $routes->get('/notifications', 'Notifications::index');
+    $routes->get('/notifications/mark-read/(:num)', 'Notifications::markRead/$1');
+
     $routes->get('/pemusnahan', 'Pemusnahan::index');
     $routes->get('/pemusnahan/create', 'Pemusnahan::create');
     $routes->post('/pemusnahan/store', 'Pemusnahan::store');
+    $routes->get('/pemusnahan/edit/(:num)', 'Pemusnahan::edit/$1');
+    $routes->post('/pemusnahan/update/(:num)', 'Pemusnahan::update/$1');
+    $routes->get('/pemusnahan/delete/(:num)', 'Pemusnahan::delete/$1');
 
     $routes->get('/return', 'Retur::index');
+    $routes->get('/return/edit/(:num)', 'Retur::edit/$1');
+    $routes->post('/return/update/(:num)', 'Retur::update/$1');
     $routes->get('/return/create', 'Retur::create');
     $routes->post('/return/store', 'Retur::store');
+    $routes->get('/return/delete/(:num)', 'Retur::delete/$1');
     $routes->get('/return/getDistribusiInfo/(:num)', 'Retur::getDistribusiInfo/$1');
 });
 

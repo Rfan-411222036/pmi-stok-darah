@@ -21,6 +21,7 @@
 
     <section class="content">
         <div class="container-fluid">
+            <!-- debug banner removed -->
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -36,13 +37,16 @@
             <?php endif; ?>
 
             <div class="card">
+                <?php $role = session()->get('role'); $userId = session()->get('id_user'); $ownProdusen = (new \App\Models\ProdusenModel())->getProdusenByUser($userId); $ownProdusenId = $ownProdusen['id_produsen'] ?? null; $ownRsId = $own_rs_id ?? null; ?>
                 <div class="card-header">
                     <h3 class="card-title">Daftar Distribusi Darah</h3>
+                    <?php if ($role !== 'rs'): ?>
                     <div class="card-tools">
                         <a href="<?= base_url('/distribusi/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Distribusi
                         </a>
                     </div>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <form method="get" action="<?= base_url('/distribusi') ?>" class="mb-3">
@@ -95,6 +99,7 @@
                                     <th>Keperluan</th>
                                     <th>No Permintaan</th>
                                     <th>Tanggal Distribusi</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,11 +118,24 @@
                                         <td><?= $item['keperluan'] ?: '-' ?></td>
                                         <td><?= $item['no_permintaan'] ?: '-' ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tanggal_distribusi'])) ?></td>
+                                        <td>
+                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($ownProdusenId) && $item['id_produsen'] == $ownProdusenId) || ($role === 'rs' && isset($ownRsId) && isset($item['id_rs']) && $item['id_rs'] == $ownRsId); ?>
+                                            <?php if ($canManage): ?>
+                                                <a href="<?= base_url('/distribusi/edit/' . $item['id_distribusi']) ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="<?= base_url('/distribusi/delete/' . $item['id_distribusi']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data distribusi ini?')">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </a>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted">Tidak ada data distribusi</td>
+                                        <td colspan="10" class="text-center text-muted">Tidak ada data distribusi</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

@@ -17,8 +17,19 @@ class Produsen extends BaseController
     {
         $search = $this->request->getGet('search');
         $perPage = 10;
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
 
-        $result = $this->produsenModel->getProdusen($search, $perPage);
+        if ($role === 'admin') {
+            $result = $this->produsenModel->getProdusen($search, $perPage);
+        } elseif ($role === 'bdrs') {
+            $result = $this->produsenModel->getProdusen($search, $perPage, $userId);
+        } else {
+            $result = [
+                'produsen' => [],
+                'pager' => $this->produsenModel->pager
+            ];
+        }
 
         $data = [
             'title' => 'Management BDRS',
@@ -33,6 +44,13 @@ class Produsen extends BaseController
 
     public function create()
     {
+        $role = session()->get('role');
+
+        if ($role === 'rs') {
+            session()->setFlashdata('error', 'Akses tidak diizinkan.');
+            return redirect()->to('/produsen');
+        }
+
         $data = [
             'title' => 'Tambah BDRS',
             'page_title' => 'Tambah Data BDRS',
@@ -43,6 +61,13 @@ class Produsen extends BaseController
 
     public function store()
     {
+        $role = session()->get('role');
+
+        if ($role === 'rs') {
+            session()->setFlashdata('error', 'Akses tidak diizinkan.');
+            return redirect()->to('/produsen');
+        }
+
         $validation = \Config\Services::validation();
         $validation->setRules([
             'nama' => 'required',
@@ -58,11 +83,15 @@ class Produsen extends BaseController
         $data = [
             'nama' => $this->request->getPost('nama'),
             'jenis' => $this->request->getPost('jenis'),
-            'jenis_darah' => $this->request->getPost('jenis_darah'),
             'no_kantong' => $this->request->getPost('no_kantong'),
             'status' => $this->request->getPost('status'),
-            'alamat' => $this->request->getPost('alamat')
+            'alamat' => $this->request->getPost('alamat'),
+            'telepon' => $this->request->getPost('telepon')
         ];
+
+        if ($role === 'bdrs') {
+            $data['id_user'] = session()->get('id_user');
+        }
 
         if ($this->produsenModel->save($data)) {
             session()->setFlashdata('success', 'Data produsen berhasil ditambahkan');
@@ -76,10 +105,23 @@ class Produsen extends BaseController
     public function edit($id)
     {
         $produsen = $this->produsenModel->find($id);
+        $role = session()->get('role');
 
         if (!$produsen) {
             session()->setFlashdata('error', 'Data produsen tidak ditemukan');
             return redirect()->to('/produsen');
+        }
+
+        if ($role !== 'admin') {
+            if ($role === 'bdrs') {
+                if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
+                    session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                    return redirect()->to('/produsen');
+                }
+            } else {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/produsen');
+            }
         }
 
         $data = [
@@ -94,10 +136,23 @@ class Produsen extends BaseController
     public function update($id)
     {
         $produsen = $this->produsenModel->find($id);
+        $role = session()->get('role');
 
         if (!$produsen) {
             session()->setFlashdata('error', 'Data produsen tidak ditemukan');
             return redirect()->to('/produsen');
+        }
+
+        if ($role !== 'admin') {
+            if ($role === 'bdrs') {
+                if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
+                    session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                    return redirect()->to('/produsen');
+                }
+            } else {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/produsen');
+            }
         }
 
         $validation = \Config\Services::validation();
@@ -115,10 +170,10 @@ class Produsen extends BaseController
         $data = [
             'nama' => $this->request->getPost('nama'),
             'jenis' => $this->request->getPost('jenis'),
-            'jenis_darah' => $this->request->getPost('jenis_darah'),
             'no_kantong' => $this->request->getPost('no_kantong'),
             'status' => $this->request->getPost('status'),
-            'alamat' => $this->request->getPost('alamat')
+            'alamat' => $this->request->getPost('alamat'),
+            'telepon' => $this->request->getPost('telepon')
         ];
 
         if ($this->produsenModel->update($id, $data)) {
@@ -133,10 +188,23 @@ class Produsen extends BaseController
     public function delete($id)
     {
         $produsen = $this->produsenModel->find($id);
+        $role = session()->get('role');
 
         if (!$produsen) {
             session()->setFlashdata('error', 'Data produsen tidak ditemukan');
             return redirect()->to('/produsen');
+        }
+
+        if ($role !== 'admin') {
+            if ($role === 'bdrs') {
+                if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
+                    session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                    return redirect()->to('/produsen');
+                }
+            } else {
+                session()->setFlashdata('error', 'Akses tidak diizinkan.');
+                return redirect()->to('/produsen');
+            }
         }
 
         $stokModel = new \App\Models\StokModel();

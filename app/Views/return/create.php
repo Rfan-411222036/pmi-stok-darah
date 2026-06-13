@@ -57,6 +57,7 @@
                                 <div class="form-group">
                                     <label for="id_bag">ID Kantong Darah *</label>
                                     <input type="text" class="form-control" id="id_bag" name="id_bag" readonly required>
+                                    <input type="hidden" id="id_rs" name="id_rs" value="<?= old('id_rs') ?>">
                                 </div>
 
                                 <div class="form-group">

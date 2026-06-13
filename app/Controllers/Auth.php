@@ -40,6 +40,34 @@ class Auth extends BaseController
                 'role' => $user['role'],
                 'isLoggedIn' => true
             ];
+
+            // Attach linked rumah sakit or produsen id to session when available
+            try {
+                if ($user['role'] === 'rs') {
+                    $rsModel = new \App\Models\RumahSakitModel();
+                    $rs = $rsModel->where('id_user', $user['id_user'])->first();
+                    if (!$rs) {
+                        // fallback: try matching by email on rumah_sakit record
+                        $rs = $rsModel->where('email', $user['email'])->first();
+                    }
+                    if (!$rs) {
+                        // fallback: try matching by name (login.nama == rumah_sakit.nama_rs)
+                        $rs = $rsModel->where('nama_rs', $user['nama'])->first();
+                    }
+                    if ($rs) {
+                        $sessionData['id_rs'] = $rs['id_rs'];
+                    }
+                } elseif ($user['role'] === 'bdrs') {
+                    $prodModel = new \App\Models\ProdusenModel();
+                    $prod = $prodModel->where('id_user', $user['id_user'])->first();
+                    if ($prod) {
+                        $sessionData['id_produsen'] = $prod['id_produsen'];
+                    }
+                }
+            } catch (\Exception $e) {
+                // ignore mapping errors
+            }
+
             session()->set($sessionData);
             return redirect()->to('/dashboard');
         } else {

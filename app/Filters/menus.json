@@ -72,7 +72,7 @@
         },
         {
           "name": "cek status",
-          "path": "/dashboard"
+          "path": "/permintaan"
         }
       ]
     },
