@@ -152,14 +152,23 @@ class Permintaan extends BaseController
         $role = session()->get('role');
         $userId = session()->get('id_user');
 
+        $selected_rs = null;
         if ($role === 'bdrs') {
             $prod = $this->produsenModel->getProdusenByUser($userId);
             $produsen = $prod ? [$prod] : [];
             $rumahSakit = $this->rsModel->findAll();
         } elseif ($role === 'rs') {
+            // try multiple fallbacks to detect RS mapping
             $rs = $this->rsModel->getRumahSakitByUser($userId);
+            if (!$rs && session()->has('id_rs')) {
+                $rs = $this->rsModel->find(session()->get('id_rs'));
+            }
+            if (!$rs && session()->has('nama')) {
+                $rs = $this->rsModel->where('nama_rs', session()->get('nama'))->first();
+            }
             $rumahSakit = $rs ? [$rs] : [];
             $produsen = $this->produsenModel->findAll();
+            $selected_rs = $rs['id_rs'] ?? null;
         } else {
             $produsen = $this->produsenModel->findAll();
             $rumahSakit = $this->rsModel->findAll();
@@ -183,6 +192,7 @@ class Permintaan extends BaseController
             'golongan_list' => $golongan,
             'jenis_list' => $jenis,
             'produsen_stock_golongan' => $produsenStockGolongan
+            , 'selected_rs' => $selected_rs
         ]);
     }
 
@@ -250,6 +260,13 @@ class Permintaan extends BaseController
         }
 
         $produsen = $this->produsenModel->where('id_user', $userId)->first();
+        if (!$produsen && session()->has('id_produsen')) {
+            $produsen = $this->produsenModel->find(session()->get('id_produsen'));
+        }
+        if (!$produsen && session()->has('nama')) {
+            $produsen = $this->produsenModel->where('nama', session()->get('nama'))->first();
+        }
+
         if (!$produsen || $produsen['id_produsen'] != $perm['id_produsen']) {
             return redirect()->back()->with('error', 'Akses BDRS tidak valid untuk permintaan ini');
         }
@@ -308,12 +325,23 @@ class Permintaan extends BaseController
         }
 
         $availableStock = $this->stokModel->getAvailableStockForProdusen($perm['id_produsen'], $perm['gol_dar'], $perm['jenis']);
+        $availableStockCount = count($availableStock);
+        $alternativeStock = [];
+
+        if ($availableStockCount === 0) {
+            $alternativeStock = $this->stokModel->getAvailableStockForProdusen($perm['id_produsen']);
+            if (!empty($alternativeStock)) {
+                $availableStock = $alternativeStock;
+            }
+        }
 
         return view('permintaan/approve', [
             'title' => 'Setujui Permintaan',
             'page_title' => 'Setujui Permintaan Darah',
             'permintaan' => $perm,
             'available_stock' => $availableStock,
+            'available_stock_count' => $availableStockCount,
+            'alternative_stock' => $alternativeStock,
             'validation' => \Config\Services::validation()
         ]);
     }

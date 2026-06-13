@@ -60,6 +60,9 @@ class Auth extends BaseController
                 } elseif ($user['role'] === 'bdrs') {
                     $prodModel = new \App\Models\ProdusenModel();
                     $prod = $prodModel->where('id_user', $user['id_user'])->first();
+                    if (!$prod) {
+                        $prod = $prodModel->where('nama', $user['nama'])->first();
+                    }
                     if ($prod) {
                         $sessionData['id_produsen'] = $prod['id_produsen'];
                     }

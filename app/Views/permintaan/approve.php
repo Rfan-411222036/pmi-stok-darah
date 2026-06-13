@@ -87,8 +87,19 @@
 
                         <?php if (empty($available_stock)): ?>
                             <div class="alert alert-warning">
-                                Tidak ada kantong darah tersedia di BDRS untuk permintaan ini. Silakan perbarui stok terlebih dahulu sebelum menyetujui.
+                                Tidak ada kantong darah yang sesuai dengan golongan/jenis permintaan ini.
+                                Silakan perbarui stok atau pilih permintaan lain.
                             </div>
+                            <?php if (!empty($alternative_stock)): ?>
+                                <div class="alert alert-info">
+                                    Namun ada stok lain yang tersedia untuk BDRS ini:
+                                    <ul class="mb-0">
+                                        <?php foreach ($alternative_stock as $alt): ?>
+                                            <li><?= esc($alt['no_kantong']) ?> - <?= esc($alt['gol_dar']) ?> <?= esc($alt['jenis_darah']) ?> - Exp <?= date('d/m/Y', strtotime($alt['tanggal_expired'])) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <div class="form-group">

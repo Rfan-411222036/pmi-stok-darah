@@ -22,12 +22,18 @@
 
                         <div class="form-group">
                             <label for="id_rs">Rumah Sakit</label>
-                            <select name="id_rs" id="id_rs" class="form-control" required>
+                            <?php $role = session()->get('role'); $shouldDisableRs = ($role === 'rs') || (isset($selected_rs) && $selected_rs); ?>
+                            <select name="id_rs" id="id_rs" class="form-control" <?= $shouldDisableRs ? 'disabled' : '' ?> required>
                                 <option value="">Pilih RS</option>
                                 <?php foreach ($rumah_sakit as $r): ?>
-                                    <option value="<?= $r['id_rs'] ?>" <?= old('id_rs') == $r['id_rs'] ? 'selected' : '' ?>><?= $r['nama_rs'] ?></option>
+                                    <?php $isSelected = (old('id_rs') !== null) ? (old('id_rs') == $r['id_rs']) : (isset($selected_rs) && $selected_rs == $r['id_rs']); ?>
+                                    <option value="<?= $r['id_rs'] ?>" <?= $isSelected ? 'selected' : '' ?>><?= $r['nama_rs'] ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <?php if ($shouldDisableRs): ?>
+                                <?php $hiddenRsVal = old('id_rs') ?: ($selected_rs ?? session()->get('id_rs')); ?>
+                                <input type="hidden" name="id_rs" value="<?= $hiddenRsVal ?>">
+                            <?php endif; ?>
                         </div>
 
                         <div class="form-group">

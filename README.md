@@ -79,9 +79,4 @@ UI / Design improvements:
 - Small CSS polish was added in `app/Views/templates/footer.php` to ensure consistent spacing and responsive adjustments.
 
 TAMBAHAN : 
-- Menu master bdrs table tidak perlu jenis darah tolong tambahkan Telepon, alamat, aksi edit, hapus
-- di user BDRS,setelah RS melakukan permintaan darah ke BDRS belum ada notifikasi nya.
-- pada user RS, di menu cek status belum ada status permintaan darahnya.
-- tambahkan pilihan edit untuk menu distribusi, pemusnahan dan retur
-- data  Stok Darah di Setiap BDRS belom match contoh bdrs eka hospital ada 11 padahal detail nya ada 3
-
+- approve rs ke bdrs belom bisa
