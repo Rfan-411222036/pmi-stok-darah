@@ -11,7 +11,7 @@ class ReturnModel extends Model
     protected $allowedFields = ['id_distribusi', 'id_bag', 'id_rs', 'tanggal_retur', 'alasan_return', 'kondisi_darah', 'keterangan'];
     protected $useTimestamps = false;
 
-    public function getReturnWithDetails($search = '', $perPage = 10)
+    public function getReturnWithDetails($search = '', $perPage = 10, $from = null, $to = null, $keperluan = null)
     {
         $builder = $this->select('return_darah.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, rumah_sakit.nama_rs, distribusi.tanggal_distribusi, distribusi.penerima, produsen.nama as nama_produsen')
                    ->join('stok', 'stok.id_bag = return_darah.id_bag')
@@ -24,17 +24,34 @@ class ReturnModel extends Model
                    ->like('stok.no_kantong', $search)
                    ->orLike('rumah_sakit.nama_rs', $search)
                    ->orLike('return_darah.alasan_return', $search)
+                   ->orLike('return_darah.keterangan', $search)
                    ->groupEnd();
+        }
+
+        if ($from) {
+            $builder->where('return_darah.tanggal_retur >=', $from);
+        }
+        if ($to) {
+            $builder->where('return_darah.tanggal_retur <=', $to);
+        }
+
+        if ($keperluan) {
+            $builder->where('return_darah.alasan_return', $keperluan);
         }
 
         $builder->orderBy('return_darah.tanggal_retur', 'DESC');
 
-        $data = [
-            'return' => $builder->paginate($perPage),
+        if ($perPage) {
+            return [
+                'return' => $builder->paginate($perPage),
+                'pager' => $this->pager
+            ];
+        }
+
+        return [
+            'return' => $builder->findAll(),
             'pager' => $this->pager
         ];
-
-        return $data;
     }
 
     public function getTotalReturn()
@@ -64,6 +81,19 @@ class ReturnModel extends Model
                    ->limit($limit)
                    ->get()
                    ->getResultArray();
+    }
+
+    public function getDistinctAlasanReturn()
+    {
+        $rows = $this->select('alasan_return')
+                     ->distinct()
+                     ->where('alasan_return IS NOT NULL', null, false)
+                     ->where('alasan_return !=', '')
+                     ->orderBy('alasan_return')
+                     ->get()
+                     ->getResultArray();
+
+        return array_column($rows, 'alasan_return');
     }
 
     public function getDistribusiForReturn()

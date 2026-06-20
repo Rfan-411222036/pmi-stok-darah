@@ -19,6 +19,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/dashboard/laporan/distribusi', 'Dashboard::downloadDistribusi');
     $routes->get('/dashboard/laporan/pemusnahan', 'Dashboard::downloadPemusnahan');
     $routes->get('/dashboard/laporan/retur', 'Dashboard::downloadRetur');
+    $routes->post('/dashboard/check-low-stock', 'Dashboard::checkLowStock');
 
     // User Management
     $routes->get('/users', 'Users::index');
@@ -45,6 +46,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/rumahsakit/delete/(:num)', 'RumahSakit::delete/$1');
 
     $routes->get('/stok', 'Stok::index');
+    $routes->get('/stok/download', 'Stok::downloadReport');
     $routes->get('/stok/create', 'Stok::create');
     $routes->post('/stok/store', 'Stok::store');
     $routes->get('/stok/edit/(:num)', 'Stok::edit/$1');
@@ -60,6 +62,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
 
     // Permintaan (Requests)
     $routes->get('/permintaan', 'Permintaan::index');
+    $routes->get('/permintaan/download', 'Permintaan::downloadReport');
     $routes->get('/permintaan/create', 'Permintaan::create');
     $routes->post('/permintaan/store', 'Permintaan::store');
     $routes->get('/permintaan/approve/(:num)', 'Permintaan::approve/$1');
@@ -78,6 +81,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/pemusnahan/delete/(:num)', 'Pemusnahan::delete/$1');
 
     $routes->get('/return', 'Retur::index');
+    $routes->get('/return/download', 'Retur::downloadReport');
     $routes->get('/return/edit/(:num)', 'Retur::edit/$1');
     $routes->post('/return/update/(:num)', 'Retur::update/$1');
     $routes->get('/return/create', 'Retur::create');

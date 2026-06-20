@@ -50,6 +50,46 @@ class Dashboard extends BaseController
         }
     }
 
+    public function checkLowStock()
+    {
+        $role = session()->get('role');
+        if ($role !== 'admin') {
+            return redirect()->back()->with('error', 'Akses ditolak');
+        }
+
+        $thresholds = [ 'A' => 10, 'B' => 10, 'O' => 15, 'AB' => 5 ];
+        $produsenList = $this->produsenModel->findAll();
+        $notificationModel = new \App\Models\NotificationModel();
+        $userModel = new \App\Models\UserModel();
+        $adminUsers = $userModel->where('role', 'admin')->findAll();
+        $created = 0;
+
+        foreach ($produsenList as $prod) {
+            $prodId = $prod['id_produsen'];
+            foreach ($thresholds as $gol => $th) {
+                $remaining = $this->stokModel->countAvailableByProdusenGolonganJenis($prodId, $gol, null);
+                if ($remaining < $th) {
+                    foreach ($adminUsers as $admin) {
+                        $notificationModel->insert([
+                            'user_id' => $admin['id_user'],
+                            'title' => 'Stok Rendah: ' . $gol,
+                            'message' => 'Stok kantong darah ' . $gol . ' untuk BDRS ' . $prod['nama'] . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
+                            'is_read' => 0,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                        $created++;
+                    }
+                }
+            }
+        }
+
+        if ($created > 0) {
+            return redirect()->back()->with('success', "Notifikasi stok rendah dibuat: $created");
+        }
+
+        return redirect()->back()->with('success', 'Tidak ada stok yang berada di bawah ambang saat ini');
+    }
+
     public function index()
     {
         $currentRole = session()->get('role');
@@ -110,6 +150,8 @@ class Dashboard extends BaseController
             ];
         }
 
+        $produsenList = $this->produsenModel->orderBy('nama')->findAll();
+
         $data = [
             'title' => 'Dashboard',
             'page_title' => 'Dashboard Management Stok Darah PMI',
@@ -134,6 +176,9 @@ class Dashboard extends BaseController
             'low_stock_notifications' => $lowStockNotifications,
             'recent_distribusi' => $recentDistribusi,
             'monthly_distribusi' => $monthlyDistribusi,
+            'produsen_list' => $produsenList,
+            'golongan_list' => $this->stokModel->getDistinctGolongan(),
+            'jenis_list' => $this->stokModel->getDistinctJenis(),
         ];
 
         return view('dashboard/index', $data);
@@ -154,8 +199,24 @@ class Dashboard extends BaseController
 
     public function downloadLaporan()
     {
-        $stokData = $this->stokModel->select('id_bag, no_kantong, jenis_darah, gol_dar, rhesus, volume, tanggal_produksi, tanggal_expired, status')
-                                     ->findAll();
+        $produsenFilter = $this->request->getGet('id_produsen') ?: null;
+        $golFilter = $this->request->getGet('gol_dar') ?: null;
+        $jenisFilter = $this->request->getGet('jenis') ?: null;
+
+        $builder = $this->stokModel->select('stok.id_bag, stok.no_kantong, stok.jenis_darah, stok.gol_dar, stok.rhesus, stok.volume, stok.tanggal_produksi, stok.tanggal_expired, stok.status, stok.keterangan, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
+                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+
+        if ($produsenFilter) {
+            $builder = $builder->where('stok.id_produsen', $produsenFilter);
+        }
+        if ($golFilter) {
+            $builder = $builder->where('stok.gol_dar', $golFilter);
+        }
+        if ($jenisFilter) {
+            $builder = $builder->where('stok.jenis_darah', $jenisFilter);
+        }
+
+        $stokData = $builder->orderBy('stok.tanggal_expired', 'ASC')->findAll();
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();
@@ -163,6 +224,28 @@ class Dashboard extends BaseController
 
         $pdf->addTitle('LAPORAN STOK DARAH');
         $pdf->Ln(3);
+
+        $meta = [];
+        if ($produsenFilter) {
+            $produsen = $this->produsenModel->find($produsenFilter);
+            if ($produsen) {
+                $meta[] = 'BDRS: ' . ($produsen['nama'] ?? '-');
+            }
+        }
+        if ($golFilter) {
+            $meta[] = 'Golongan: ' . $golFilter;
+        }
+        if ($jenisFilter) {
+            $meta[] = 'Jenis: ' . $jenisFilter;
+        }
+
+        if (!empty($meta)) {
+            foreach ($meta as $line) {
+                $pdf->SetFont('helvetica', '', 10);
+                $pdf->Cell(0, 6, $line, 0, 1, 'L');
+            }
+            $pdf->Ln(2);
+        }
 
         $stats = [
             ['label' => 'Total Unit', 'value' => count($stokData)],
@@ -173,7 +256,7 @@ class Dashboard extends BaseController
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data stok darah.', 0, 1, 'C');
         } else {
-            $headers = ['No', 'No. Kantong', 'Jenis', 'Goldar', 'Volume', 'Expired Date'];
+            $headers = ['No', 'No. Kantong', 'BDRS', 'Jenis', 'Gol', 'Rhesus', 'Volume', 'Produksi', 'Expired', 'Status', 'Keterangan'];
             $tableData = [];
 
             $no = 1;
@@ -181,14 +264,19 @@ class Dashboard extends BaseController
                 $tableData[] = [
                     $no++,
                     $item['no_kantong'] ?? '-',
-                    ($item['jenis_darah'] ?? '-') . ' ' . ($item['gol_dar'] ?? '-') . ($item['rhesus'] ?? '+'),
+                    $item['nama_produsen'] ?? '-',
+                    $item['jenis_darah'] ?? '-',
                     $item['gol_dar'] ?? '-',
+                    $item['rhesus'] ?? '-',
                     ($item['volume'] ?? '-') . ' ml',
+                    $item['tanggal_produksi'] ?? '-',
                     $item['tanggal_expired'] ?? '-',
+                    ucfirst($item['status'] ?? '-'),
+                    substr($item['keterangan'] ?? '-', 0, 25),
                 ];
             }
 
-            $columnWidths = [8, 25, 25, 15, 20, 27];
+            $columnWidths = [8, 24, 30, 20, 12, 12, 18, 18, 20, 20, 30];
             $pdf->addTable($headers, $tableData, $columnWidths);
         }
 
@@ -197,8 +285,18 @@ class Dashboard extends BaseController
 
     public function downloadDistribusi()
     {
-        $distribusiData = $this->distribusiModel->select('id_distribusi, id_bag, id_rs, tanggal_distribusi, penerima, keperluan')
-                                                ->findAll();
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+        $produsenFilter = $this->request->getGet('id_produsen') ?: null;
+        $rsFilter = $this->request->getGet('id_rs') ?: null;
+
+        $builder = $this->distribusiModel->select('id_distribusi, id_bag, id_rs, tanggal_distribusi, penerima, keperluan');
+        if ($from) $builder = $builder->where('tanggal_distribusi >=', $from);
+        if ($to) $builder = $builder->where('tanggal_distribusi <=', $to);
+        if ($produsenFilter) $builder = $builder->where('id_produsen', $produsenFilter);
+        if ($rsFilter) $builder = $builder->where('id_rs', $rsFilter);
+
+        $distribusiData = $builder->orderBy('tanggal_distribusi', 'DESC')->findAll();
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();
@@ -246,8 +344,14 @@ class Dashboard extends BaseController
 
     public function downloadPemusnahan()
     {
-        $pemusnahanData = $this->pemusnahanModel->select('id_pemusnahan, id_bag, tanggal_pemusnahan, alasan, keterangan, petugas')
-                                                ->findAll();
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+
+        $builder = $this->pemusnahanModel->select('id_pemusnahan, id_bag, tanggal_pemusnahan, alasan, keterangan, petugas');
+        if ($from) $builder = $builder->where('tanggal_pemusnahan >=', $from);
+        if ($to) $builder = $builder->where('tanggal_pemusnahan <=', $to);
+
+        $pemusnahanData = $builder->orderBy('tanggal_pemusnahan', 'DESC')->findAll();
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();
@@ -293,10 +397,16 @@ class Dashboard extends BaseController
     public function downloadRetur()
     {
         $returnModel = new \App\Models\ReturnModel();
-        $returData = $returnModel->select('return_darah.id_return, return_darah.tanggal_retur, return_darah.alasan_return, return_darah.kondisi_darah, stok.no_kantong, produsen.nama as nama_produsen')
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+
+        $builder = $returnModel->select('return_darah.id_return, return_darah.tanggal_retur, return_darah.alasan_return, return_darah.kondisi_darah, stok.no_kantong, produsen.nama as nama_produsen')
                      ->join('stok', 'stok.id_bag = return_darah.id_bag')
-                     ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
-                     ->findAll();
+                     ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+        if ($from) $builder = $builder->where('return_darah.tanggal_retur >=', $from);
+        if ($to) $builder = $builder->where('return_darah.tanggal_retur <=', $to);
+
+        $returData = $builder->orderBy('return_darah.tanggal_retur', 'DESC')->findAll();
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();

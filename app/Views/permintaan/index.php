@@ -35,6 +35,59 @@
 
             <div class="card">
                 <div class="card-body">
+                    <form action="<?= base_url('/permintaan') ?>" method="get" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="search">Cari</label>
+                                    <input type="text" name="search" id="search" class="form-control" value="<?= esc($filters['search'] ?? '') ?>" placeholder="Cari RS, BDRS, penerima, keterangan...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="from">Dari</label>
+                                    <input type="date" name="from" id="from" class="form-control" value="<?= esc($filters['from'] ?? '') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="to">Sampai</label>
+                                    <input type="date" name="to" id="to" class="form-control" value="<?= esc($filters['to'] ?? '') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="keperluan">Keperluan</label>
+                                    <select name="keperluan" id="keperluan" class="form-control">
+                                        <option value="">Semua</option>
+                                        <?php foreach ($keteranganOptions as $option): ?>
+                                            <?php $value = $option['keterangan'] ?? $option; ?>
+                                            <option value="<?= esc($value) ?>" <?= isset($filters['keperluan']) && $filters['keperluan'] === $value ? 'selected' : '' ?>><?= esc($value) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="gol_dar">Golongan</label>
+                                    <input type="text" name="gol_dar" id="gol_dar" class="form-control" value="<?= esc($filters['gol_dar'] ?? '') ?>" placeholder="A, B, AB, O">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="jenis">Jenis</label>
+                                    <input type="text" name="jenis" id="jenis" class="form-control" value="<?= esc($filters['jenis'] ?? '') ?>" placeholder="Contoh: DARAH">
+                                </div>
+                            </div>
+                            <div class="col-md-9 d-flex align-items-end justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-2">Terapkan Filter</button>
+                                <a href="<?= base_url('/permintaan/download?' . http_build_query($filters)) ?>" class="btn btn-success">Download PDF</a>
+                            </div>
+                        </div>
+                    </form>
+
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-sm table-hover">
                             <thead>

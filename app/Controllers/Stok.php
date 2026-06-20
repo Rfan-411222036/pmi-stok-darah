@@ -20,6 +20,9 @@ class Stok extends BaseController
     {
         $search = $this->request->getGet('search');
         $produsenFilter = $this->request->getGet('id_produsen');
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+        $keterangan = $this->request->getGet('keterangan');
         $perPage = 10;
         $role = session()->get('role');
         $userId = session()->get('id_user');
@@ -42,11 +45,11 @@ class Stok extends BaseController
             ];
             $golonganRhesus = [];
         } else {
-            $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter);
+            $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter, $from, $to, $keterangan);
             $golonganRhesus = $this->stokModel->getStokByGolonganRhesus($produsenFilter);
         }
 
-        $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter);
+        $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter, $from, $to, $keterangan);
         $golonganRhesus = $this->stokModel->getStokByGolonganRhesus($produsenFilter);
 
         $bloodGroups = ['A', 'B', 'AB', 'O'];
@@ -77,6 +80,10 @@ class Stok extends BaseController
             'search' => $search,
             'filter_produsen' => $produsenFilter,
             'filter_produsen_name' => $produsenName,
+            'from' => $from,
+            'to' => $to,
+            'keterangan' => $keterangan,
+            'keteranganOptions' => $this->stokModel->getDistinctKeterangan(),
             'chartLabels' => $bloodGroups,
             'chartDataPlus' => array_values($rhesusCounts['+']),
             'chartDataMinus' => array_values($rhesusCounts['-']),
@@ -86,6 +93,73 @@ class Stok extends BaseController
         ];
 
         return view('stok/index', $data);
+    }
+
+    public function downloadReport()
+    {
+        helper('url');
+
+        $search = $this->request->getGet('search');
+        $produsenFilter = $this->request->getGet('id_produsen');
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+        $keterangan = $this->request->getGet('keterangan');
+
+        $stokData = $this->stokModel->getStokWithDetails($search, null, $produsenFilter, $from, $to, $keterangan)['stok'];
+
+        $pdf = new \App\Libraries\PdfGenerator();
+        $pdf->AddPage();
+        $pdf->setHeaderInfo('LAPORAN STOK DARAH', date('d F Y'));
+        $pdf->addTitle('LAPORAN STOK DARAH');
+
+        $meta = [];
+        if ($from || $to) {
+            $meta[] = 'Periode: ' . ($from ?: '-') . ' s/d ' . ($to ?: '-');
+        }
+        if ($keterangan) {
+            $meta[] = 'Keterangan: ' . $keterangan;
+        }
+        if ($search) {
+            $meta[] = 'Search: ' . $search;
+        }
+
+        if (!empty($meta)) {
+            foreach ($meta as $line) {
+                $pdf->SetFont('helvetica', '', 10);
+                $pdf->Cell(0, 6, $line, 0, 1, 'L');
+            }
+            $pdf->Ln(2);
+        }
+
+        if (empty($stokData)) {
+            $pdf->SetFont('helvetica', '', 11);
+            $pdf->Cell(0, 10, 'Tidak ada data stok sesuai filter.', 0, 1, 'C');
+            $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
+            return;
+        }
+
+        $headers = ['No', 'No. Kantong', 'BDRS', 'Gol', 'Rhesus', 'Jenis', 'Volume', 'Produksi', 'Expired', 'Status', 'Keterangan'];
+        $tableData = [];
+        $no = 1;
+        foreach ($stokData as $item) {
+            $tableData[] = [
+                $no++,
+                $item['no_kantong'] ?? '-',
+                $item['nama_produsen'] ?? '-',
+                $item['gol_dar'] ?? '-',
+                $item['rhesus'] ?? '-',
+                $item['jenis_darah'] ?? '-',
+                ($item['volume'] ?? '-') . ' ml',
+                $item['tanggal_produksi'] ?? '-',
+                $item['tanggal_expired'] ?? '-',
+                ucfirst($item['status'] ?? '-'),
+                $item['keterangan'] ?? '-',
+            ];
+        }
+
+        $columnWidths = [8, 25, 30, 12, 12, 20, 18, 20, 20, 18, 35];
+        $pdf->addTable($headers, $tableData, $columnWidths);
+        $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
     }
 
     public function create()

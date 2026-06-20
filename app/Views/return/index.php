@@ -50,20 +50,46 @@
                 <div class="card-body">
                     <form method="get" action="<?= base_url('/return') ?>" class="mb-3">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Cari no kantong, rumah sakit, alasan..." value="<?= $search ?>">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari no kantong, rumah sakit, alasan..." value="<?= esc($search) ?>">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
                                         </button>
-                                        <?php if ($search): ?>
+                                        <?php if ($search || $from || $to || $keperluan): ?>
                                             <a href="<?= base_url('/return') ?>" class="btn btn-default">
                                                 <i class="fas fa-times"></i>
                                             </a>
                                         <?php endif; ?>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" name="from" class="form-control" value="<?= esc($from) ?>" placeholder="Dari">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" name="to" class="form-control" value="<?= esc($to) ?>" placeholder="Sampai">
+                            </div>
+                            <div class="col-md-3">
+                                <select name="keperluan" class="form-control">
+                                    <option value="">Semua Keperluan</option>
+                                    <?php if (!empty($keperluanOptions)): ?>
+                                        <?php foreach ($keperluanOptions as $option): ?>
+                                            <option value="<?= esc($option) ?>" <?= $keperluan === $option ? 'selected' : '' ?>><?= esc($option) ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a href="<?= base_url('/return/download?' . http_build_query(array_filter([ 'search' => $search, 'from' => $from, 'to' => $to, 'keperluan' => $keperluan ]))) ?>" class="btn btn-success btn-sm">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
                             </div>
                         </div>
                     </form>

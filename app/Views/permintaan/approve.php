@@ -15,6 +15,9 @@
 
     <section class="content">
         <div class="container-fluid">
+            <div class="mb-2">
+                <small class="text-muted">DEBUG: session role = <?= esc(session()->get('role')) ?>, user id = <?= esc(session()->get('id_user')) ?></small>
+            </div>
             <?php if (session()->getFlashdata('errors')): ?>
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -103,7 +106,7 @@
                         <?php endif; ?>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success" <?= empty($available_stock) ? 'disabled' : '' ?>>Setujui Permintaan</button>
+                            <button type="submit" class="btn btn-success">Setujui Permintaan</button>
                             <a href="<?= base_url('/permintaan') ?>" class="btn btn-secondary">Kembali</a>
                         </div>
                     </form>

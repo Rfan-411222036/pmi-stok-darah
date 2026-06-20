@@ -25,19 +25,89 @@ class Retur extends BaseController
     public function index()
     {
         $search = $this->request->getGet('search');
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+        $keperluan = $this->request->getGet('keperluan');
         $perPage = 10;
 
-        $result = $this->returnModel->getReturnWithDetails($search, $perPage);
+        $result = $this->returnModel->getReturnWithDetails($search, $perPage, $from, $to, $keperluan);
 
         $data = [
             'title' => 'Management Return Darah',
             'page_title' => 'Data Return Darah',
             'return' => $result['return'] ?? [],
             'pager' => $result['pager'] ?? $this->returnModel->pager,
-            'search' => $search
+            'search' => $search,
+            'from' => $from,
+            'to' => $to,
+            'keperluan' => $keperluan,
+            'keperluanOptions' => $this->returnModel->getDistinctAlasanReturn()
         ];
 
         return view('return/index', $data);
+    }
+
+    public function downloadReport()
+    {
+        $search = $this->request->getGet('search');
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+        $keperluan = $this->request->getGet('keperluan');
+
+        $returnData = $this->returnModel->getReturnWithDetails($search, null, $from, $to, $keperluan)['return'];
+
+        $pdf = new \App\Libraries\PdfGenerator();
+        $pdf->AddPage();
+        $pdf->setHeaderInfo('LAPORAN RETURN DARAH', date('d F Y'));
+        $pdf->addTitle('LAPORAN RETURN DARAH');
+
+        $meta = [];
+        if ($from || $to) {
+            $meta[] = 'Periode: ' . ($from ?: '-') . ' s/d ' . ($to ?: '-');
+        }
+        if ($keperluan) {
+            $meta[] = 'Keperluan: ' . $keperluan;
+        }
+        if ($search) {
+            $meta[] = 'Search: ' . $search;
+        }
+
+        if (!empty($meta)) {
+            foreach ($meta as $line) {
+                $pdf->SetFont('helvetica', '', 10);
+                $pdf->Cell(0, 6, $line, 0, 1, 'L');
+            }
+            $pdf->Ln(2);
+        }
+
+        if (empty($returnData)) {
+            $pdf->SetFont('helvetica', '', 11);
+            $pdf->Cell(0, 10, 'Tidak ada data return sesuai filter.', 0, 1, 'C');
+            $pdf->Output('Laporan_Retur_' . date('d-m-Y') . '.pdf', 'D');
+            return;
+        }
+
+        $headers = ['No', 'No. Kantong', 'Gol', 'Jenis', 'Rumah Sakit', 'Tanggal Distribusi', 'Tanggal Return', 'Alasan Return', 'Kondisi', 'Status Stok'];
+        $tableData = [];
+        $no = 1;
+        foreach ($returnData as $item) {
+            $tableData[] = [
+                $no++,
+                $item['no_kantong'] ?? '-',
+                $item['gol_dar'] ?? '-',
+                $item['jenis_darah'] ?? '-',
+                $item['nama_rs'] ?? '-',
+                isset($item['tanggal_distribusi']) ? date('d-m-Y', strtotime($item['tanggal_distribusi'])) : '-',
+                isset($item['tanggal_retur']) ? date('d-m-Y', strtotime($item['tanggal_retur'])) : '-',
+                $item['alasan_return'] ?? '-',
+                ucfirst($item['kondisi_darah'] ?? '-'),
+                ($item['kondisi_darah'] === 'baik') ? 'Kembali' : 'Dimusnahkan',
+            ];
+        }
+
+        $columnWidths = [8, 28, 12, 18, 30, 24, 24, 28, 20, 18];
+        $pdf->addTable($headers, $tableData, $columnWidths);
+        $pdf->Output('Laporan_Retur_' . date('d-m-Y') . '.pdf', 'D');
     }
 
     public function create()

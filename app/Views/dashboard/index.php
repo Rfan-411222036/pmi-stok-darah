@@ -75,6 +75,51 @@
             <?php endif; ?>
 
             <?php if ($current_role === 'admin'): ?>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Laporan & Pemeriksaan Stok</h3>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="<?= base_url('/dashboard/laporan/download') ?>" target="_blank" class="form-inline mb-2">
+                        <div class="form-group mr-2">
+                            <select name="id_produsen" class="form-control">
+                                <option value="">Semua BDRS</option>
+                                <?php foreach ($produsen_list as $p): ?>
+                                    <option value="<?= $p['id_produsen'] ?>"><?= esc($p['nama']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group mr-2">
+                            <select name="gol_dar" class="form-control">
+                                <option value="">Semua Golongan</option>
+                                <?php foreach ($golongan_list as $g): ?>
+                                    <option value="<?= esc($g) ?>"><?= esc($g) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group mr-2">
+                            <select name="jenis" class="form-control">
+                                <option value="">Semua Jenis</option>
+                                <?php foreach ($jenis_list as $j): ?>
+                                    <option value="<?= esc($j) ?>"><?= esc($j) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <button class="btn btn-danger mr-2" type="submit"><i class="fas fa-file-pdf"></i> Download Stok (PDF)</button>
+                    </form>
+
+                    <form method="get" action="<?= base_url('/dashboard/laporan/distribusi') ?>" target="_blank" class="form-inline mb-2">
+                        <input type="date" name="from" class="form-control mr-2">
+                        <input type="date" name="to" class="form-control mr-2">
+                        <button class="btn btn-success" type="submit"><i class="fas fa-file-pdf"></i> Download Distribusi</button>
+                    </form>
+
+                    <form method="post" action="<?= base_url('/dashboard/check-low-stock') ?>">
+                        <?= csrf_field() ?>
+                        <button class="btn btn-warning" type="submit"><i class="fas fa-bell"></i> Periksa Stok Rendah Sekarang</button>
+                    </form>
+                </div>
+            </div>
             <div class="card card-outline card-danger mb-3">
                 <div class="card-header">
                     <h3 class="card-title">Notifikasi Stok Rendah</h3>

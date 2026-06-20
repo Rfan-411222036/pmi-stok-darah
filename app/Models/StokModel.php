@@ -11,7 +11,7 @@ class StokModel extends Model
     protected $allowedFields = ['no_kantong', 'id_produsen', 'jenis_darah', 'gol_dar', 'rhesus', 'volume', 'tanggal_produksi', 'tanggal_expired', 'status', 'keterangan'];
     protected $useTimestamps = false;
 
-    public function getStokWithDetails($search = '', $perPage = 10, $produsenId = null)
+    public function getStokWithDetails($search = '', $perPage = 10, $produsenId = null, $from = null, $to = null, $keterangan = null)
     {
         $builder = $this->select('stok.*, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
                        ->join('produsen', 'produsen.id_produsen = stok.id_produsen');
@@ -26,17 +26,34 @@ class StokModel extends Model
                    ->orLike('stok.gol_dar', $search)
                    ->orLike('stok.jenis_darah', $search)
                    ->orLike('produsen.nama', $search)
+                   ->orLike('stok.keterangan', $search)
                    ->groupEnd();
+        }
+
+        if ($from) {
+            $builder->where('stok.tanggal_produksi >=', $from);
+        }
+        if ($to) {
+            $builder->where('stok.tanggal_produksi <=', $to);
+        }
+
+        if ($keterangan) {
+            $builder->where('stok.keterangan', $keterangan);
         }
 
         $builder->orderBy('stok.tanggal_expired', 'ASC');
 
-        $data = [
-            'stok' => $builder->paginate($perPage),
+        if ($perPage) {
+            return [
+                'stok' => $builder->paginate($perPage),
+                'pager' => $this->pager
+            ];
+        }
+
+        return [
+            'stok' => $builder->findAll(),
             'pager' => $this->pager
         ];
-
-        return $data;
     }
 
     public function getStokTersedia($produsenId = null)
@@ -163,6 +180,19 @@ class StokModel extends Model
                      ->getResultArray();
 
         return array_column($rows, 'jenis_darah');
+    }
+
+    public function getDistinctKeterangan()
+    {
+        $rows = $this->select('keterangan')
+                     ->distinct()
+                     ->where('keterangan IS NOT NULL')
+                     ->where('keterangan !=', '')
+                     ->orderBy('keterangan')
+                     ->get()
+                     ->getResultArray();
+
+        return array_column($rows, 'keterangan');
     }
 
     public function getDistinctGolonganByProdusen($id_produsen)

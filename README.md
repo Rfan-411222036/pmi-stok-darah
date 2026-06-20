@@ -79,4 +79,6 @@ UI / Design improvements:
 - Small CSS polish was added in `app/Views/templates/footer.php` to ensure consistent spacing and responsive adjustments.
 
 TAMBAHAN : 
-- approve rs ke bdrs belom bisa
+- approve permintaan rs dari bdrs belom bisa
+- Pengguna mengunduh laporan distribusi, permintaan, retur, Sistem menghasilkan laporan sesuai filter (print/pdf)
+- Sistem menampilkan notifikasi stok kritis di BDRS Minimum stok(Notifikasi Admin)

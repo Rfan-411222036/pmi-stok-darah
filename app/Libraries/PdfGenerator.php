@@ -2,6 +2,13 @@
 
 namespace App\Libraries;
 
+if (! class_exists('TCPDF')) {
+    $tcpdfPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'tecnickcom' . DIRECTORY_SEPARATOR . 'tcpdf' . DIRECTORY_SEPARATOR . 'tcpdf.php';
+    if (is_file($tcpdfPath)) {
+        require_once $tcpdfPath;
+    }
+}
+
 use TCPDF;
 
 class PdfGenerator extends TCPDF
@@ -121,41 +128,81 @@ class PdfGenerator extends TCPDF
         $this->Ln(2);
     }
 
+    public function getAvailablePageWidth()
+    {
+        return $this->getPageWidth() - $this->lMargin - $this->rMargin;
+    }
+
     public function addTable($headers, $data, $columnWidths = null)
     {
-        // Set column widths if not provided
+        $availableWidth = $this->getAvailablePageWidth();
+
         if (!$columnWidths) {
-            $columnWidths = array_fill(0, count($headers), $this->w / count($headers) - 30);
+            $columnCount = count($headers);
+            $columnWidths = array_fill(0, $columnCount, $availableWidth / $columnCount);
+        }
+
+        $totalWidth = array_sum($columnWidths);
+        if ($totalWidth > $availableWidth) {
+            $ratio = $availableWidth / $totalWidth;
+            foreach ($columnWidths as $index => $width) {
+                $columnWidths[$index] = $width * $ratio;
+            }
+
+            // Adjust rounding difference on the last column
+            $difference = $availableWidth - array_sum($columnWidths);
+            if ($difference !== 0) {
+                $columnWidths[count($columnWidths) - 1] += $difference;
+            }
         }
 
         $this->Ln(2);
-        
+
         // Header
-        $this->SetFont('helvetica', 'B', 10);
+        $this->SetFont('helvetica', 'B', 9);
         $this->SetFillColor(0, 102, 204);
         $this->SetTextColor(255, 255, 255);
-        
+
         foreach ($headers as $i => $header) {
-            $this->Cell($columnWidths[$i], 9, $header, 1, 0, 'C', true);
+            $this->MultiCell($columnWidths[$i], 8, $header, 1, 'C', true, 0, '', '', true, 0, false, true, 8, 'M');
         }
         $this->Ln();
 
         // Data rows
-        $this->SetFont('helvetica', '', 9);
+        $this->SetFont('helvetica', '', 8);
         $this->SetTextColor(0, 0, 0);
         $alternate = false;
-        
+
         foreach ($data as $row) {
-            // Alternate row colors
             if ($alternate) {
-                $this->SetFillColor(240, 248, 255);
+                $fillColor = [240, 248, 255];
             } else {
-                $this->SetFillColor(255, 255, 255);
+                $fillColor = [255, 255, 255];
             }
             $alternate = !$alternate;
 
+            $rowHeight = 0;
             foreach ($row as $i => $cell) {
-                $this->Cell($columnWidths[$i], 8, $cell, 1, 0, 'L', true);
+                $lineCount = $this->getNumLines($cell, $columnWidths[$i]);
+                $rowHeight = max($rowHeight, $lineCount * 5 + 2);
+            }
+
+            if ($this->GetY() + $rowHeight > $this->PageBreakTrigger) {
+                $this->AddPage();
+                $this->SetFont('helvetica', 'B', 9);
+                $this->SetFillColor(0, 102, 204);
+                $this->SetTextColor(255, 255, 255);
+                foreach ($headers as $i => $header) {
+                    $this->MultiCell($columnWidths[$i], 8, $header, 1, 'C', true, 0, '', '', true, 0, false, true, 8, 'M');
+                }
+                $this->Ln();
+                $this->SetFont('helvetica', '', 8);
+                $this->SetTextColor(0, 0, 0);
+            }
+
+            $this->SetFillColor($fillColor[0], $fillColor[1], $fillColor[2]);
+            foreach ($row as $i => $cell) {
+                $this->MultiCell($columnWidths[$i], $rowHeight, $cell, 1, 'L', true, 0, '', '', true, 0, false, true, $rowHeight, 'M');
             }
             $this->Ln();
         }

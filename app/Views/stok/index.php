@@ -52,9 +52,9 @@
                   <div class="card-body">
                     <form method="get" action="<?= base_url('/stok') ?>" class="mb-3">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Cari no kantong, golongan, jenis..." value="<?= $search ?>">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari no kantong, golongan, jenis, keterangan..." value="<?= esc($search) ?>">
                                     <?php if (!empty($filter_produsen)): ?>
                                         <input type="hidden" name="id_produsen" value="<?= esc($filter_produsen) ?>">
                                     <?php endif; ?>
@@ -62,7 +62,7 @@
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
                                         </button>
-                                        <?php if ($search || !empty($filter_produsen)): ?>
+                                        <?php if ($search || $from || $to || $keterangan || !empty($filter_produsen)): ?>
                                             <a href="<?= base_url('/stok') ?>" class="btn btn-default">
                                                 <i class="fas fa-times"></i>
                                             </a>
@@ -70,13 +70,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <?php if (!empty($filter_produsen_name)): ?>
-                                <div class="col-md-4">
-                                    <div class="alert alert-info mb-0">
-                                        <strong>Filter BDRS:</strong> <?= esc($filter_produsen_name) ?>
-                                    </div>
+                            <div class="col-md-2">
+                                <div class="form-group mb-0">
+                                    <input type="date" name="from" class="form-control" value="<?= esc($from) ?>" placeholder="Dari">
                                 </div>
-                            <?php endif; ?>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group mb-0">
+                                    <input type="date" name="to" class="form-control" value="<?= esc($to) ?>" placeholder="Sampai">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-0">
+                                    <select name="keterangan" class="form-control">
+                                        <option value="">Semua Keterangan</option>
+                                        <?php if (!empty($keteranganOptions)): ?>
+                                            <?php foreach ($keteranganOptions as $option): ?>
+                                                <option value="<?= esc($option) ?>" <?= $keterangan === $option ? 'selected' : '' ?>><?= esc($option) ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <a href="<?= base_url('/stok/download?' . http_build_query(array_filter([ 'search' => $search, 'id_produsen' => $filter_produsen, 'from' => $from, 'to' => $to, 'keterangan' => $keterangan ]))) ?>" class="btn btn-success btn-sm">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
                         </div>
                     </form>
 

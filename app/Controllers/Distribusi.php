@@ -176,6 +176,37 @@ class Distribusi extends BaseController
         $stokData = ['status' => 'terdistribusi'];
 
         if ($this->distribusiModel->save($data) && $this->stokModel->update($this->request->getPost('id_bag'), $stokData)) {
+            // After marking stok as distributed, check low stock thresholds and notify admin if needed
+            try {
+                $bag = $this->stokModel->find($id_bag);
+                if ($bag) {
+                    $thresholds = [ 'A' => 10, 'B' => 10, 'O' => 15, 'AB' => 5 ];
+                    $gol = $bag['gol_dar'] ?? null;
+                    $jenis = $bag['jenis_darah'] ?? null;
+                    $prodId = $bag['id_produsen'] ?? null;
+                    if ($gol && isset($thresholds[$gol]) && $prodId) {
+                        $remaining = $this->stokModel->countAvailableByProdusenGolonganJenis($prodId, $gol, $jenis);
+                        if ($remaining < $thresholds[$gol]) {
+                            $produsen = $this->produsenModel->find($prodId);
+                            $produsenName = $produsen['nama'] ?? ('BDRS #' . $prodId);
+                            $notificationModel = new \App\Models\NotificationModel();
+                            $adminUsers = (new \App\Models\UserModel())->where('role', 'admin')->findAll();
+                            foreach ($adminUsers as $admin) {
+                                $notificationModel->insert([
+                                    'user_id' => $admin['id_user'],
+                                    'title' => 'Stok Rendah: ' . $gol . ' ' . $jenis,
+                                    'message' => 'Stok kantong darah ' . $gol . ' ' . $jenis . ' untuk BDRS ' . $produsenName . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
+                                    'is_read' => 0,
+                                    'created_at' => date('Y-m-d H:i:s')
+                                ]);
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // ignore notification errors
+            }
+
             session()->setFlashdata('success', 'Distribusi darah berhasil dicatat');
         } else {
             session()->setFlashdata('error', 'Gagal mencatat distribusi darah');

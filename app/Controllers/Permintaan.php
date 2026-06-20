@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\PdfGenerator;
 use App\Models\PermintaanModel;
 use App\Models\ProdusenModel;
 use App\Models\RumahSakitModel;
@@ -101,14 +102,22 @@ class Permintaan extends BaseController
     {
         $role = session()->get('role');
         $userId = session()->get('id_user');
+        $filters = [
+            'search' => $this->request->getGet('search'),
+            'from' => $this->request->getGet('from'),
+            'to' => $this->request->getGet('to'),
+            'keperluan' => $this->request->getGet('keperluan'),
+            'gol_dar' => $this->request->getGet('gol_dar'),
+            'jenis' => $this->request->getGet('jenis'),
+        ];
 
         if ($role === 'bdrs') {
             // find produsen for this user; show all their requests, not only pending
             $produsen = $this->produsenModel->where('id_user', $userId)->first();
             if ($produsen) {
-                $dataList = $this->permintaanModel->getForProdusen($produsen['id_produsen']);
+                $dataList = $this->permintaanModel->getForProdusen($produsen['id_produsen'], $filters);
             } elseif ($userId) {
-                $dataList = $this->permintaanModel->getByCreator($userId);
+                $dataList = $this->permintaanModel->getByCreator($userId, $filters);
             } else {
                 $dataList = [];
             }
@@ -130,21 +139,95 @@ class Permintaan extends BaseController
             }
 
             if ($rs) {
-                $dataList = $this->permintaanModel->getByRs($rs['id_rs']);
+                $dataList = $this->permintaanModel->getByRs($rs['id_rs'], $filters);
             } elseif ($userId) {
-                $dataList = $this->permintaanModel->getByCreator($userId);
+                $dataList = $this->permintaanModel->getByCreator($userId, $filters);
             } else {
                 $dataList = [];
             }
         } else {
-            $dataList = $this->permintaanModel->getAllWithNames();
+            $dataList = $this->permintaanModel->getAllWithNames($filters);
         }
 
         return view('permintaan/index', [
             'title' => 'Permintaan Darah',
             'page_title' => 'Permintaan Darah',
-            'list' => $dataList
+            'list' => $dataList,
+            'filters' => $filters,
+            'keteranganOptions' => $this->permintaanModel->getDistinctKeterangan(),
         ]);
+    }
+
+    public function downloadReport()
+    {
+        $filters = [
+            'search' => $this->request->getGet('search'),
+            'from' => $this->request->getGet('from'),
+            'to' => $this->request->getGet('to'),
+            'keperluan' => $this->request->getGet('keperluan'),
+            'gol_dar' => $this->request->getGet('gol_dar'),
+            'jenis' => $this->request->getGet('jenis'),
+        ];
+
+        $requests = $this->permintaanModel->getAllWithNames($filters);
+        $pdf = new PdfGenerator();
+        $pdf->AddPage();
+        $pdf->setHeaderInfo('LAPORAN PERMINTAAN DARAH', date('d F Y'));
+        $pdf->addTitle('LAPORAN PERMINTAAN DARAH');
+
+        $meta = [];
+        if (!empty($filters['from']) || !empty($filters['to'])) {
+            $meta[] = 'Periode: ' . ($filters['from'] ?: '-') . ' s/d ' . ($filters['to'] ?: '-');
+        }
+        if (!empty($filters['keperluan'])) {
+            $meta[] = 'Keperluan: ' . $filters['keperluan'];
+        }
+        if (!empty($filters['search'])) {
+            $meta[] = 'Search: ' . $filters['search'];
+        }
+        if (!empty($filters['gol_dar'])) {
+            $meta[] = 'Golongan: ' . $filters['gol_dar'];
+        }
+        if (!empty($filters['jenis'])) {
+            $meta[] = 'Jenis: ' . $filters['jenis'];
+        }
+
+        if (!empty($meta)) {
+            foreach ($meta as $line) {
+                $pdf->SetFont('helvetica', '', 10);
+                $pdf->Cell(0, 6, $line, 0, 1, 'L');
+            }
+            $pdf->Ln(2);
+        }
+
+        if (empty($requests)) {
+            $pdf->SetFont('helvetica', '', 11);
+            $pdf->Cell(0, 10, 'Tidak ada data permintaan untuk filter ini.', 0, 1, 'C');
+            $pdf->Output('Laporan_Permintaan_' . date('d-m-Y') . '.pdf', 'D');
+            return;
+        }
+
+        $headers = ['No', 'RS', 'BDRS', 'Jumlah', 'Gol', 'Jenis', 'Diagnosa/Keperluan', 'Nama Penerima', 'Tgl Permintaan', 'Status'];
+        $tableData = [];
+        $no = 1;
+        foreach ($requests as $item) {
+            $tableData[] = [
+                $no++,
+                $item['nama_rs'] ?? '-',
+                $item['nama_produsen'] ?? '-',
+                $item['jumlah'] ?? '-',
+                $item['gol_dar'] ?? '-',
+                $item['jenis'] ?? '-',
+                $item['keterangan'] ?? '-',
+                $item['nama_penerima'] ?? '-',
+                isset($item['created_at']) ? date('d-m-Y', strtotime($item['created_at'])) : '-',
+                ucfirst($item['status'] ?? '-'),
+            ];
+        }
+
+        $columnWidths = [8, 30, 30, 18, 18, 20, 40, 35, 24, 22];
+        $pdf->addTable($headers, $tableData, $columnWidths);
+        $pdf->Output('Laporan_Permintaan_' . date('d-m-Y') . '.pdf', 'D');
     }
 
     public function create()
@@ -243,19 +326,31 @@ class Permintaan extends BaseController
 
     public function approve($id)
     {
+        $this->logApproveDebug('enter', [
+            'id' => $id,
+            'method' => $this->request->getMethod(),
+            'session_role' => session()->get('role'),
+            'session_user_id' => session()->get('id_user'),
+            'post' => $this->request->getPost()
+        ]);
         $role = session()->get('role');
         $userId = session()->get('id_user');
 
         if ($role !== 'bdrs') {
+            $this->logApproveDebug('access_denied_role', ['role' => $role, 'user' => $userId]);
             return redirect()->back()->with('error', 'Akses ditolak');
         }
 
         $perm = $this->permintaanModel->find($id);
         if (!$perm) {
+            $this->logApproveDebug('not_found', ['id' => $id]);
+        }
+        if (!$perm) {
             return redirect()->back()->with('error', 'Permintaan tidak ditemukan');
         }
 
         if ($perm['status'] !== 'pending') {
+            $this->logApproveDebug('already_processed', ['id' => $id, 'status' => $perm['status']]);
             return redirect()->back()->with('error', 'Permintaan sudah diproses');
         }
 
@@ -267,28 +362,51 @@ class Permintaan extends BaseController
             $produsen = $this->produsenModel->where('nama', session()->get('nama'))->first();
         }
 
+        $this->logApproveDebug('produsen_resolved', ['produsen' => $produsen]);
+
         if (!$produsen || $produsen['id_produsen'] != $perm['id_produsen']) {
+            $this->logApproveDebug('produsen_mismatch', ['session_produsen' => $produsen, 'perm_id_produsen' => $perm['id_produsen']]);
             return redirect()->back()->with('error', 'Akses BDRS tidak valid untuk permintaan ini');
         }
 
-        if ($this->request->getMethod() === 'post') {
+        if (strtolower($this->request->getMethod()) === 'post') {
+            $this->logApproveDebug('post_handler_enter', ['post' => $this->request->getPost()]);
             $validation = \Config\Services::validation();
             $validation->setRules([
                 'id_bag' => 'required',
                 'approval_note' => 'required'
             ]);
 
-            if (!$validation->withRequest($this->request)->run()) {
+            $this->logApproveDebug('before_validation', ['post' => $this->request->getPost()]);
+            try {
+                $valid = $validation->withRequest($this->request)->run();
+            } catch (\Exception $e) {
+                $this->logApproveDebug('validation_exception', ['exception' => $e->getMessage()]);
+                return redirect()->back()->with('error', 'Validation error');
+            }
+
+            $this->logApproveDebug('validation_result', ['valid' => $valid, 'errors' => $validation->getErrors()]);
+            if (!$valid) {
+                $this->logApproveDebug('validation_failed', ['errors' => $validation->getErrors(), 'post' => $this->request->getPost()]);
                 return redirect()->back()->withInput()->with('errors', $validation->getErrors());
             }
 
             $id_bag = $this->request->getPost('id_bag');
-            $bag = $this->stokModel->find($id_bag);
+            try {
+                $bag = $this->stokModel->find($id_bag);
+            } catch (\Exception $e) {
+                $this->logApproveDebug('stok_find_exception', ['id_bag' => $id_bag, 'exception' => $e->getMessage()]);
+                return redirect()->back()->with('error', 'Error mencari kantong darah');
+            }
+
+            $this->logApproveDebug('bag_fetched', ['id_bag' => $id_bag, 'bag' => $bag]);
 
             if (!$bag || $bag['id_produsen'] != $perm['id_produsen'] || $bag['status'] !== 'tersedia' || $bag['tanggal_expired'] < date('Y-m-d')) {
+                $this->logApproveDebug('invalid_bag', ['id_bag' => $id_bag, 'bag' => $bag ?? null, 'perm' => $perm]);
                 return redirect()->back()->with('error', 'No kantong tidak valid atau tidak tersedia.');
             }
 
+            $this->logApproveDebug('about_to_update', ['perm_id' => $id, 'id_bag' => $id_bag, 'post' => $this->request->getPost()]);
             $this->permintaanModel->update($id, [
                 'status' => 'approved',
                 'approved_by' => $userId,
@@ -298,6 +416,8 @@ class Permintaan extends BaseController
             ]);
 
             $this->stokModel->update($id_bag, ['status' => 'terdistribusi']);
+
+            $this->logApproveDebug('updated', ['perm_id' => $id, 'id_bag' => $id_bag, 'approved_by' => $userId]);
 
             $thresholds = [
                 'A' => 10,
@@ -346,18 +466,31 @@ class Permintaan extends BaseController
         ]);
     }
 
+    protected function logApproveDebug($message, $data = [])
+    {
+        $path = WRITEPATH . 'logs/approve-debug.log';
+        $entry = date('c') . ' ' . $message . ' ' . json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        try {
+            file_put_contents($path, $entry, FILE_APPEND | LOCK_EX);
+        } catch (\Exception $e) {
+            // swallow — logging should not break app flow
+        }
+    }
+
     protected function notifyAdminLowStock($produsenId, $golongan, $jenis, $remaining)
     {
         // Simple stub for low stock alert. Adjust to actual admin notification flow.
+        $produsen = $this->produsenModel->find($produsenId);
+        $produsenName = $produsen['nama'] ?? ('BDRS #' . $produsenId);
         $adminUsers = $this->userModel->where('role', 'admin')->findAll();
 
         foreach ($adminUsers as $admin) {
             $this->notificationModel->insert([
                 'user_id' => $admin['id_user'],
                 'title' => 'Stok Rendah: ' . $golongan . ' ' . $jenis,
-                    'message' => 'Stok kantong darah ' . $golongan . ' ' . $jenis . ' untuk BDRS #' . $produsenId . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
-                    'is_read' => 0,
-                    'created_at' => date('Y-m-d H:i:s')
+                'message' => 'Stok kantong darah ' . $golongan . ' ' . $jenis . ' untuk BDRS ' . $produsenName . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
             ]);
         }
     }
