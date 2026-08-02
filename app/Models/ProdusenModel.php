@@ -21,15 +21,10 @@ class ProdusenModel extends Model
             $fields = [];
         }
 
-        $hasIsActive = in_array('is_active', $fields);
         $hasIdUser = in_array('id_user', $fields);
 
         // Use the model instance as the query builder so paginate() works.
         $builder = $this;
-
-        if ($hasIsActive) {
-            $builder = $builder->where('is_active', 1);
-        }
 
         if ($userId && $hasIdUser) {
             $builder = $builder->where('id_user', $userId);
@@ -62,9 +57,6 @@ class ProdusenModel extends Model
         }
 
         $builder = $this;
-        if (in_array('is_active', $fields)) {
-            $builder = $builder->where('is_active', 1);
-        }
 
         if ($userId && in_array('id_user', $fields)) {
             $builder = $builder->where('id_user', $userId);

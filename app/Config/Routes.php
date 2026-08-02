@@ -15,6 +15,8 @@ $routes->get('/logout', 'Auth::logout');
 // Protected routes - require authentication
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/dashboard', 'Dashboard::index');
+    $routes->get('/dashboard/laporan/preview-stok', 'Dashboard::previewLaporan');
+    $routes->get('/dashboard/laporan/preview-distribusi', 'Dashboard::previewDistribusi');
     $routes->get('/dashboard/laporan/download', 'Dashboard::downloadLaporan');
     $routes->get('/dashboard/laporan/distribusi', 'Dashboard::downloadDistribusi');
     $routes->get('/dashboard/laporan/pemusnahan', 'Dashboard::downloadPemusnahan');
@@ -62,12 +64,15 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
 
     // Permintaan (Requests)
     $routes->get('/permintaan', 'Permintaan::index');
+    $routes->get('/permintaan/preview', 'Permintaan::previewReport');
     $routes->get('/permintaan/download', 'Permintaan::downloadReport');
     $routes->get('/permintaan/create', 'Permintaan::create');
     $routes->post('/permintaan/store', 'Permintaan::store');
     $routes->get('/permintaan/approve/(:num)', 'Permintaan::approve/$1');
     $routes->post('/permintaan/approve/(:num)', 'Permintaan::approve/$1');
     $routes->get('/permintaan/reject/(:num)', 'Permintaan::reject/$1');
+    $routes->get('/permintaan/complete/(:num)', 'Permintaan::complete/$1');
+    $routes->post('/permintaan/complete/(:num)', 'Permintaan::complete/$1');
 
     // Notifications
     $routes->get('/notifications', 'Notifications::index');

@@ -58,7 +58,7 @@
                                     <select class="form-control" id="id_rs" name="id_rs" required>
                                         <option value="">Pilih Rumah Sakit</option>
                                         <?php foreach ($rumah_sakit as $rs): ?>
-                                            <option value="<?= $rs['id_rs'] ?>" <?= old('id_rs') == $rs['id_rs'] ? 'selected' : '' ?>>
+                                            <option value="<?= $rs['id_rs'] ?>" <?= old('id_rs', $prefill_id_rs ?? '') == $rs['id_rs'] ? 'selected' : '' ?>>
                                                 <?= $rs['nama_rs'] ?> (<?= $rs['jenis_rs'] ?>)
                                             </option>
                                         <?php endforeach; ?>
@@ -68,7 +68,7 @@
                                 <div class="form-group">
                                     <label for="penerima">Penerima *</label>
                                     <input type="text" class="form-control" id="penerima" name="penerima"
-                                           value="<?= old('penerima') ?>"
+                                           value="<?= old('penerima', $prefill_penerima ?? '') ?>"
                                            placeholder="Masukkan nama penerima" required>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 <div class="form-group">
                                     <label for="no_permintaan">No Permintaan</label>
                                     <input type="text" class="form-control" id="no_permintaan" name="no_permintaan"
-                                           value="<?= old('no_permintaan') ?>"
+                                           value="<?= old('no_permintaan', $prefill_no_permintaan ?? '') ?>"
                                            placeholder="Masukkan nomor permintaan">
                                 </div>
 

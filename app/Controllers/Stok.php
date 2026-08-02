@@ -38,17 +38,6 @@ class Stok extends BaseController
             }
         }
 
-        if ($role === 'rs') {
-            $result = [
-                'stok' => [],
-                'pager' => $this->stokModel->pager
-            ];
-            $golonganRhesus = [];
-        } else {
-            $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter, $from, $to, $keterangan);
-            $golonganRhesus = $this->stokModel->getStokByGolonganRhesus($produsenFilter);
-        }
-
         $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter, $from, $to, $keterangan);
         $golonganRhesus = $this->stokModel->getStokByGolonganRhesus($produsenFilter);
 

@@ -8,7 +8,7 @@ class PermintaanModel extends Model
 {
     protected $table = 'permintaan';
     protected $primaryKey = 'id_permintaan';
-    protected $allowedFields = ['id_rs', 'id_produsen', 'jumlah', 'gol_dar', 'jenis', 'keterangan', 'nama_penerima', 'id_bag', 'approval_note', 'status', 'created_by', 'approved_by', 'approved_at', 'created_at'];
+    protected $allowedFields = ['id_rs', 'id_produsen', 'jumlah', 'gol_dar', 'jenis', 'keterangan', 'nama_penerima', 'id_bag', 'approval_note', 'priority_cito', 'status', 'created_by', 'approved_by', 'approved_at', 'created_at'];
     protected $useTimestamps = false;
 
     public function getPendingForProdusen($id_produsen)

@@ -49,7 +49,7 @@
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="fas fa-user mr-1"></i>
                 <?= session()->get('nama') ?>
-                <span class="badge badge-<?= session()->get('role') == 'admin' ? 'danger' : 'info' ?> ml-1">
+                <span class="badge badge-<?= (session()->get('role') == 'admin' || session()->get('role') == 'pimpinan') ? 'danger' : 'info' ?> ml-1">
                     <?= ucfirst(session()->get('role')) ?>
                 </span>
             </a>

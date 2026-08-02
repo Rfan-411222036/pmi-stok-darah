@@ -57,13 +57,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="no_kantong">No. Kantong Darah *</label>
-                                    <input type="text" class="form-control" id="no_kantong" name="no_kantong"
-                                           value="<?= old('no_kantong', $produsen['no_kantong']) ?>"
-                                           placeholder="Masukkan nomor kantong darah" required>
-                                </div>
-
-                                <div class="form-group">
                                     <label for="telepon">Telepon</label>
                                     <input type="text" class="form-control" id="telepon" name="telepon"
                                            value="<?= old('telepon', $produsen['telepon'] ?? '') ?>"
@@ -71,11 +64,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="status">Status Darah *</label>
-                                    <select class="form-control" id="status" name="status" required>
+                                    <label for="is_active">Status *</label>
+                                    <select class="form-control" id="is_active" name="is_active" required>
                                         <option value="">Pilih Status</option>
-                                        <option value="masih layak" <?= old('status', $produsen['status']) == 'masih layak' ? 'selected' : '' ?>>Masih Layak</option>
-                                        <option value="expired" <?= old('status', $produsen['status']) == 'expired' ? 'selected' : '' ?>>Expired</option>
+                                        <option value="1" <?= old('is_active', $produsen['is_active'] ?? 1) == '1' ? 'selected' : '' ?>>Aktif</option>
+                                        <option value="0" <?= old('is_active', $produsen['is_active'] ?? 1) == '0' ? 'selected' : '' ?>>Non Aktif</option>
                                     </select>
                                 </div>
                             </div>

@@ -20,7 +20,7 @@ class RumahSakit extends BaseController
         $role = session()->get('role');
         $userId = session()->get('id_user');
 
-        if ($role === 'admin') {
+        if ($role === 'admin' || $role === 'pimpinan') {
             $result = $this->rumahSakitModel->getRumahSakit($search, $perPage);
         } elseif ($role === 'rs') {
             $result = $this->rumahSakitModel->getRumahSakit($search, $perPage, $userId);
@@ -105,7 +105,7 @@ class RumahSakit extends BaseController
             return redirect()->to('/rumahsakit');
         }
 
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'rs') {
                 if (isset($rumahSakit['id_user']) && $rumahSakit['id_user'] != session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');
@@ -136,7 +136,7 @@ class RumahSakit extends BaseController
             return redirect()->to('/rumahsakit');
         }
 
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'rs') {
                 if (isset($rumahSakit['id_user']) && $rumahSakit['id_user'] != session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');
@@ -186,7 +186,7 @@ class RumahSakit extends BaseController
             return redirect()->to('/rumahsakit');
         }
 
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'rs') {
                 if (isset($rumahSakit['id_user']) && $rumahSakit['id_user'] != session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');

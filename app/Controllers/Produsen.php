@@ -20,7 +20,7 @@ class Produsen extends BaseController
         $role = session()->get('role');
         $userId = session()->get('id_user');
 
-        if ($role === 'admin') {
+        if ($role === 'admin' || $role === 'pimpinan') {
             $result = $this->produsenModel->getProdusen($search, $perPage);
         } elseif ($role === 'bdrs') {
             $result = $this->produsenModel->getProdusen($search, $perPage, $userId);
@@ -72,8 +72,7 @@ class Produsen extends BaseController
         $validation->setRules([
             'nama' => 'required',
             'jenis' => 'required',
-            'no_kantong' => 'required',
-            'status' => 'required'
+            'is_active' => 'required|in_list[0,1]'
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
@@ -83,8 +82,8 @@ class Produsen extends BaseController
         $data = [
             'nama' => $this->request->getPost('nama'),
             'jenis' => $this->request->getPost('jenis'),
-            'no_kantong' => $this->request->getPost('no_kantong'),
-            'status' => $this->request->getPost('status'),
+            'status' => $this->request->getPost('is_active') == '1' ? 'aktif' : 'non aktif',
+            'is_active' => (int) $this->request->getPost('is_active'),
             'alamat' => $this->request->getPost('alamat'),
             'telepon' => $this->request->getPost('telepon')
         ];
@@ -112,7 +111,7 @@ class Produsen extends BaseController
             return redirect()->to('/produsen');
         }
 
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'bdrs') {
                 if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');
@@ -143,7 +142,7 @@ class Produsen extends BaseController
             return redirect()->to('/produsen');
         }
 
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'bdrs') {
                 if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');
@@ -159,8 +158,7 @@ class Produsen extends BaseController
         $validation->setRules([
             'nama' => 'required',
             'jenis' => 'required',
-            'no_kantong' => 'required',
-            'status' => 'required'
+            'is_active' => 'required|in_list[0,1]'
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
@@ -170,8 +168,8 @@ class Produsen extends BaseController
         $data = [
             'nama' => $this->request->getPost('nama'),
             'jenis' => $this->request->getPost('jenis'),
-            'no_kantong' => $this->request->getPost('no_kantong'),
-            'status' => $this->request->getPost('status'),
+            'status' => $this->request->getPost('is_active') == '1' ? 'aktif' : 'non aktif',
+            'is_active' => (int) $this->request->getPost('is_active'),
             'alamat' => $this->request->getPost('alamat'),
             'telepon' => $this->request->getPost('telepon')
         ];
@@ -195,7 +193,7 @@ class Produsen extends BaseController
             return redirect()->to('/produsen');
         }
 
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'bdrs') {
                 if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');

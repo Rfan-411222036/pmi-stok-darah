@@ -65,7 +65,7 @@ D:\Application\laragon\laragon\bin\php\php-8.3.26-Win32-vs16-x64\php spark serve
 
 yang kurang:
 1. jika sudah di approved berarti kantong darah sudah tidak bisa di gunakan lagi
-	- Implementasi: status kantong diubah menjadi `terdistribusi` sehingga tidak dapat dipilih ulang.
+	- Implementasi: status kantong diubah menjadi `terdistribusi` sehingga tidak dapat dipilih ulang. -> done
 2. ketentuan minimal stok berdasarkan gol darah:
 	- A PRC: 10
 	- B PRC: 10
@@ -79,6 +79,9 @@ UI / Design improvements:
 - Small CSS polish was added in `app/Views/templates/footer.php` to ensure consistent spacing and responsive adjustments.
 
 TAMBAHAN : 
-- approve permintaan rs dari bdrs belom bisa
-- Pengguna mengunduh laporan distribusi, permintaan, retur, Sistem menghasilkan laporan sesuai filter (print/pdf)
-- Sistem menampilkan notifikasi stok kritis di BDRS Minimum stok(Notifikasi Admin)
+- Laporan & Pemeriksaan Stok
+data pdf kurang lengkap seperti dari bank darah dan rs mana dll
+
+Stok kantong darah O untuk BDRS #1 tersisa 0 dan di bawah batas minimal.
+
+harusnya nama bdrs

@@ -108,6 +108,13 @@ class Distribusi extends BaseController
         $produsenFilter = null;
         $produsenList = [];
 
+        $prefillIdRs = $this->request->getGet('id_rs');
+        $prefillIdProdusen = $this->request->getGet('id_produsen');
+        $prefillGolDar = $this->request->getGet('gol_dar');
+        $prefillJenis = $this->request->getGet('jenis');
+        $prefillPenerima = $this->request->getGet('penerima');
+        $prefillNoPermintaan = $this->request->getGet('no_permintaan');
+
         if ($role === 'bdrs') {
             $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
             if ($ownProdusen) {
@@ -118,7 +125,15 @@ class Distribusi extends BaseController
             $produsenList = $this->produsenModel->orderBy('nama')->findAll();
         }
 
-        $stok = $this->stokModel->getStokForDistribusi($produsenFilter);
+        $stok = $this->stokModel->getStokForDistribusi($produsenFilter ?: $prefillIdProdusen);
+        if ($prefillGolDar || $prefillJenis) {
+            $stok = array_values(array_filter($stok, function ($item) use ($prefillGolDar, $prefillJenis) {
+                $matchGol = !$prefillGolDar || ($item['gol_dar'] ?? '') === $prefillGolDar;
+                $matchJenis = !$prefillJenis || ($item['jenis_darah'] ?? '') === $prefillJenis;
+                return $matchGol && $matchJenis;
+            }));
+        }
+
         $rumahSakit = $this->rumahSakitModel->findAll();
 
         $data = [
@@ -128,6 +143,9 @@ class Distribusi extends BaseController
             'rumah_sakit' => $rumahSakit,
             'produsen_list' => $produsenList,
             'current_rs' => null,
+            'prefill_id_rs' => $prefillIdRs,
+            'prefill_penerima' => $prefillPenerima,
+            'prefill_no_permintaan' => $prefillNoPermintaan,
             'validation' => \Config\Services::validation()
         ];
         return view('distribusi/create', $data);

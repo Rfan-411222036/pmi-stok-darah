@@ -74,13 +74,13 @@
             </div>
             <?php endif; ?>
 
-            <?php if ($current_role === 'admin'): ?>
+            <?php if (in_array($current_role, ['admin', 'pimpinan'], true)): ?>
             <div class="card mb-3">
                 <div class="card-header">
                     <h3 class="card-title">Laporan & Pemeriksaan Stok</h3>
                 </div>
                 <div class="card-body">
-                    <form method="get" action="<?= base_url('/dashboard/laporan/download') ?>" target="_blank" class="form-inline mb-2">
+                    <form id="stokPdfForm" method="get" action="<?= base_url('/dashboard/laporan/download') ?>" target="_blank" class="form-inline mb-2">
                         <div class="form-group mr-2">
                             <select name="id_produsen" class="form-control">
                                 <option value="">Semua BDRS</option>
@@ -105,13 +105,13 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <button class="btn btn-danger mr-2" type="submit"><i class="fas fa-file-pdf"></i> Download Stok (PDF)</button>
+                        <button type="button" class="btn btn-info mr-2 preview-stok-pdf" data-toggle="modal" data-target="#stokPreviewModal"><i class="fas fa-eye"></i> Preview Stok (PDF)</button>
                     </form>
 
-                    <form method="get" action="<?= base_url('/dashboard/laporan/distribusi') ?>" target="_blank" class="form-inline mb-2">
+                    <form id="distribusiPdfForm" method="get" action="<?= base_url('/dashboard/laporan/distribusi') ?>" target="_blank" class="form-inline mb-2">
                         <input type="date" name="from" class="form-control mr-2">
                         <input type="date" name="to" class="form-control mr-2">
-                        <button class="btn btn-success" type="submit"><i class="fas fa-file-pdf"></i> Download Distribusi</button>
+                        <button type="button" class="btn btn-success preview-distribusi-pdf" data-toggle="modal" data-target="#distribusiPreviewModal"><i class="fas fa-eye"></i> Preview Distribusi</button>
                     </form>
 
                     <form method="post" action="<?= base_url('/dashboard/check-low-stock') ?>">
@@ -143,7 +143,186 @@
                     <?php endif; ?>
                 </div>
             </div>
+
+            <?php if (!empty($priority_notifications)): ?>
+                <div class="card card-outline card-warning mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Notifikasi Permintaan Cito High</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <?php foreach ($priority_notifications as $notification): ?>
+                                <li class="list-group-item border-left border-danger border-4">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <span class="badge badge-danger mb-2">HIGH PRIORITY</span>
+                                            <div><?= esc($notification['message']) ?></div>
+                                        </div>
+                                        <small class="text-muted"><?= date('d/m/Y H:i', strtotime($notification['created_at'])) ?></small>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
             <?php endif; ?>
+            <?php endif; ?>
+
+            <div class="modal fade" id="stokPreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Preview Laporan Stok PDF</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">Preview data stok yang akan diekspor ke PDF.</div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No. Kantong</th>
+                                            <th>BDRS</th>
+                                            <th>Jenis</th>
+                                            <th>Gol</th>
+                                            <th>Rhesus</th>
+                                            <th>Volume</th>
+                                            <th>Produksi</th>
+                                            <th>Expired</th>
+                                            <th>Status</th>
+                                            <th>Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="stokPreviewBody">
+                                        <tr><td colspan="10" class="text-center text-muted">Klik preview untuk melihat data.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-danger" id="confirmStokDownload"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="distribusiPreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Preview Laporan Distribusi PDF</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">Preview data distribusi yang akan diekspor ke PDF.</div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No. Kantong</th>
+                                            <th>Tanggal</th>
+                                            <th>Penerima</th>
+                                            <th>Keperluan</th>
+                                            <th>Rumah Sakit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="distribusiPreviewBody">
+                                        <tr><td colspan="5" class="text-center text-muted">Klik preview untuk melihat data.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-success" id="confirmDistribusiDownload"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var stokForm = document.getElementById('stokPdfForm');
+                    var stokPreviewButton = document.querySelector('.preview-stok-pdf');
+                    var confirmStokDownload = document.getElementById('confirmStokDownload');
+                    var stokPreviewBody = document.getElementById('stokPreviewBody');
+
+                    if (stokPreviewButton && stokForm) {
+                        stokPreviewButton.addEventListener('click', function () {
+                            var formData = new URLSearchParams(new FormData(stokForm));
+                            fetch('<?= base_url('/dashboard/laporan/preview-stok') ?>?' + formData.toString())
+                                .then(function (response) { return response.json(); })
+                                .then(function (payload) {
+                                    if (!payload || !payload.success || !payload.rows || payload.rows.length === 0) {
+                                        stokPreviewBody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">Tidak ada data stok untuk preview.</td></tr>';
+                                        return;
+                                    }
+
+                                    stokPreviewBody.innerHTML = payload.rows.map(function (row) {
+                                        return '<tr>' +
+                                            '<td>' + (row.no_kantong || '-') + '</td>' +
+                                            '<td>' + (row.nama_produsen || '-') + '</td>' +
+                                            '<td>' + (row.jenis_darah || '-') + '</td>' +
+                                            '<td>' + (row.gol_dar || '-') + '</td>' +
+                                            '<td>' + (row.rhesus || '-') + '</td>' +
+                                            '<td>' + (row.volume || '-') + '</td>' +
+                                            '<td>' + (row.tanggal_produksi || '-') + '</td>' +
+                                            '<td>' + (row.tanggal_expired || '-') + '</td>' +
+                                            '<td>' + (row.status || '-') + '</td>' +
+                                            '<td>' + (row.keterangan || '-') + '</td>' +
+                                        '</tr>';
+                                    }).join('');
+                                });
+                        });
+                    }
+
+                    if (confirmStokDownload && stokForm) {
+                        confirmStokDownload.addEventListener('click', function () {
+                            stokForm.submit();
+                        });
+                    }
+
+                    var distribusiForm = document.getElementById('distribusiPdfForm');
+                    var distribusiPreviewButton = document.querySelector('.preview-distribusi-pdf');
+                    var confirmDistribusiDownload = document.getElementById('confirmDistribusiDownload');
+                    var distribusiPreviewBody = document.getElementById('distribusiPreviewBody');
+
+                    if (distribusiPreviewButton && distribusiForm) {
+                        distribusiPreviewButton.addEventListener('click', function () {
+                            var formData = new URLSearchParams(new FormData(distribusiForm));
+                            fetch('<?= base_url('/dashboard/laporan/preview-distribusi') ?>?' + formData.toString())
+                                .then(function (response) { return response.json(); })
+                                .then(function (payload) {
+                                    if (!payload || !payload.success || !payload.rows || payload.rows.length === 0) {
+                                        distribusiPreviewBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Tidak ada data distribusi untuk preview.</td></tr>';
+                                        return;
+                                    }
+
+                                    distribusiPreviewBody.innerHTML = payload.rows.map(function (row) {
+                                        return '<tr>' +
+                                            '<td>' + (row.no_kantong || '-') + '</td>' +
+                                            '<td>' + (row.tanggal_distribusi || '-') + '</td>' +
+                                            '<td>' + (row.penerima || '-') + '</td>' +
+                                            '<td>' + (row.keperluan || '-') + '</td>' +
+                                            '<td>' + (row.rs || '-') + '</td>' +
+                                        '</tr>';
+                                    }).join('');
+                                });
+                        });
+                    }
+
+                    if (confirmDistribusiDownload && distribusiForm) {
+                        confirmDistribusiDownload.addEventListener('click', function () {
+                            distribusiForm.submit();
+                        });
+                    }
+                });
+            </script>
 
             <!-- Small boxes (Stat box) -->
             <div class="row">
@@ -264,10 +443,10 @@
                     <div class="card card-outline card-danger pmi-card">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <div>
-                                <h3 class="card-title"><?= $current_role === 'admin' ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3>
-                                <p class="text-muted mb-0"><?php if ($current_role === 'admin'): ?>Menampilkan total stok darah untuk setiap BDRS yang terdaftar.<?php else: ?>Menampilkan total stok darah di BDRS Anda sendiri.<?php endif; ?></p>
+                                <h3 class="card-title"><?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3>
+                                <p class="text-muted mb-0"><?php if (in_array($current_role, ['admin', 'pimpinan'], true)): ?>Menampilkan total stok darah untuk setiap BDRS yang terdaftar.<?php else: ?>Menampilkan total stok darah di BDRS Anda sendiri.<?php endif; ?></p>
                             </div>
-                            <span class="badge badge-pill badge-danger"><?= $current_role === 'admin' ? 'Admin View' : 'BDRS View' ?></span>
+                            <span class="badge badge-pill badge-danger"><?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Admin View' : 'BDRS View' ?></span>
                         </div>
                         <div class="card-body">
                             <div class="chart-wrapper" style="min-height: 360px; position: relative;">
@@ -375,7 +554,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-hospital"></i> <?= $current_role === 'admin' ? 'Stok Darah di Setiap BDRS' : 'Stok Darah BDRS Anda' ?>
+                                <i class="fas fa-hospital"></i> <?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Stok Darah di Setiap BDRS' : 'Stok Darah BDRS Anda' ?>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -597,7 +776,7 @@
         });
 
                 // Monthly distribusi chart (admin) with click -> per-gudang
-                <?php if (!empty($monthly_distribusi) && $current_role === 'admin'): ?>
+                <?php if (!empty($monthly_distribusi) && in_array($current_role, ['admin', 'pimpinan'], true)): ?>
                 (function(){
                         var mCtx = document.getElementById('monthlyDistribusiChart');
                         if (!mCtx) return;

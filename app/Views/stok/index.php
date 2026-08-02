@@ -207,7 +207,7 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($ownProdusenId) && $item['id_produsen'] == $ownProdusenId); ?>
+                                            <?php $canManage = ($role === 'admin' || $role === 'pimpinan') || ($role === 'bdrs' && isset($ownProdusenId) && $item['id_produsen'] == $ownProdusenId); ?>
                                             <?php if ($canManage): ?>
                                                 <a href="<?= base_url('/stok/edit/' . $item['id_bag']) ?>" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-edit"></i> Edit

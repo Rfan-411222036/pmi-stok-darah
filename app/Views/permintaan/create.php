@@ -96,6 +96,16 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="priority_cito">Priority Cito</label>
+                            <select name="priority_cito" id="priority_cito" class="form-control" required>
+                                <option value="">Pilih Prioritas</option>
+                                <option value="high" <?= old('priority_cito') === 'high' ? 'selected' : '' ?>>High</option>
+                                <option value="medium" <?= old('priority_cito') === 'medium' ? 'selected' : '' ?>>Medium</option>
+                                <option value="low" <?= old('priority_cito') === 'low' ? 'selected' : '' ?>>Low</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="nama_penerima">Nama Penerima Pasien</label>
                             <input type="text" name="nama_penerima" id="nama_penerima" class="form-control" placeholder="Masukkan nama penerima pasien" value="<?= old('nama_penerima') ?>" required>
                         </div>

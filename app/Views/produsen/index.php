@@ -95,17 +95,16 @@
                                         <td><?= esc($item['telepon'] ?? '-') ?></td>
                                         <td><?= esc($item['alamat'] ?? '-') ?></td>
                                         <td>
-                                            <?php if (isset($item['status']) && $item['status'] == 'expired'): ?>
-                                                <span class="badge badge-danger">Expired</span>
-                                            <?php elseif (isset($item['status']) && $item['status'] == 'masih layak'): ?>
-                                                <span class="badge badge-success">Masih Layak</span>
+                                            <?php $active = isset($item['is_active']) ? (int) $item['is_active'] : 1; ?>
+                                            <?php if ($active === 1): ?>
+                                                <span class="badge badge-success">Aktif</span>
                                             <?php else: ?>
-                                                <span class="badge badge-secondary">-</span>
+                                                <span class="badge badge-secondary">Non Aktif</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
                                             <?php $active = isset($item['is_active']) ? $item['is_active'] : 1; ?>
-                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($item['id_user']) && $item['id_user'] == $userId); ?>
+                                            <?php $canManage = ($role === 'admin' || $role === 'pimpinan') || ($role === 'bdrs' && isset($item['id_user']) && $item['id_user'] == $userId); ?>
                                             <?php if ($canManage): ?>
                                                 <a href="<?= base_url('/produsen/edit/' . $item['id_produsen']) ?>" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-edit"></i> Edit

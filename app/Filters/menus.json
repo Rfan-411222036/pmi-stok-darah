@@ -67,6 +67,10 @@
           "path": "/dashboard"
         },
         {
+          "name": "stok darah",
+          "path": "/stok"
+        },
+        {
           "name": "distribusi",
           "path": "/distribusi"
         },

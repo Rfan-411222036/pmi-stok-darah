@@ -53,7 +53,7 @@ class Dashboard extends BaseController
     public function checkLowStock()
     {
         $role = session()->get('role');
-        if ($role !== 'admin') {
+        if ($role !== 'admin' && $role !== 'pimpinan') {
             return redirect()->back()->with('error', 'Akses ditolak');
         }
 
@@ -94,6 +94,7 @@ class Dashboard extends BaseController
     {
         $currentRole = session()->get('role');
         $currentUserId = session()->get('id_user');
+        $isAdminLike = in_array($currentRole, ['admin', 'pimpinan'], true);
 
         $produsenId = null;
         if ($currentRole === 'bdrs') {
@@ -102,8 +103,8 @@ class Dashboard extends BaseController
         }
 
         $totalStok = $this->stokModel->getStokTersedia($produsenId);
-        $totalProdusen = $this->produsenModel->getTotalProdusen($currentRole === 'admin' ? null : $currentUserId);
-        $totalRS = $this->rsModel->getTotalRumahSakit($currentRole === 'admin' ? null : $currentUserId);
+        $totalProdusen = $this->produsenModel->getTotalProdusen($isAdminLike ? null : $currentUserId);
+        $totalRS = $this->rsModel->getTotalRumahSakit($isAdminLike ? null : $currentUserId);
         $totalDistribusi = $this->distribusiModel->getTotalDistribusi();
         $totalPemusnahan = $this->pemusnahanModel->getTotalPemusnahan();
         $stokExpired = $this->stokModel->getStokExpired();
@@ -114,7 +115,7 @@ class Dashboard extends BaseController
         $stokByGolongan = $this->stokModel->getStokByGolongan($produsenId);
         $stokByJenis = $this->stokModel->getStokByJenis($produsenId);
 
-        if ($currentRole === 'admin') {
+        if ($isAdminLike) {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
         } else {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS($currentUserId);
@@ -133,7 +134,15 @@ class Dashboard extends BaseController
         $totalStaff = $this->userModel->getTotalStaff();
 
         $lowStockNotifications = [];
-        if ($currentRole === 'admin') {
+        $priorityNotifications = [];
+        if (in_array($currentRole, ['admin', 'pimpinan', 'bdrs', 'rs'], true)) {
+            $priorityNotifications = $this->notificationModel
+                ->where('user_id', $currentUserId)
+                ->orderBy('created_at', 'DESC')
+                ->findAll(5);
+        }
+
+        if ($isAdminLike) {
             $lowStockNotifications = $this->notificationModel->orderBy('created_at', 'DESC')->findAll(5);
         }
 
@@ -141,7 +150,7 @@ class Dashboard extends BaseController
 
         // Monthly distribusi chart (for admin)
         $monthlyDistribusi = [];
-        if ($currentRole === 'admin') {
+        if ($isAdminLike) {
             $monthlyCounts = $this->distribusiModel->getDistribusiPerMonth();
             $monthlyLabels = array_map(function($m){ return date('F', mktime(0,0,0,$m,1)); }, range(1,12));
             $monthlyDistribusi = [
@@ -174,6 +183,7 @@ class Dashboard extends BaseController
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
             'low_stock_notifications' => $lowStockNotifications,
+            'priority_notifications' => $priorityNotifications,
             'recent_distribusi' => $recentDistribusi,
             'monthly_distribusi' => $monthlyDistribusi,
             'produsen_list' => $produsenList,
@@ -195,6 +205,46 @@ class Dashboard extends BaseController
 
         $rows = $this->distribusiModel->getDistribusiPerGudangForMonth($month, $year);
         return $this->response->setJSON(['success' => true, 'data' => $rows]);
+    }
+
+    public function previewLaporan()
+    {
+        $produsenFilter = $this->request->getGet('id_produsen') ?: null;
+        $golFilter = $this->request->getGet('gol_dar') ?: null;
+        $jenisFilter = $this->request->getGet('jenis') ?: null;
+
+        $builder = $this->stokModel->select('stok.id_bag, stok.no_kantong, stok.jenis_darah, stok.gol_dar, stok.rhesus, stok.volume, stok.tanggal_produksi, stok.tanggal_expired, stok.status, stok.keterangan, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
+                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+
+        if ($produsenFilter) {
+            $builder = $builder->where('stok.id_produsen', $produsenFilter);
+        }
+        if ($golFilter) {
+            $builder = $builder->where('stok.gol_dar', $golFilter);
+        }
+        if ($jenisFilter) {
+            $builder = $builder->where('stok.jenis_darah', $jenisFilter);
+        }
+
+        $stokData = $builder->orderBy('stok.tanggal_expired', 'ASC')->findAll(10);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'rows' => array_map(function ($item) {
+                return [
+                    'no_kantong' => $item['no_kantong'] ?? '-',
+                    'nama_produsen' => $item['nama_produsen'] ?? '-',
+                    'jenis_darah' => $item['jenis_darah'] ?? '-',
+                    'gol_dar' => $item['gol_dar'] ?? '-',
+                    'rhesus' => $item['rhesus'] ?? '-',
+                    'volume' => ($item['volume'] ?? '-') . ' ml',
+                    'tanggal_produksi' => $item['tanggal_produksi'] ?? '-',
+                    'tanggal_expired' => $item['tanggal_expired'] ?? '-',
+                    'status' => ucfirst($item['status'] ?? '-'),
+                    'keterangan' => $item['keterangan'] ?? '-',
+                ];
+            }, $stokData),
+        ]);
     }
 
     public function downloadLaporan()
@@ -281,6 +331,49 @@ class Dashboard extends BaseController
         }
 
         $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
+    }
+
+    public function previewDistribusi()
+    {
+        $from = $this->request->getGet('from');
+        $to = $this->request->getGet('to');
+        $produsenFilter = $this->request->getGet('id_produsen') ?: null;
+        $rsFilter = $this->request->getGet('id_rs') ?: null;
+
+        $builder = $this->distribusiModel->select('id_distribusi, id_bag, id_rs, tanggal_distribusi, penerima, keperluan');
+
+        if ($from) {
+            $builder = $builder->where('tanggal_distribusi >=', $from);
+        }
+        if ($to) {
+            $builder = $builder->where('tanggal_distribusi <=', $to);
+        }
+        if ($produsenFilter) {
+            $builder = $builder->where('id_produsen', $produsenFilter);
+        }
+        if ($rsFilter) {
+            $builder = $builder->where('id_rs', $rsFilter);
+        }
+
+        $distribusiData = $builder->orderBy('tanggal_distribusi', 'DESC')->findAll(10);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'rows' => array_map(function ($item) {
+                $rs = $this->rsModel->find($item['id_rs']);
+                $rsName = $rs['nama_rs'] ?? '-';
+                $bag = $this->stokModel->find($item['id_bag']);
+                $noKantong = $bag['no_kantong'] ?? '-';
+
+                return [
+                    'no_kantong' => $noKantong,
+                    'tanggal_distribusi' => date('d-m-Y', strtotime($item['tanggal_distribusi'] ?? 'now')),
+                    'penerima' => $item['penerima'] ?? '-',
+                    'keperluan' => $item['keperluan'] ?? '-',
+                    'rs' => $rsName,
+                ];
+            }, $distribusiData),
+        ]);
     }
 
     public function downloadDistribusi()

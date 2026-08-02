@@ -73,6 +73,11 @@ class Permintaan extends BaseController
                         'approval_note' => [ 'type' => 'TEXT', 'null' => true ]
                     ]);
                 }
+                if (!$db->fieldExists('priority_cito', 'permintaan')) {
+                    $forge->addColumn('permintaan', [
+                        'priority_cito' => [ 'type' => 'ENUM', 'constraint' => ['high', 'medium', 'low'], 'default' => 'medium' ]
+                    ]);
+                }
             }
 
             if (!$db->tableExists('notifications')) {
@@ -158,8 +163,10 @@ class Permintaan extends BaseController
         ]);
     }
 
-    public function downloadReport()
+    public function previewReport()
     {
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
         $filters = [
             'search' => $this->request->getGet('search'),
             'from' => $this->request->getGet('from'),
@@ -169,7 +176,47 @@ class Permintaan extends BaseController
             'jenis' => $this->request->getGet('jenis'),
         ];
 
-        $requests = $this->permintaanModel->getAllWithNames($filters);
+        $requests = $this->resolveRequestData($role, $userId, $filters);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'meta' => [
+                'periode' => ($filters['from'] ?: '-') . ' s/d ' . ($filters['to'] ?: '-'),
+                'keperluan' => $filters['keperluan'] ?: '-',
+                'gol_dar' => $filters['gol_dar'] ?: '-',
+                'jenis' => $filters['jenis'] ?: '-',
+            ],
+            'rows' => array_map(function ($item) {
+                return [
+                    'nama_rs' => $item['nama_rs'] ?? '-',
+                    'nama_produsen' => $item['nama_produsen'] ?? '-',
+                    'jumlah' => $item['jumlah'] ?? '-',
+                    'gol_dar' => $item['gol_dar'] ?? '-',
+                    'no_kantong' => $item['no_kantong'] ?? '-',
+                    'priority_cito' => ucfirst($item['priority_cito'] ?? 'medium'),
+                    'keterangan' => $item['keterangan'] ?? '-',
+                    'nama_penerima' => $item['nama_penerima'] ?? '-',
+                    'status' => ucfirst($item['status'] ?? '-'),
+                ];
+            }, array_slice($requests, 0, 10)),
+        ]);
+    }
+
+    public function downloadReport()
+    {
+        $role = session()->get('role');
+        $userId = session()->get('id_user');
+        $filters = [
+            'search' => $this->request->getGet('search'),
+            'from' => $this->request->getGet('from'),
+            'to' => $this->request->getGet('to'),
+            'keperluan' => $this->request->getGet('keperluan'),
+            'gol_dar' => $this->request->getGet('gol_dar'),
+            'jenis' => $this->request->getGet('jenis'),
+        ];
+
+        $requests = $this->resolveRequestData($role, $userId, $filters);
+
         $pdf = new PdfGenerator();
         $pdf->AddPage();
         $pdf->setHeaderInfo('LAPORAN PERMINTAAN DARAH', date('d F Y'));
@@ -207,7 +254,7 @@ class Permintaan extends BaseController
             return;
         }
 
-        $headers = ['No', 'RS', 'BDRS', 'Jumlah', 'Gol', 'Jenis', 'Diagnosa/Keperluan', 'Nama Penerima', 'Tgl Permintaan', 'Status'];
+        $headers = ['No', 'RS', 'BDRS', 'Jumlah', 'Gol', 'Jenis', 'Priority', 'Diagnosa/Keperluan', 'Nama Penerima', 'Tgl Permintaan', 'Status'];
         $tableData = [];
         $no = 1;
         foreach ($requests as $item) {
@@ -218,6 +265,7 @@ class Permintaan extends BaseController
                 $item['jumlah'] ?? '-',
                 $item['gol_dar'] ?? '-',
                 $item['jenis'] ?? '-',
+                ucfirst($item['priority_cito'] ?? 'medium'),
                 $item['keterangan'] ?? '-',
                 $item['nama_penerima'] ?? '-',
                 isset($item['created_at']) ? date('d-m-Y', strtotime($item['created_at'])) : '-',
@@ -225,9 +273,50 @@ class Permintaan extends BaseController
             ];
         }
 
-        $columnWidths = [8, 30, 30, 18, 18, 20, 40, 35, 24, 22];
+        $columnWidths = [8, 30, 30, 18, 18, 20, 18, 40, 35, 24, 22];
         $pdf->addTable($headers, $tableData, $columnWidths);
         $pdf->Output('Laporan_Permintaan_' . date('d-m-Y') . '.pdf', 'D');
+    }
+
+    protected function resolveRequestData($role, $userId, array $filters)
+    {
+        if ($role === 'bdrs') {
+            $produsen = $this->produsenModel->where('id_user', $userId)->first();
+            if ($produsen) {
+                return $this->permintaanModel->getForProdusen($produsen['id_produsen'], $filters);
+            }
+            if ($userId) {
+                return $this->permintaanModel->getByCreator($userId, $filters);
+            }
+            return [];
+        }
+
+        if ($role === 'rs') {
+            $rs = null;
+            try {
+                $fields = $this->rsModel->db->getFieldNames($this->rsModel->table);
+            } catch (\Exception $e) {
+                $fields = [];
+            }
+
+            if (in_array('id_user', $fields) && $userId) {
+                $rs = $this->rsModel->where('id_user', $userId)->first();
+            }
+
+            if (!$rs && session()->has('id_rs')) {
+                $rs = $this->rsModel->find(session()->get('id_rs'));
+            }
+
+            if ($rs) {
+                return $this->permintaanModel->getByRs($rs['id_rs'], $filters);
+            }
+            if ($userId) {
+                return $this->permintaanModel->getByCreator($userId, $filters);
+            }
+            return [];
+        }
+
+        return $this->permintaanModel->getAllWithNames($filters);
     }
 
     public function create()
@@ -292,6 +381,7 @@ class Permintaan extends BaseController
             'jenis' => $post['jenis'] ?? null,
             'keterangan' => ($post['diagnosa'] === 'Lain-lain' ? trim($post['diagnosa_lain'] ?? '') : $post['diagnosa']) ?: null,
             'nama_penerima' => $post['nama_penerima'] ?? null,
+            'priority_cito' => in_array($post['priority_cito'] ?? '', ['high', 'medium', 'low'], true) ? $post['priority_cito'] : 'medium',
             'status' => 'pending',
             'created_by' => $userId,
             'created_at' => date('Y-m-d H:i:s')
@@ -300,12 +390,48 @@ class Permintaan extends BaseController
         $insertId = $this->permintaanModel->insert($data);
         if ($insertId) {
             $this->notifyBdrsNewRequest($data['id_produsen'], $insertId, $data['no_permintaan'] ?? null);
+            if (($data['priority_cito'] ?? 'medium') === 'high') {
+                $this->notifyHighPriorityRequest($data);
+            }
             session()->setFlashdata('success', 'Permintaan berhasil diajukan. Menunggu persetujuan BDRS.');
         } else {
             session()->setFlashdata('error', 'Gagal mengajukan permintaan. Silakan coba lagi.');
         }
 
         return redirect()->to('/permintaan');
+    }
+
+    protected function notifyHighPriorityRequest(array $data)
+    {
+        $produsen = $this->produsenModel->find($data['id_produsen']);
+        $rs = $this->rsModel->find($data['id_rs']);
+        $targetUserIds = [];
+
+        if (!empty($produsen['id_user'])) {
+            $targetUserIds[] = (int) $produsen['id_user'];
+        }
+
+        $adminUsers = $this->userModel->whereIn('role', ['admin', 'pimpinan'])->findAll();
+        foreach ($adminUsers as $admin) {
+            if (!empty($admin['id_user'])) {
+                $targetUserIds[] = (int) $admin['id_user'];
+            }
+        }
+
+        $targetUserIds = array_values(array_unique($targetUserIds));
+        $rsName = $rs['nama_rs'] ?? 'Rumah Sakit';
+        $produsenName = $produsen['nama'] ?? 'BDRS';
+        $message = 'Permintaan darah PRIORITAS HIGH dari ' . $rsName . ' untuk ' . $produsenName . ' membutuhkan perhatian segera.';
+
+        foreach ($targetUserIds as $userId) {
+            $this->notificationModel->insert([
+                'user_id' => $userId,
+                'title' => 'Permintaan Cito High',
+                'message' => $message,
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
     }
 
     protected function notifyBdrsNewRequest($produsenId, $permintaanId = null, $noPermintaan = null)
@@ -510,6 +636,32 @@ class Permintaan extends BaseController
         ]);
 
         session()->setFlashdata('success', 'Permintaan ditolak');
+        return redirect()->to('/permintaan');
+    }
+
+    public function complete($id)
+    {
+        $role = session()->get('role');
+        $perm = $this->permintaanModel->find($id);
+
+        if (!$perm) {
+            return redirect()->back()->with('error', 'Permintaan tidak ditemukan');
+        }
+
+        if ($role !== 'rs') {
+            return redirect()->back()->with('error', 'Akses tidak diizinkan');
+        }
+
+        if ($perm['status'] !== 'approved') {
+            return redirect()->back()->with('error', 'Permintaan harus dalam status disetujui terlebih dahulu');
+        }
+
+        if ($this->permintaanModel->update($id, ['status' => 'completed'])) {
+            session()->setFlashdata('success', 'Permintaan berhasil diselesaikan');
+        } else {
+            session()->setFlashdata('error', 'Gagal menyelesaikan permintaan');
+        }
+
         return redirect()->to('/permintaan');
     }
 }
