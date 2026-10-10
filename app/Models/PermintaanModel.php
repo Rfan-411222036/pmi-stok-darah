@@ -19,6 +19,7 @@ class PermintaanModel extends Model
                     ->join('stok', 'stok.id_bag = permintaan.id_bag', 'left')
                     ->where('permintaan.id_produsen', $id_produsen)
                     ->where('permintaan.status', 'pending')
+                    ->orderBy("CASE WHEN permintaan.priority_cito = 'high' THEN 1 WHEN permintaan.priority_cito = 'medium' THEN 2 ELSE 3 END", 'ASC', false)
                     ->orderBy('permintaan.created_at', 'DESC')
                     ->findAll();
     }
@@ -96,7 +97,9 @@ class PermintaanModel extends Model
             $builder->where('permintaan.status', $filters['status']);
         }
 
-        return $builder->orderBy('permintaan.created_at', 'DESC');
+        return $builder->orderBy("CASE WHEN permintaan.status = 'pending' THEN 1 WHEN permintaan.status = 'approved' THEN 2 WHEN permintaan.status = 'completed' THEN 3 ELSE 4 END", 'ASC', false)
+               ->orderBy("CASE WHEN permintaan.priority_cito = 'high' THEN 1 WHEN permintaan.priority_cito = 'medium' THEN 2 ELSE 3 END", 'ASC', false)
+                   ->orderBy('permintaan.created_at', 'DESC');
     }
 
     public function getDistinctKeterangan()

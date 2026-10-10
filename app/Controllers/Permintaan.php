@@ -143,7 +143,12 @@ class Permintaan extends BaseController
                 $rs = $this->rsModel->find(session()->get('id_rs'));
             }
 
+            if (!$rs && session()->has('nama')) {
+                $rs = $this->rsModel->where('nama_rs', session()->get('nama'))->first();
+            }
+
             if ($rs) {
+                $this->ensureRsApprovalNotifications($rs['id_rs'], $userId);
                 $dataList = $this->permintaanModel->getByRs($rs['id_rs'], $filters);
             } elseif ($userId) {
                 $dataList = $this->permintaanModel->getByCreator($userId, $filters);
@@ -154,11 +159,22 @@ class Permintaan extends BaseController
             $dataList = $this->permintaanModel->getAllWithNames($filters);
         }
 
+        $requestNotifications = [];
+        if ($userId && in_array($role, ['bdrs', 'rs'], true)) {
+            $notificationTitle = $role === 'bdrs' ? 'Permintaan Baru Dari RS' : 'Permintaan Disetujui';
+            $requestNotifications = $this->notificationModel
+                ->where('user_id', $userId)
+                ->where('title', $notificationTitle)
+                ->orderBy('created_at', 'DESC')
+                ->findAll(5);
+        }
+
         return view('permintaan/index', [
             'title' => 'Permintaan Darah',
             'page_title' => 'Permintaan Darah',
             'list' => $dataList,
             'filters' => $filters,
+            'requestNotifications' => $requestNotifications,
             'keteranganOptions' => $this->permintaanModel->getDistinctKeterangan(),
         ]);
     }
@@ -250,8 +266,7 @@ class Permintaan extends BaseController
         if (empty($requests)) {
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data permintaan untuk filter ini.', 0, 1, 'C');
-            $pdf->Output('Laporan_Permintaan_' . date('d-m-Y') . '.pdf', 'D');
-            return;
+            return $this->sendPdfDownload($pdf, 'Laporan_Permintaan_' . date('d-m-Y') . '.pdf');
         }
 
         $headers = ['No', 'RS', 'BDRS', 'Jumlah', 'Gol', 'Jenis', 'Priority', 'Diagnosa/Keperluan', 'Nama Penerima', 'Tgl Permintaan', 'Status'];
@@ -275,7 +290,15 @@ class Permintaan extends BaseController
 
         $columnWidths = [8, 30, 30, 18, 18, 20, 18, 40, 35, 24, 22];
         $pdf->addTable($headers, $tableData, $columnWidths);
-        $pdf->Output('Laporan_Permintaan_' . date('d-m-Y') . '.pdf', 'D');
+        return $this->sendPdfDownload($pdf, 'Laporan_Permintaan_' . date('d-m-Y') . '.pdf');
+    }
+
+    protected function sendPdfDownload(PdfGenerator $pdf, string $filename)
+    {
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setBody($pdf->Output($filename, 'S'));
     }
 
     protected function resolveRequestData($role, $userId, array $filters)
@@ -450,6 +473,70 @@ class Permintaan extends BaseController
         ]);
     }
 
+    protected function notifyRsRequestApproved(array $request)
+    {
+        $rs = $this->rsModel->find($request['id_rs']);
+        if (!$rs) {
+            return;
+        }
+
+        $rsUserId = $rs['id_user'] ?? null;
+        if (!$rsUserId && !empty($rs['nama_rs'])) {
+            $rsUser = $this->userModel
+                ->where('role', 'rs')
+                ->where('nama', $rs['nama_rs'])
+                ->first();
+            $rsUserId = $rsUser['id_user'] ?? null;
+        }
+        if (!$rsUserId) {
+            return;
+        }
+
+        $produsen = $this->produsenModel->find($request['id_produsen']);
+        $this->notificationModel->insert([
+            'user_id' => $rsUserId,
+            'title' => 'Permintaan Disetujui',
+            'message' => 'Permintaan #' . $request['id_permintaan'] . ' telah disetujui oleh ' . ($produsen['nama'] ?? 'BDRS') . '.',
+            'is_read' => 0,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
+    protected function ensureRsApprovalNotifications($rsId, $userId)
+    {
+        if (!$rsId || !$userId) {
+            return;
+        }
+
+        $approvedRequests = $this->permintaanModel
+            ->where('id_rs', $rsId)
+            ->where('status', 'approved')
+            ->orderBy('approved_at', 'DESC')
+            ->findAll(20);
+
+        foreach ($approvedRequests as $request) {
+            $reference = 'Permintaan #' . $request['id_permintaan'] . ' telah';
+            $existing = $this->notificationModel
+                ->where('user_id', $userId)
+                ->where('title', 'Permintaan Disetujui')
+                ->like('message', $reference)
+                ->first();
+
+            if ($existing) {
+                continue;
+            }
+
+            $produsen = $this->produsenModel->find($request['id_produsen']);
+            $this->notificationModel->insert([
+                'user_id' => $userId,
+                'title' => 'Permintaan Disetujui',
+                'message' => $reference . ' telah disetujui oleh ' . ($produsen['nama'] ?? 'BDRS') . '.',
+                'is_read' => 0,
+                'created_at' => $request['approved_at'] ?? date('Y-m-d H:i:s')
+            ]);
+        }
+    }
+
     public function approve($id)
     {
         $this->logApproveDebug('enter', [
@@ -533,13 +620,17 @@ class Permintaan extends BaseController
             }
 
             $this->logApproveDebug('about_to_update', ['perm_id' => $id, 'id_bag' => $id_bag, 'post' => $this->request->getPost()]);
-            $this->permintaanModel->update($id, [
+            $approved = $this->permintaanModel->update($id, [
                 'status' => 'approved',
                 'approved_by' => $userId,
                 'approved_at' => date('Y-m-d H:i:s'),
                 'id_bag' => $id_bag,
                 'approval_note' => $this->request->getPost('approval_note')
             ]);
+
+            if ($approved) {
+                $this->notifyRsRequestApproved($perm);
+            }
 
             $this->stokModel->update($id_bag, ['status' => 'terdistribusi']);
 

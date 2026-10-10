@@ -102,15 +102,37 @@ class Dashboard extends BaseController
             $produsenId = $ownProdusen['id_produsen'] ?? null;
         }
 
+        $distributionRsId = null;
+        if ($currentRole === 'rs') {
+            $ownRs = null;
+            try {
+                $rsFields = $this->rsModel->db->getFieldNames($this->rsModel->table);
+            } catch (\Exception $e) {
+                $rsFields = [];
+            }
+
+            if (in_array('id_user', $rsFields, true) && $currentUserId) {
+                $ownRs = $this->rsModel->where('id_user', $currentUserId)->first();
+            }
+            if (!$ownRs && session()->has('id_rs')) {
+                $ownRs = $this->rsModel->find(session()->get('id_rs'));
+            }
+            if (!$ownRs && session()->has('nama')) {
+                $ownRs = $this->rsModel->where('nama_rs', session()->get('nama'))->first();
+            }
+
+            $distributionRsId = $ownRs['id_rs'] ?? 0;
+        }
+
         $totalStok = $this->stokModel->getStokTersedia($produsenId);
         $totalProdusen = $this->produsenModel->getTotalProdusen($isAdminLike ? null : $currentUserId);
         $totalRS = $this->rsModel->getTotalRumahSakit($isAdminLike ? null : $currentUserId);
-        $totalDistribusi = $this->distribusiModel->getTotalDistribusi();
+        $totalDistribusi = $this->distribusiModel->getTotalDistribusi($distributionRsId);
         $totalPemusnahan = $this->pemusnahanModel->getTotalPemusnahan();
         $stokExpired = $this->stokModel->getStokExpired();
         $stokMendekatiExpired = $this->stokModel->getStokMendekatiExpired();
-        $distribusiHariIni = $this->distribusiModel->getDistribusiHariIni();
-        $distribusiBulanIni = $this->distribusiModel->getDistribusiBulanIni();
+        $distribusiHariIni = $this->distribusiModel->getDistribusiHariIni($distributionRsId);
+        $distribusiBulanIni = $this->distribusiModel->getDistribusiBulanIni($distributionRsId);
 
         $stokByGolongan = $this->stokModel->getStokByGolongan($produsenId);
         $stokByJenis = $this->stokModel->getStokByJenis($produsenId);
@@ -146,7 +168,7 @@ class Dashboard extends BaseController
             $lowStockNotifications = $this->notificationModel->orderBy('created_at', 'DESC')->findAll(5);
         }
 
-        $recentDistribusi = $this->distribusiModel->getRecentDistribusi(5);
+        $recentDistribusi = $this->distribusiModel->getRecentDistribusi(5, $distributionRsId);
 
         // Monthly distribusi chart (for admin)
         $monthlyDistribusi = [];
@@ -214,7 +236,9 @@ class Dashboard extends BaseController
         $jenisFilter = $this->request->getGet('jenis') ?: null;
 
         $builder = $this->stokModel->select('stok.id_bag, stok.no_kantong, stok.jenis_darah, stok.gol_dar, stok.rhesus, stok.volume, stok.tanggal_produksi, stok.tanggal_expired, stok.status, stok.keterangan, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
-                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
+                                   ->where('stok.status', 'tersedia')
+                                   ->where('stok.tanggal_expired >=', date('Y-m-d'));
 
         if ($produsenFilter) {
             $builder = $builder->where('stok.id_produsen', $produsenFilter);
@@ -226,7 +250,9 @@ class Dashboard extends BaseController
             $builder = $builder->where('stok.jenis_darah', $jenisFilter);
         }
 
-        $stokData = $builder->orderBy('stok.tanggal_expired', 'ASC')->findAll(10);
+        $stokData = $builder->orderBy('stok.tanggal_expired', 'DESC')
+                    ->orderBy('stok.created_at', 'ASC')
+                    ->findAll(10);
 
         return $this->response->setJSON([
             'success' => true,
@@ -254,7 +280,9 @@ class Dashboard extends BaseController
         $jenisFilter = $this->request->getGet('jenis') ?: null;
 
         $builder = $this->stokModel->select('stok.id_bag, stok.no_kantong, stok.jenis_darah, stok.gol_dar, stok.rhesus, stok.volume, stok.tanggal_produksi, stok.tanggal_expired, stok.status, stok.keterangan, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
-                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
+                                   ->where('stok.status', 'tersedia')
+                                   ->where('stok.tanggal_expired >=', date('Y-m-d'));
 
         if ($produsenFilter) {
             $builder = $builder->where('stok.id_produsen', $produsenFilter);
@@ -266,7 +294,9 @@ class Dashboard extends BaseController
             $builder = $builder->where('stok.jenis_darah', $jenisFilter);
         }
 
-        $stokData = $builder->orderBy('stok.tanggal_expired', 'ASC')->findAll();
+        $stokData = $builder->orderBy('stok.tanggal_expired', 'DESC')
+                    ->orderBy('stok.created_at', 'ASC')
+                    ->findAll();
 
         $pdf = new PdfGenerator();
         $pdf->AddPage();
@@ -483,6 +513,19 @@ class Dashboard extends BaseController
             $columnWidths = [8, 30, 18, 20, 25, 39];
             $pdf->addTable($headers, $tableData, $columnWidths);
         }
+
+        if ($pdf->GetY() + 50 > $pdf->getPageHeight() - 25) {
+            $pdf->AddPage();
+        }
+
+        $signerName = session()->get('nama') ?: 'User';
+        $pdf->Ln(8);
+        $pdf->SetFont('helvetica', '', 10);
+        $pdf->Cell(0, 6, 'Tanggal Pemusnahan: ' . date('d F Y'), 0, 1, 'R');
+        $pdf->Cell(0, 6, 'Petugas Pemusnahan,', 0, 1, 'R');
+        $pdf->Ln(22);
+        $pdf->SetFont('helvetica', 'B', 10);
+        $pdf->Cell(0, 6, $signerName, 0, 1, 'R');
 
         $pdf->Output('Laporan_Pemusnahan_' . date('d-m-Y') . '.pdf', 'D');
     }

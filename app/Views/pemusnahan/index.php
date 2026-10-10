@@ -41,6 +41,11 @@
                     <h3 class="card-title">Daftar Pemusnahan Darah</h3>
                     <?php if ($role === 'admin' || $role === 'bdrs'): ?>
                     <div class="card-tools">
+                        <?php if ($role === 'admin'): ?>
+                        <a href="<?= base_url('/dashboard/laporan/pemusnahan') ?>" class="btn btn-danger btn-sm" target="_blank">
+                            <i class="fas fa-file-pdf"></i> Download PDF
+                        </a>
+                        <?php endif; ?>
                         <a href="<?= base_url('/pemusnahan/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Pemusnahan
                         </a>

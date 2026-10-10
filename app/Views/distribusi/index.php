@@ -119,7 +119,7 @@
                                         <td><?= $item['no_permintaan'] ?: '-' ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tanggal_distribusi'])) ?></td>
                                         <td>
-                                            <?php $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($ownProdusenId) && $item['id_produsen'] == $ownProdusenId) || ($role === 'rs' && isset($ownRsId) && isset($item['id_rs']) && $item['id_rs'] == $ownRsId); ?>
+                                            <?php $itemProdusenId = $item['stok_id_produsen'] ?? $item['id_produsen'] ?? null; $canManage = ($role === 'admin') || ($role === 'bdrs' && isset($ownProdusenId) && $itemProdusenId == $ownProdusenId) || ($role === 'rs' && isset($ownRsId) && isset($item['id_rs']) && $item['id_rs'] == $ownRsId); ?>
                                             <?php if ($canManage): ?>
                                                 <a href="<?= base_url('/distribusi/edit/' . $item['id_distribusi']) ?>" class="btn btn-sm btn-warning">
                                                     <i class="fas fa-edit"></i> Edit

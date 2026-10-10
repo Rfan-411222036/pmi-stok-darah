@@ -33,6 +33,25 @@
                 <div class="alert alert-warning"><?= session()->getFlashdata('warning') ?></div>
             <?php endif; ?>
 
+            <?php if (!empty($requestNotifications)): ?>
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">Notifikasi Permintaan</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <?php foreach ($requestNotifications as $notification): ?>
+                                <li class="list-group-item">
+                                    <strong><?= esc($notification['title']) ?></strong>
+                                    <div><?= esc($notification['message']) ?></div>
+                                    <small class="text-muted"><?= date('d/m/Y H:i', strtotime($notification['created_at'])) ?></small>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="card">
                 <div class="card-body">
                     <form action="<?= base_url('/permintaan') ?>" method="get" class="mb-4">

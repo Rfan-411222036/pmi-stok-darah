@@ -13,7 +13,7 @@ class DistribusiModel extends Model
 
     public function getDistribusiWithDetails($search = '', $perPage = 10, $produsenId = null, $rsId = null)
     {
-        $builder = $this->select('distribusi.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
+        $builder = $this->select('distribusi.*, stok.id_produsen as stok_id_produsen, stok.no_kantong, stok.gol_dar, stok.jenis_darah, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
                        ->join('stok', 'stok.id_bag = distribusi.id_bag')
                        ->join('rumah_sakit', 'rumah_sakit.id_rs = distribusi.id_rs')
                        ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
@@ -43,21 +43,49 @@ class DistribusiModel extends Model
         ];
     }
 
-    public function getTotalDistribusi()
+    public function getTotalDistribusi($rsId = null)
     {
-        return $this->countAll();
+        $builder = $this->db->table('permintaan')
+                           ->where('status', 'completed');
+
+        if ($rsId !== null) {
+            $builder->where('id_rs', $rsId);
+        }
+
+        return $builder->countAllResults();
     }
 
-    public function getDistribusiHariIni()
+    public function getDistribusiHariIni($rsId = null)
     {
-        return $this->where('DATE(tanggal_distribusi)', date('Y-m-d'))->countAllResults();
+        return $this->countCompletedDistribusi($rsId, 'today');
     }
 
-    public function getDistribusiBulanIni()
+    public function getDistribusiBulanIni($rsId = null)
     {
-        return $this->where('MONTH(tanggal_distribusi)', date('m'))
-                   ->where('YEAR(tanggal_distribusi)', date('Y'))
-                   ->countAllResults();
+        return $this->countCompletedDistribusi($rsId, 'month');
+    }
+
+    private function countCompletedDistribusi($rsId = null, $period = null)
+    {
+        $builder = $this->db->table('distribusi d')
+                           ->select('COUNT(DISTINCT d.id_distribusi) AS total', false)
+                           ->join('permintaan p', 'p.id_rs = d.id_rs AND p.id_bag = d.id_bag')
+                           ->where('p.status', 'completed');
+
+        if ($rsId !== null) {
+            $builder->where('d.id_rs', $rsId);
+        }
+
+        if ($period === 'today') {
+            $builder->where('DATE(d.tanggal_distribusi)', date('Y-m-d'));
+        } elseif ($period === 'month') {
+            $builder->where('MONTH(d.tanggal_distribusi)', date('m'))
+                    ->where('YEAR(d.tanggal_distribusi)', date('Y'));
+        }
+
+        $row = $builder->get()->getRowArray();
+
+        return (int) ($row['total'] ?? 0);
     }
 
     /**
@@ -103,16 +131,20 @@ class DistribusiModel extends Model
         return $builder->get()->getResultArray();
     }
 
-    public function getRecentDistribusi($limit = 5)
+    public function getRecentDistribusi($limit = 5, $rsId = null)
     {
-        return $this->select('distribusi.*, stok.no_kantong, stok.gol_dar, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
-                   ->join('stok', 'stok.id_bag = distribusi.id_bag')
-                   ->join('rumah_sakit', 'rumah_sakit.id_rs = distribusi.id_rs')
-                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
-                   ->orderBy('distribusi.tanggal_distribusi', 'DESC')
-                   ->limit($limit)
-                   ->get()
-                   ->getResultArray();
+        $builder = $this->select('distribusi.*, stok.no_kantong, stok.gol_dar, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
+                        ->join('stok', 'stok.id_bag = distribusi.id_bag')
+                        ->join('rumah_sakit', 'rumah_sakit.id_rs = distribusi.id_rs')
+                        ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
+        if ($rsId !== null) {
+            $builder->where('distribusi.id_rs', $rsId);
+        }
+
+        return $builder->orderBy('distribusi.tanggal_distribusi', 'DESC')
+                       ->limit($limit)
+                       ->get()
+                       ->getResultArray();
     }
 
     public function getStokPerBDRS($id_user = null)
@@ -120,7 +152,7 @@ class DistribusiModel extends Model
         // Aggregate by produsen (BDRS) so producers without linked login users are still shown
         $builder = $this->db->table('produsen p')
                    ->select('p.id_produsen, p.nama as nama_produsen,
-                         COALESCE(SUM(CASE WHEN s.status = "tersedia" THEN 1 ELSE 0 END), 0) as jumlah_stok,
+                         COALESCE(SUM(CASE WHEN s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as jumlah_stok,
                          COALESCE(SUM(CASE WHEN s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as layak_pakai,
                          COALESCE(SUM(CASE WHEN (s.status = "tersedia" AND s.tanggal_expired < CURDATE()) OR s.status = "expired" THEN 1 ELSE 0 END), 0) as sudah_expired')
                    ->join('stok s', 'p.id_produsen = s.id_produsen', 'left');
