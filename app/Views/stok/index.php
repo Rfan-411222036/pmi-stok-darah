@@ -212,12 +212,12 @@
                                                 <a href="<?= base_url('/stok/edit/' . $item['id_bag']) ?>" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
-                                                <?php if ($item['status'] == 'tersedia'): ?>
-                                                    <a href="<?= base_url('/stok/delete/' . $item['id_bag']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus stok ini?')">
+                                                <?php if (in_array($item['status'], ['tersedia', 'terdistribusi', 'expired'], true)): ?>
+                                                    <a href="<?= base_url('/stok/delete/' . $item['id_bag']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin mengarsipkan stok ini? Riwayat transaksi tetap tersimpan.')">
                                                         <i class="fas fa-trash"></i> Hapus
                                                     </a>
                                                 <?php else: ?>
-                                                    <button class="btn btn-secondary btn-sm" disabled title="Stok tidak dapat dihapus">
+                                                    <button class="btn btn-secondary btn-sm" disabled title="Stok musnah tidak dapat dihapus">
                                                         <i class="fas fa-trash"></i> Hapus
                                                     </button>
                                                 <?php endif; ?>
