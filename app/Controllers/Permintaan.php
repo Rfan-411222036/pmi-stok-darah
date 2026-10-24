@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\PdfGenerator;
+use App\Models\DistribusiModel;
 use App\Models\PermintaanModel;
 use App\Models\ProdusenModel;
 use App\Models\RumahSakitModel;
@@ -18,6 +19,7 @@ class Permintaan extends BaseController
     protected $stokModel;
     protected $userModel;
     protected $notificationModel;
+    protected $distribusiModel;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class Permintaan extends BaseController
         $this->stokModel = new StokModel();
         $this->userModel = new UserModel();
         $this->notificationModel = new NotificationModel();
+        $this->distribusiModel = new DistribusiModel();
 
         // Ensure `permintaan` table exists; create fallback table if migrations weren't run
         $db = \Config\Database::connect();
@@ -121,6 +124,10 @@ class Permintaan extends BaseController
             $produsen = $this->produsenModel->where('id_user', $userId)->first();
             if ($produsen) {
                 $dataList = $this->permintaanModel->getForProdusen($produsen['id_produsen'], $filters);
+                $this->notificationModel->notifyPendingRequests(
+                    (int) $userId,
+                    $this->permintaanModel->getPendingForProdusen($produsen['id_produsen'])
+                );
             } elseif ($userId) {
                 $dataList = $this->permintaanModel->getByCreator($userId, $filters);
             } else {
@@ -295,6 +302,8 @@ class Permintaan extends BaseController
 
     protected function sendPdfDownload(PdfGenerator $pdf, string $filename)
     {
+        $pdf->addSignature((string) session()->get('nama'));
+
         return $this->response
             ->setHeader('Content-Type', 'application/pdf')
             ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
@@ -496,10 +505,14 @@ class Permintaan extends BaseController
             return;
         }
 
+        $request = $permintaanId ? $this->permintaanModel->find($permintaanId) : null;
+        $rs = $request ? $this->rsModel->find($request['id_rs']) : null;
         $this->notificationModel->insert([
             'user_id' => $produsen['id_user'],
             'title' => 'Permintaan Baru Dari RS',
-            'message' => 'Permintaan baru telah diajukan untuk BDRS Anda' . ($noPermintaan ? ' (No: ' . $noPermintaan . ')' : '') . '. Cek halaman Permintaan untuk melihat detail.',
+            'message' => 'Permintaan #' . (int) $permintaanId . ' dari ' . ($rs['nama_rs'] ?? 'Rumah Sakit')
+                . ' telah diajukan untuk BDRS Anda' . ($noPermintaan ? ' (No: ' . $noPermintaan . ')' : '')
+                . '. Cek halaman Permintaan untuk melihat detail.',
             'is_read' => 0,
             'created_at' => date('Y-m-d H:i:s')
         ]);
@@ -652,6 +665,9 @@ class Permintaan extends BaseController
             }
 
             $this->logApproveDebug('about_to_update', ['perm_id' => $id, 'id_bag' => $id_bag, 'post' => $this->request->getPost()]);
+            $db = \Config\Database::connect();
+            $db->transBegin();
+
             $approved = $this->permintaanModel->update($id, [
                 'status' => 'approved',
                 'approved_by' => $userId,
@@ -660,13 +676,25 @@ class Permintaan extends BaseController
                 'approval_note' => $this->request->getPost('approval_note')
             ]);
 
-            if ($approved) {
-                $this->notifyRsRequestApproved($perm);
-            }
-
-            $this->stokModel->update($id_bag, ['status' => 'terdistribusi']);
+            $distributionSaved = $approved && $this->distribusiModel->insert([
+                'id_bag' => $id_bag,
+                'id_rs' => $perm['id_rs'],
+                'tanggal_distribusi' => date('Y-m-d H:i:s'),
+                'penerima' => $perm['nama_penerima'] ?? 'Penerima RS',
+                'keperluan' => $perm['keterangan'] ?? null,
+                'no_permintaan' => 'REQ-' . $perm['id_permintaan'],
+            ]);
+            $stockUpdated = $distributionSaved
+                && $this->stokModel->update($id_bag, ['status' => 'terdistribusi']);
 
             $this->logApproveDebug('updated', ['perm_id' => $id, 'id_bag' => $id_bag, 'approved_by' => $userId]);
+
+            if (!$approved || !$distributionSaved || !$stockUpdated || !$db->transStatus()) {
+                $db->transRollback();
+                return redirect()->back()->with('error', 'Gagal mencatat persetujuan dan distribusi. Tidak ada perubahan yang disimpan.');
+            }
+            $db->transCommit();
+            $this->notifyRsRequestApproved($perm);
 
             $thresholds = [
                 'A' => 10,

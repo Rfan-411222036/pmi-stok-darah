@@ -48,7 +48,7 @@ class Users extends BaseController
             'email' => 'required|valid_email|is_unique[login.email]',
             'password' => 'required|min_length[3]',
             'password_confirmation' => 'required|matches[password]',
-            'role' => 'required'
+            'role' => 'required|in_list[admin,staff,bdrs,rs,pimpinan]'
         ], [
             'password_confirmation' => [
                 'required' => 'Konfirmasi password harus diisi',
@@ -108,7 +108,7 @@ class Users extends BaseController
         $validationRules = [
             'nama' => 'required',
             'email' => $emailRules,
-            'role' => 'required'
+            'role' => 'required|in_list[admin,staff,bdrs,rs,pimpinan]'
         ];
 
         // Jika password diisi, tambahkan validasi password

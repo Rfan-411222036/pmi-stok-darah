@@ -146,6 +146,7 @@ class Stok extends BaseController
         if (empty($stokData)) {
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data stok sesuai filter.', 0, 1, 'C');
+            $pdf->addSignature((string) session()->get('nama'));
             $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
             return;
         }
@@ -171,6 +172,7 @@ class Stok extends BaseController
 
         $columnWidths = [8, 25, 30, 12, 12, 20, 18, 20, 20, 18, 35];
         $pdf->addTable($headers, $tableData, $columnWidths);
+        $pdf->addSignature((string) session()->get('nama'));
         $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
     }
 

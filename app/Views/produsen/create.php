@@ -39,6 +39,20 @@
 
                         <div class="row">
                             <div class="col-md-6">
+                                <?php if (in_array(session()->get('role'), ['admin', 'pimpinan'], true)): ?>
+                                <div class="form-group">
+                                    <label for="id_user">Akun BDRS</label>
+                                    <select class="form-control" id="id_user" name="id_user">
+                                        <option value="">Belum ditautkan</option>
+                                        <?php foreach ($bdrs_users as $bdrsUser): ?>
+                                            <option value="<?= $bdrsUser['id_user'] ?>" <?= old('id_user') == $bdrsUser['id_user'] ? 'selected' : '' ?>>
+                                                <?= esc($bdrsUser['nama']) ?> (<?= esc($bdrsUser['email']) ?>)
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <small class="form-text text-muted">Tautkan akun agar BDRS dapat melihat stok dan permintaan miliknya.</small>
+                                </div>
+                                <?php endif; ?>
                                 <div class="form-group">
                                      <label for="nama">Nama Bank Darah Rumah Sakit *</label>
                                      <input type="text" class="form-control" id="nama" name="nama" 

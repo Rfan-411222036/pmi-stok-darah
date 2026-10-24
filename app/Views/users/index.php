@@ -90,11 +90,18 @@
                                     <td><?= $user['nama'] ?></td>
                                     <td><?= $user['email'] ?></td>
                                     <td>
-                                        <?php if ($user['role'] == 'admin'): ?>
-                                            <span class="badge badge-danger">Admin</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-info">Staff</span>
-                                        <?php endif; ?>
+                                        <?php
+                                        $roleLabels = [
+                                            'admin' => 'Admin',
+                                            'staff' => 'Staff',
+                                            'bdrs' => 'BDRS',
+                                            'rs' => 'RS',
+                                            'pimpinan' => 'Pimpinan',
+                                        ];
+                                        ?>
+                                        <span class="badge <?= $user['role'] === 'admin' ? 'badge-danger' : 'badge-info' ?>">
+                                            <?= $roleLabels[$user['role']] ?? esc($user['role']) ?>
+                                        </span>
                                     </td>
                                     <td><?= date('d/m/Y H:i', strtotime($user['created_at'])) ?></td>
                                     <td>

@@ -73,9 +73,15 @@
                                     <label for="role">Role *</label>
                                     <select class="form-control" id="role" name="role" required>
                                         <option value="">Pilih Role</option>
+                                        <option value="admin" <?= old('role') == 'admin' ? 'selected' : '' ?>>Admin
+                                        </option>
                                         <option value="staff" <?= old('role') == 'staff' ? 'selected' : '' ?>>Staff
                                         </option>
-                                        <option value="admin" <?= old('role') == 'admin' ? 'selected' : '' ?>>Admin
+                                        <option value="bdrs" <?= old('role') == 'bdrs' ? 'selected' : '' ?>>BDRS
+                                        </option>
+                                        <option value="rs" <?= old('role') == 'rs' ? 'selected' : '' ?>>RS
+                                        </option>
+                                        <option value="pimpinan" <?= old('role') == 'pimpinan' ? 'selected' : '' ?>>Pimpinan
                                         </option>
                                     </select>
                                 </div>

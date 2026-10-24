@@ -98,11 +98,13 @@ class Dashboard extends BaseController
         $currentRole = session()->get('role');
         $currentUserId = session()->get('id_user');
         $isAdminLike = in_array($currentRole, ['admin', 'pimpinan'], true);
+        $bdrsLinkMissing = false;
 
         $produsenId = null;
         if ($currentRole === 'bdrs') {
             $ownProdusen = $this->produsenModel->getProdusenByUser($currentUserId);
-            $produsenId = $ownProdusen['id_produsen'] ?? null;
+            $bdrsLinkMissing = !$ownProdusen;
+            $produsenId = $ownProdusen['id_produsen'] ?? -1;
         }
 
         $distributionRsId = null;
@@ -130,18 +132,70 @@ class Dashboard extends BaseController
         $totalStok = $this->stokModel->getStokTersedia($produsenId);
         $totalProdusen = $this->produsenModel->getTotalProdusen($isAdminLike ? null : $currentUserId);
         $totalRS = $this->rsModel->getTotalRumahSakit($isAdminLike ? null : $currentUserId);
-        $totalDistribusi = $this->distribusiModel->getTotalDistribusi($distributionRsId);
+        $totalDistribusi = $this->distribusiModel->getTotalDistribusi(
+            $distributionRsId,
+            $currentRole === 'bdrs' ? $produsenId : null
+        );
         $totalPemusnahan = $this->pemusnahanModel->getTotalPemusnahan();
-        $stokExpired = $this->stokModel->getStokExpired();
-        $stokMendekatiExpired = $this->stokModel->getStokMendekatiExpired();
-        $distribusiHariIni = $this->distribusiModel->getDistribusiHariIni($distributionRsId);
-        $distribusiBulanIni = $this->distribusiModel->getDistribusiBulanIni($distributionRsId);
+        $stokExpired = $this->stokModel->getStokExpired($produsenId);
+        $stokMendekatiExpired = $this->stokModel->getStokMendekatiExpired($produsenId);
+        $distribusiHariIni = $this->distribusiModel->getDistribusiHariIni(
+            $distributionRsId,
+            $currentRole === 'bdrs' ? $produsenId : null
+        );
+        $distribusiBulanIni = $this->distribusiModel->getDistribusiBulanIni(
+            $distributionRsId,
+            $currentRole === 'bdrs' ? $produsenId : null
+        );
 
         $stokByGolongan = $this->stokModel->getStokByGolongan($produsenId);
         $stokByJenis = $this->stokModel->getStokByJenis($produsenId);
+        $bdrsDistributionByHospital = [];
+        $bdrsDistributionChart = ['labels' => [], 'datasets' => []];
 
         if ($currentRole === 'bdrs') {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS($currentUserId);
+            if ($produsenId) {
+                $pendingRequests = $this->permintaanModel->getPendingForProdusen($produsenId);
+                $this->notificationModel->notifyPendingRequests((int) $currentUserId, $pendingRequests);
+
+                $bdrsDistributionByHospital = $this->distribusiModel
+                    ->getDistribusiPerRsAndGolongan($produsenId);
+                $hospitalLabels = [];
+                $distributionData = array_fill_keys(['A', 'B', 'AB', 'O'], []);
+
+                foreach ($bdrsDistributionByHospital as $row) {
+                    if (!array_key_exists($row['id_rs'], $hospitalLabels)) {
+                        $hospitalLabels[$row['id_rs']] = $row['nama_rs'];
+                    }
+                }
+                $hospitalIds = array_keys($hospitalLabels);
+                $hospitalLabels = array_values($hospitalLabels);
+                foreach ($distributionData as $golongan => $unused) {
+                    $distributionData[$golongan] = array_fill(0, count($hospitalLabels), 0);
+                }
+
+                $hospitalIndexes = [];
+                foreach ($hospitalIds as $index => $hospitalId) {
+                    $hospitalIndexes[$hospitalId] = $index;
+                }
+                foreach ($bdrsDistributionByHospital as $row) {
+                    $index = $hospitalIndexes[$row['id_rs']] ?? null;
+                    if ($index !== null && isset($distributionData[$row['gol_dar']])) {
+                        $distributionData[$row['gol_dar']][$index] = (int) $row['jumlah'];
+                    }
+                }
+
+                $colors = ['A' => '#dc3545', 'B' => '#007bff', 'AB' => '#28a745', 'O' => '#ffc107'];
+                foreach ($distributionData as $golongan => $values) {
+                    $bdrsDistributionChart['datasets'][] = [
+                        'label' => $golongan,
+                        'data' => $values,
+                        'backgroundColor' => $colors[$golongan],
+                    ];
+                }
+                $bdrsDistributionChart['labels'] = $hospitalLabels;
+            }
         } else {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
         }
@@ -223,7 +277,11 @@ class Dashboard extends BaseController
             $lowStockNotifications = $this->notificationModel->orderBy('created_at', 'DESC')->findAll(5);
         }
 
-        $recentDistribusi = $this->distribusiModel->getRecentDistribusi(5, $distributionRsId);
+        $recentDistribusi = $this->distribusiModel->getRecentDistribusi(
+            5,
+            $distributionRsId,
+            $currentRole === 'bdrs' ? $produsenId : null
+        );
 
         // Monthly distribusi chart (for admin)
         $monthlyDistribusi = [];
@@ -265,6 +323,8 @@ class Dashboard extends BaseController
             'priority_notifications' => $priorityNotifications,
             'recent_distribusi' => $recentDistribusi,
             'monthly_distribusi' => $monthlyDistribusi,
+            'bdrs_distribution_chart' => $bdrsDistributionChart,
+            'bdrs_link_missing' => $bdrsLinkMissing,
             'produsen_list' => $produsenList,
             'golongan_list' => $this->stokModel->getDistinctGolongan(),
             'jenis_list' => $this->stokModel->getDistinctJenis(),
@@ -417,6 +477,7 @@ class Dashboard extends BaseController
             $pdf->addTable($headers, $tableData, $columnWidths);
         }
 
+        $pdf->addSignature((string) session()->get('nama'));
         $pdf->Output('Laporan_Stok_' . date('d-m-Y') . '.pdf', 'D');
     }
 
@@ -519,6 +580,7 @@ class Dashboard extends BaseController
             $pdf->addTable($headers, $tableData, $columnWidths);
         }
 
+        $pdf->addSignature((string) session()->get('nama'));
         $pdf->Output('Laporan_Distribusi_' . date('d-m-Y') . '.pdf', 'D');
     }
 
@@ -571,19 +633,7 @@ class Dashboard extends BaseController
             $pdf->addTable($headers, $tableData, $columnWidths);
         }
 
-        if ($pdf->GetY() + 50 > $pdf->getPageHeight() - 25) {
-            $pdf->AddPage();
-        }
-
-        $signerName = session()->get('nama') ?: 'User';
-        $pdf->Ln(8);
-        $pdf->SetFont('helvetica', '', 10);
-        $pdf->Cell(0, 6, 'Tanggal Pemusnahan: ' . date('d F Y'), 0, 1, 'R');
-        $pdf->Cell(0, 6, 'Petugas Pemusnahan,', 0, 1, 'R');
-        $pdf->Ln(22);
-        $pdf->SetFont('helvetica', 'B', 10);
-        $pdf->Cell(0, 6, $signerName, 0, 1, 'R');
-
+        $pdf->addSignature((string) session()->get('nama'));
         $pdf->Output('Laporan_Pemusnahan_' . date('d-m-Y') . '.pdf', 'D');
     }
 
@@ -635,6 +685,7 @@ class Dashboard extends BaseController
             $pdf->addTable($headers, $tableData, $columnWidths);
         }
 
+        $pdf->addSignature((string) session()->get('nama'));
         $pdf->Output('Laporan_Retur_' . date('d-m-Y') . '.pdf', 'D');
     }
 }

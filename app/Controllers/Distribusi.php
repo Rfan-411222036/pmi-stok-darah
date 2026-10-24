@@ -6,6 +6,8 @@ use App\Models\DistribusiModel;
 use App\Models\StokModel;
 use App\Models\RumahSakitModel;
 use App\Models\ProdusenModel;
+use App\Models\PermintaanModel;
+use App\Models\NotificationModel;
 
 class Distribusi extends BaseController
 {
@@ -13,6 +15,7 @@ class Distribusi extends BaseController
     protected $stokModel;
     protected $rumahSakitModel;
     protected $produsenModel;
+    protected $permintaanModel;
 
     public function __construct()
     {
@@ -20,6 +23,7 @@ class Distribusi extends BaseController
         $this->stokModel = new StokModel();
         $this->rumahSakitModel = new RumahSakitModel();
         $this->produsenModel = new ProdusenModel();
+        $this->permintaanModel = new PermintaanModel();
     }
 
     public function index()
@@ -32,7 +36,12 @@ class Distribusi extends BaseController
         $produsenFilter = null;
         if ($role === 'bdrs') {
             $ownProdusen = $this->produsenModel->getProdusenByUser($userId);
-            $produsenFilter = $ownProdusen['id_produsen'] ?? null;
+            $produsenFilter = $ownProdusen['id_produsen'] ?? -1;
+        }
+        $pendingRequests = [];
+        if ($role === 'bdrs' && $produsenFilter) {
+            $pendingRequests = $this->permintaanModel->getPendingForProdusen($produsenFilter);
+            (new NotificationModel())->notifyPendingRequests((int) $userId, $pendingRequests);
         }
 
         $rsFilter = null;
@@ -93,9 +102,11 @@ class Distribusi extends BaseController
             'produsen_list' => $produsenList,
             'current_rs' => $rs,
             'own_rs_id' => $rsFilter ?? null,
-            'rumah_sakit' => $rumahSakitList
-            ,'golongan_list' => $golonganList
-            ,'jenis_list' => $jenisList
+            'rumah_sakit' => $rumahSakitList,
+            'golongan_list' => $golonganList,
+            'jenis_list' => $jenisList,
+            'pending_requests' => $pendingRequests,
+            'bdrs_link_missing' => $role === 'bdrs' && $produsenFilter === -1,
         ];
 
         return view('distribusi/index', $data);
@@ -120,6 +131,8 @@ class Distribusi extends BaseController
             if ($ownProdusen) {
                 $produsenFilter = $ownProdusen['id_produsen'];
                 $produsenList = [$ownProdusen];
+            } else {
+                return redirect()->to('/distribusi')->with('error', 'Akun BDRS belum ditautkan ke data BDRS. Hubungi admin untuk menghubungkan akun.');
             }
         } else {
             $produsenList = $this->produsenModel->orderBy('nama')->findAll();

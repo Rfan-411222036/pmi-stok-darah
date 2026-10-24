@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\ProdusenModel;
+use App\Models\UserModel;
 
 class Produsen extends BaseController
 {
     protected $produsenModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->produsenModel = new ProdusenModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
@@ -54,6 +57,9 @@ class Produsen extends BaseController
         $data = [
             'title' => 'Tambah BDRS',
             'page_title' => 'Tambah Data BDRS',
+            'bdrs_users' => in_array($role, ['admin', 'pimpinan'], true)
+                ? $this->userModel->where('role', 'bdrs')->orderBy('nama')->findAll()
+                : [],
             'validation' => \Config\Services::validation()
         ];
         return view('produsen/create', $data);
@@ -90,6 +96,14 @@ class Produsen extends BaseController
 
         if ($role === 'bdrs') {
             $data['id_user'] = session()->get('id_user');
+        } elseif (in_array($role, ['admin', 'pimpinan'], true)) {
+            $linkedUserId = $this->request->getPost('id_user');
+            if ($linkedUserId && !$this->isAvailableBdrsUser($linkedUserId)) {
+                return redirect()->back()->withInput()->with('errors', [
+                    'id_user' => 'Akun BDRS tidak valid atau sudah terhubung ke produsen lain.',
+                ]);
+            }
+            $data['id_user'] = $linkedUserId ?: null;
         }
 
         if ($this->produsenModel->save($data)) {
@@ -113,7 +127,7 @@ class Produsen extends BaseController
 
         if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'bdrs') {
-                if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
+                if ((int) ($produsen['id_user'] ?? 0) !== (int) session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');
                     return redirect()->to('/produsen');
                 }
@@ -127,6 +141,9 @@ class Produsen extends BaseController
             'title' => 'Edit Produsen',
             'page_title' => 'Edit Data Produsen',
             'produsen' => $produsen,
+            'bdrs_users' => in_array($role, ['admin', 'pimpinan'], true)
+                ? $this->userModel->where('role', 'bdrs')->orderBy('nama')->findAll()
+                : [],
             'validation' => \Config\Services::validation()
         ];
         return view('produsen/edit', $data);
@@ -144,7 +161,7 @@ class Produsen extends BaseController
 
         if ($role !== 'admin' && $role !== 'pimpinan') {
             if ($role === 'bdrs') {
-                if (isset($produsen['id_user']) && $produsen['id_user'] != session()->get('id_user')) {
+                if ((int) ($produsen['id_user'] ?? 0) !== (int) session()->get('id_user')) {
                     session()->setFlashdata('error', 'Akses tidak diizinkan.');
                     return redirect()->to('/produsen');
                 }
@@ -174,6 +191,16 @@ class Produsen extends BaseController
             'telepon' => $this->request->getPost('telepon')
         ];
 
+        if (in_array($role, ['admin', 'pimpinan'], true)) {
+            $linkedUserId = $this->request->getPost('id_user');
+            if ($linkedUserId && !$this->isAvailableBdrsUser($linkedUserId, $id)) {
+                return redirect()->back()->withInput()->with('errors', [
+                    'id_user' => 'Akun BDRS tidak valid atau sudah terhubung ke produsen lain.',
+                ]);
+            }
+            $data['id_user'] = $linkedUserId ?: null;
+        }
+
         if ($this->produsenModel->update($id, $data)) {
             session()->setFlashdata('success', 'Data produsen berhasil diupdate');
         } else {
@@ -181,6 +208,24 @@ class Produsen extends BaseController
         }
 
         return redirect()->to('/produsen');
+    }
+
+    protected function isAvailableBdrsUser($userId, $exceptProdusenId = null): bool
+    {
+        $userId = filter_var($userId, FILTER_VALIDATE_INT);
+        if ($userId === false || $userId <= 0) {
+            return false;
+        }
+
+        $user = $this->userModel->where('id_user', (int) $userId)
+            ->where('role', 'bdrs')
+            ->first();
+        if (!$user) {
+            return false;
+        }
+
+        $linkedProdusen = $this->produsenModel->where('id_user', (int) $userId)->first();
+        return !$linkedProdusen || (int) $linkedProdusen['id_produsen'] === (int) $exceptProdusenId;
     }
 
     public function delete($id)

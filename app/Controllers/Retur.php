@@ -83,6 +83,7 @@ class Retur extends BaseController
         if (empty($returnData)) {
             $pdf->SetFont('helvetica', '', 11);
             $pdf->Cell(0, 10, 'Tidak ada data return sesuai filter.', 0, 1, 'C');
+            $pdf->addSignature((string) session()->get('nama'));
             $pdf->Output('Laporan_Retur_' . date('d-m-Y') . '.pdf', 'D');
             return;
         }
@@ -107,6 +108,7 @@ class Retur extends BaseController
 
         $columnWidths = [8, 28, 12, 18, 30, 24, 24, 28, 20, 18];
         $pdf->addTable($headers, $tableData, $columnWidths);
+        $pdf->addSignature((string) session()->get('nama'));
         $pdf->Output('Laporan_Retur_' . date('d-m-Y') . '.pdf', 'D');
     }
 

@@ -260,4 +260,25 @@ class PdfGenerator extends TCPDF
 
         $this->Ln(4);
     }
+
+    public function addSignature(string $name)
+    {
+        $blockHeight = 44;
+        if ($this->GetY() + $blockHeight > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
+
+        $width = 70;
+        $x = $this->getPageWidth() - $this->rMargin - $width;
+        $this->SetXY($x, $this->GetY() + 5);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell($width, 6, 'Bekasi, ' . date('d F Y'), 0, 1, 'C');
+        $this->SetX($x);
+        $this->Cell($width, 6, 'Petugas,', 0, 1, 'C');
+        $this->Ln(18);
+        $this->SetX($x);
+        $this->SetFont('helvetica', 'B', 10);
+        $this->Cell($width, 6, $name, 0, 1, 'C');
+        $this->SetFont('helvetica', '', 10);
+    }
 }

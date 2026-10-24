@@ -22,6 +22,9 @@
     <section class="content">
         <div class="container-fluid">
             <!-- debug banner removed -->
+            <?php if (!empty($bdrs_link_missing)): ?>
+                <div class="alert alert-warning">Akun ini belum ditautkan ke data BDRS, sehingga stok dan permintaan tidak dapat ditampilkan. Hubungi admin untuk menghubungkan akun.</div>
+            <?php endif; ?>
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -69,6 +72,61 @@
                         </div>
                     </form>
 
+                    <?php if ($role === 'bdrs'): ?>
+                    <div class="card card-outline card-warning mb-3">
+                        <div class="card-body d-flex flex-wrap align-items-center justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Permintaan Darah Menunggu</h5>
+                                <p class="text-muted mb-0">Permintaan RS untuk BDRS Anda yang perlu ditinjau.</p>
+                            </div>
+                            <a href="<?= base_url('/permintaan') ?>" class="btn btn-secondary">
+                                <i class="fas fa-list"></i> Semua Permintaan
+                            </a>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>RS</th>
+                                            <th>Jumlah</th>
+                                            <th>Golongan</th>
+                                            <th>Jenis</th>
+                                            <th>Prioritas</th>
+                                            <th>Penerima</th>
+                                            <th>Tanggal</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($pending_requests)): ?>
+                                            <?php foreach ($pending_requests as $request): ?>
+                                                <tr>
+                                                    <td><?= esc($request['nama_rs'] ?? '-') ?></td>
+                                                    <td><?= esc($request['jumlah']) ?></td>
+                                                    <td><?= esc($request['gol_dar'] ?? '-') ?></td>
+                                                    <td><?= esc($request['jenis'] ?? '-') ?></td>
+                                                    <td><?= esc(strtoupper($request['priority_cito'] ?? 'medium')) ?></td>
+                                                    <td><?= esc($request['nama_penerima'] ?? '-') ?></td>
+                                                    <td><?= !empty($request['created_at']) ? date('d/m/Y H:i', strtotime($request['created_at'])) : '-' ?></td>
+                                                    <td>
+                                                        <a href="<?= base_url('/permintaan/approve/' . $request['id_permintaan']) ?>" class="btn btn-sm btn-success">
+                                                            Tinjau &amp; Setujui
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="8" class="text-center text-muted">Tidak ada permintaan yang menunggu.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <?php else: ?>
                     <div class="card mb-3">
                         <div class="card-body d-flex flex-wrap align-items-center justify-content-between">
                             <div>
@@ -85,6 +143,7 @@
                             </div>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-sm table-hover">

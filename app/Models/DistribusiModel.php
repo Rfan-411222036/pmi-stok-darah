@@ -43,7 +43,7 @@ class DistribusiModel extends Model
         ];
     }
 
-    public function getTotalDistribusi($rsId = null)
+    public function getTotalDistribusi($rsId = null, $produsenId = null)
     {
         $builder = $this->db->table('permintaan')
                            ->where('status', 'completed');
@@ -51,29 +51,36 @@ class DistribusiModel extends Model
         if ($rsId !== null) {
             $builder->where('id_rs', $rsId);
         }
+        if ($produsenId !== null) {
+            $builder->where('id_produsen', $produsenId);
+        }
 
         return $builder->countAllResults();
     }
 
-    public function getDistribusiHariIni($rsId = null)
+    public function getDistribusiHariIni($rsId = null, $produsenId = null)
     {
-        return $this->countCompletedDistribusi($rsId, 'today');
+        return $this->countCompletedDistribusi($rsId, 'today', $produsenId);
     }
 
-    public function getDistribusiBulanIni($rsId = null)
+    public function getDistribusiBulanIni($rsId = null, $produsenId = null)
     {
-        return $this->countCompletedDistribusi($rsId, 'month');
+        return $this->countCompletedDistribusi($rsId, 'month', $produsenId);
     }
 
-    private function countCompletedDistribusi($rsId = null, $period = null)
+    private function countCompletedDistribusi($rsId = null, $period = null, $produsenId = null)
     {
         $builder = $this->db->table('distribusi d')
                            ->select('COUNT(DISTINCT d.id_distribusi) AS total', false)
                            ->join('permintaan p', 'p.id_rs = d.id_rs AND p.id_bag = d.id_bag')
+                           ->join('stok s', 's.id_bag = d.id_bag')
                            ->where('p.status', 'completed');
 
         if ($rsId !== null) {
             $builder->where('d.id_rs', $rsId);
+        }
+        if ($produsenId !== null) {
+            $builder->where('s.id_produsen', $produsenId);
         }
 
         if ($period === 'today') {
@@ -131,7 +138,7 @@ class DistribusiModel extends Model
         return $builder->get()->getResultArray();
     }
 
-    public function getRecentDistribusi($limit = 5, $rsId = null)
+    public function getRecentDistribusi($limit = 5, $rsId = null, $produsenId = null)
     {
         $builder = $this->select('distribusi.*, stok.no_kantong, stok.gol_dar, rumah_sakit.nama_rs, produsen.nama as nama_produsen')
                         ->join('stok', 'stok.id_bag = distribusi.id_bag')
@@ -140,11 +147,29 @@ class DistribusiModel extends Model
         if ($rsId !== null) {
             $builder->where('distribusi.id_rs', $rsId);
         }
+        if ($produsenId !== null) {
+            $builder->where('stok.id_produsen', $produsenId);
+        }
 
         return $builder->orderBy('distribusi.tanggal_distribusi', 'DESC')
                        ->limit($limit)
                        ->get()
                        ->getResultArray();
+    }
+
+    public function getDistribusiPerRsAndGolongan($produsenId)
+    {
+        return $this->db->table('distribusi d')
+            ->select('rs.id_rs, rs.nama_rs, s.gol_dar, COUNT(d.id_distribusi) AS jumlah')
+            ->join('stok s', 's.id_bag = d.id_bag')
+            ->join('rumah_sakit rs', 'rs.id_rs = d.id_rs')
+            ->where('s.id_produsen', $produsenId)
+            ->where('s.deleted_at', null)
+            ->whereIn('s.gol_dar', ['A', 'B', 'AB', 'O'])
+            ->groupBy('rs.id_rs, rs.nama_rs, s.gol_dar')
+            ->orderBy('rs.nama_rs')
+            ->get()
+            ->getResultArray();
     }
 
     public function getStokPerBDRS($id_user = null)

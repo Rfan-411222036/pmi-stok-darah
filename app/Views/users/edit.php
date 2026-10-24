@@ -76,8 +76,11 @@
                                     <label for="role">Role *</label>
                                     <select class="form-control" id="role" name="role" required>
                                         <option value="">Pilih Role</option>
-                                        <option value="staff" <?= old('role', $user['role']) == 'staff' ? 'selected' : '' ?>>Staff</option>
                                         <option value="admin" <?= old('role', $user['role']) == 'admin' ? 'selected' : '' ?>>Admin</option>
+                                        <option value="staff" <?= old('role', $user['role']) == 'staff' ? 'selected' : '' ?>>Staff</option>
+                                        <option value="bdrs" <?= old('role', $user['role']) == 'bdrs' ? 'selected' : '' ?>>BDRS</option>
+                                        <option value="rs" <?= old('role', $user['role']) == 'rs' ? 'selected' : '' ?>>RS</option>
+                                        <option value="pimpinan" <?= old('role', $user['role']) == 'pimpinan' ? 'selected' : '' ?>>Pimpinan</option>
                                     </select>
                                 </div>
                             </div>

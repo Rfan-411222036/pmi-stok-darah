@@ -43,6 +43,9 @@
     </style>
     <section class="content-header">
         <div class="container-fluid">
+            <?php if (!empty($bdrs_link_missing)): ?>
+                <div class="alert alert-warning">Akun ini belum ditautkan ke data BDRS, sehingga stok, permintaan, dan distribusi milik Anda tidak dapat ditampilkan. Hubungi admin untuk menghubungkan akun.</div>
+            <?php endif; ?>
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1><?= $page_title ?></h1>
@@ -465,6 +468,27 @@
                 </div>
             </div>
 
+            <?php if ($current_role === 'bdrs'): ?>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-danger pmi-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Grafik Distribusi Darah per Golongan dan Rumah Sakit</h3>
+                        </div>
+                        <div class="card-body">
+                            <?php if (!empty($bdrs_distribution_chart['labels'])): ?>
+                                <div style="height: 360px; position: relative;">
+                                    <canvas id="bdrsDistributionByHospitalChart"></canvas>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-muted text-center mb-0">Belum ada data distribusi untuk BDRS Anda.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <?php if (in_array($current_role, ['admin', 'pimpinan'], true)): ?>
             <div class="row">
                 <div class="col-12">
@@ -863,6 +887,30 @@
                             beginAtZero: true,
                             title: { display: true, text: 'Jumlah kantong diminta' },
                             ticks: { precision: 0 }
+                        }
+
+                        var bdrsDistributionCanvas = document.getElementById('bdrsDistributionByHospitalChart');
+                        if (bdrsDistributionCanvas) {
+                            new Chart(bdrsDistributionCanvas, {
+                                type: 'bar',
+                                data: {
+                                    labels: <?= json_encode($bdrs_distribution_chart['labels']) ?>,
+                                    datasets: <?= json_encode($bdrs_distribution_chart['datasets']) ?>
+                                },
+                                options: {
+                                    maintainAspectRatio: false,
+                                    responsive: true,
+                                    scales: {
+                                        x: { stacked: true, grid: { display: false } },
+                                        y: {
+                                            stacked: true,
+                                            beginAtZero: true,
+                                            title: { display: true, text: 'Jumlah kantong darah' },
+                                            ticks: { precision: 0 }
+                                        }
+                                    }
+                                }
+                            });
                         }
                     },
                     plugins: {
