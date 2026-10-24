@@ -10,13 +10,21 @@ class StokModel extends Model
     protected $primaryKey = 'id_bag';
     protected $allowedFields = ['no_kantong', 'id_produsen', 'jenis_darah', 'gol_dar', 'rhesus', 'volume', 'tanggal_produksi', 'tanggal_expired', 'status', 'keterangan'];
     protected $useTimestamps = false;
+    protected $useSoftDeletes = true;
+    protected $deletedField = 'deleted_at';
 
-    public function getStokWithDetails($search = '', $perPage = 10, $produsenId = null, $from = null, $to = null, $keterangan = null)
+    public function getStokWithDetails($search = '', $perPage = 10, $produsenId = null, $from = null, $to = null, $keterangan = null, $availableOnly = false)
     {
         $this->markExpiredAsExpired();
 
         $builder = $this->select('stok.*, produsen.nama as nama_produsen, produsen.jenis as jenis_produsen')
-                       ->join('produsen', 'produsen.id_produsen = stok.id_produsen');
+                       ->join('produsen', 'produsen.id_produsen = stok.id_produsen')
+                       ->where('stok.deleted_at', null);
+
+        if ($availableOnly) {
+            $builder->where('stok.status', 'tersedia')
+                    ->where('stok.tanggal_expired >=', date('Y-m-d'));
+        }
 
         if ($produsenId) {
             $builder->where('stok.id_produsen', $produsenId);
@@ -63,7 +71,8 @@ class StokModel extends Model
 
     public function getStokTersedia($produsenId = null)
     {
-        $builder = $this->where('status', 'tersedia')
+        $builder = $this->where('deleted_at', null)
+                   ->where('status', 'tersedia')
                    ->where('tanggal_expired >=', date('Y-m-d'));
 
         if ($produsenId) {
@@ -76,6 +85,7 @@ class StokModel extends Model
     public function getStokByGolongan($produsenId = null)
     {
         $builder = $this->select('gol_dar, COUNT(*) as total')
+                        ->where('deleted_at', null)
                         ->where('status', 'tersedia')
                         ->where('tanggal_expired >=', date('Y-m-d'));
 
@@ -91,6 +101,7 @@ class StokModel extends Model
     public function getStokByJenis($produsenId = null)
     {
         $builder = $this->select('jenis_darah, COUNT(*) as total')
+                        ->where('deleted_at', null)
                         ->where('status', 'tersedia')
                         ->where('tanggal_expired >=', date('Y-m-d'));
 
@@ -106,6 +117,7 @@ class StokModel extends Model
     public function getStokByGolonganRhesus($produsenId = null)
     {
         $builder = $this->select('gol_dar, rhesus, COUNT(*) as total')
+                        ->where('deleted_at', null)
                         ->where('status', 'tersedia')
                         ->where('tanggal_expired >=', date('Y-m-d'));
 
@@ -125,7 +137,8 @@ class StokModel extends Model
         $date = date('Y-m-d');
         $expiredDate = date('Y-m-d', strtotime('+14 days'));
 
-        $builder = $this->where('status', 'tersedia')
+        $builder = $this->where('deleted_at', null)
+                        ->where('status', 'tersedia')
                         ->where('tanggal_expired >=', $date)
                         ->where('tanggal_expired <=', $expiredDate);
 
@@ -138,7 +151,8 @@ class StokModel extends Model
 
     public function getStokExpired($produsenId = null)
     {
-        $builder = $this->where('tanggal_expired <', date('Y-m-d'))
+        $builder = $this->where('deleted_at', null)
+                        ->where('tanggal_expired <', date('Y-m-d'))
                         ->whereIn('status', ['tersedia', 'expired']);
 
         if ($produsenId) {
@@ -151,6 +165,7 @@ class StokModel extends Model
     public function markExpiredAsExpired()
     {
         return $this->builder()
+                    ->where('deleted_at', null)
                     ->where('status', 'tersedia')
                     ->where('tanggal_expired <', date('Y-m-d'))
                     ->update(['status' => 'expired']);
@@ -158,7 +173,8 @@ class StokModel extends Model
 
     public function getStokForDistribusi($produsenId = null)
     {
-        $builder = $this->where('status', 'tersedia')
+        $builder = $this->where('deleted_at', null)
+                        ->where('status', 'tersedia')
                         ->where('tanggal_expired >=', date('Y-m-d'));
 
         if ($produsenId) {
@@ -176,6 +192,7 @@ class StokModel extends Model
     {
         $rows = $this->select('gol_dar')
                      ->distinct()
+                     ->where('deleted_at', null)
                      ->where('gol_dar IS NOT NULL')
                      ->orderBy('gol_dar')
                      ->get()
@@ -191,6 +208,7 @@ class StokModel extends Model
     {
         $rows = $this->select('jenis_darah')
                      ->distinct()
+                     ->where('deleted_at', null)
                      ->where('jenis_darah IS NOT NULL')
                      ->orderBy('jenis_darah')
                      ->get()
@@ -203,6 +221,7 @@ class StokModel extends Model
     {
         $rows = $this->select('keterangan')
                      ->distinct()
+                     ->where('deleted_at', null)
                      ->where('keterangan IS NOT NULL')
                      ->where('keterangan !=', '')
                      ->orderBy('keterangan')
@@ -216,6 +235,7 @@ class StokModel extends Model
     {
         $rows = $this->select('gol_dar')
                      ->distinct()
+                     ->where('deleted_at', null)
                      ->where('id_produsen', $id_produsen)
                      ->where('status', 'tersedia')
                      ->where('gol_dar IS NOT NULL')
@@ -229,7 +249,8 @@ class StokModel extends Model
 
     public function getAvailableStockForProdusen($id_produsen, $gol_dar = null, $jenis = null)
     {
-        $builder = $this->where('id_produsen', $id_produsen)
+        $builder = $this->where('deleted_at', null)
+                        ->where('id_produsen', $id_produsen)
                         ->where('status', 'tersedia')
                         ->where('tanggal_expired >=', date('Y-m-d'));
 
@@ -246,11 +267,32 @@ class StokModel extends Model
 
     public function countAvailableByProdusenGolonganJenis($id_produsen, $gol_dar, $jenis)
     {
-        return $this->where('id_produsen', $id_produsen)
+        return $this->where('deleted_at', null)
+                    ->where('id_produsen', $id_produsen)
                     ->where('status', 'tersedia')
                     ->where('tanggal_expired >=', date('Y-m-d'))
                     ->where('gol_dar', $gol_dar)
                     ->where('jenis_darah', $jenis)
                     ->countAllResults();
+    }
+
+    public function getAvailableStockByProdusenAndGolongan($produsenId = null)
+    {
+        $builder = $this->db->table('stok s')
+            ->select('p.id_produsen, p.nama as nama_produsen, s.gol_dar, COUNT(s.id_bag) as total')
+            ->join('produsen p', 'p.id_produsen = s.id_produsen')
+            ->where('s.deleted_at', null)
+            ->where('s.status', 'tersedia')
+            ->where('s.tanggal_expired >=', date('Y-m-d'));
+
+        if ($produsenId) {
+            $builder->where('s.id_produsen', $produsenId);
+        }
+
+        return $builder->groupBy('p.id_produsen, p.nama, s.gol_dar')
+            ->orderBy('p.nama')
+            ->orderBy('s.gol_dar')
+            ->get()
+            ->getResultArray();
     }
 }

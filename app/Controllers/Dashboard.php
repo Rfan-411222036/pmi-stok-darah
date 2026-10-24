@@ -9,6 +9,7 @@ use App\Models\DistribusiModel;
 use App\Models\PemusnahanModel;
 use App\Models\UserModel;
 use App\Models\NotificationModel;
+use App\Models\PermintaanModel;
 use App\Libraries\PdfGenerator;
 
 class Dashboard extends BaseController
@@ -20,6 +21,7 @@ class Dashboard extends BaseController
     protected $pemusnahanModel;
     protected $userModel;
     protected $notificationModel;
+    protected $permintaanModel;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class Dashboard extends BaseController
         $this->pemusnahanModel = new PemusnahanModel();
         $this->userModel = new UserModel();
         $this->notificationModel = new NotificationModel();
+        $this->permintaanModel = new PermintaanModel();
 
         $db = \Config\Database::connect();
         $forge = \Config\Database::forge();
@@ -137,10 +140,10 @@ class Dashboard extends BaseController
         $stokByGolongan = $this->stokModel->getStokByGolongan($produsenId);
         $stokByJenis = $this->stokModel->getStokByJenis($produsenId);
 
-        if ($isAdminLike) {
-            $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
-        } else {
+        if ($currentRole === 'bdrs') {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS($currentUserId);
+        } else {
+            $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
         }
 
         $chartLabels = [];
@@ -149,6 +152,58 @@ class Dashboard extends BaseController
             $label = $item['nama_produsen'] ?? $item['nama'] ?? ($item['nama_rs'] ?? 'Unknown');
             $chartLabels[] = $label;
             $chartData[] = (int) ($item['jumlah_stok'] ?? 0);
+        }
+
+        $produsenList = $this->produsenModel->where('is_active', 1)->orderBy('nama')->findAll();
+        $golonganDarah = ['A', 'B', 'AB', 'O'];
+        $stockByBdrsAndBloodGroup = [];
+        foreach ($produsenList as $produsen) {
+            if ($currentRole === 'bdrs' && (int) $produsen['id_produsen'] !== (int) $produsenId) {
+                continue;
+            }
+            $stockByBdrsAndBloodGroup[$produsen['id_produsen']] = [
+                'nama_produsen' => $produsen['nama'],
+                'golongan' => array_fill_keys($golonganDarah, 0),
+            ];
+        }
+
+        foreach ($this->stokModel->getAvailableStockByProdusenAndGolongan($produsenId) as $stockRow) {
+            if (isset($stockByBdrsAndBloodGroup[$stockRow['id_produsen']]['golongan'][$stockRow['gol_dar']])) {
+                $stockByBdrsAndBloodGroup[$stockRow['id_produsen']]['golongan'][$stockRow['gol_dar']] = (int) $stockRow['total'];
+            }
+        }
+
+        $requestHistory = [];
+        $requestHistoryLabels = [];
+        $requestHistoryDatasets = [];
+        if ($isAdminLike) {
+            $requestHistory = $this->permintaanModel->getRequestVolumeByProdusenAndGolongan();
+            $requestHistoryLabels = array_column($produsenList, 'nama');
+            $requestHistoryData = [];
+            foreach ($golonganDarah as $golongan) {
+                $requestHistoryData[$golongan] = array_fill(0, count($requestHistoryLabels), 0);
+            }
+
+            $producerIndexes = [];
+            foreach ($produsenList as $index => $produsen) {
+                $producerIndexes[$produsen['id_produsen']] = $index;
+            }
+            foreach ($requestHistory as $requestRow) {
+                $index = $producerIndexes[$requestRow['id_produsen']] ?? null;
+                $golongan = $requestRow['gol_dar'];
+                if ($index !== null && isset($requestHistoryData[$golongan])) {
+                    $requestHistoryData[$golongan][$index] = (int) $requestRow['total_diminta'];
+                }
+            }
+
+            $colors = ['A' => '#dc3545', 'B' => '#007bff', 'AB' => '#28a745', 'O' => '#ffc107'];
+            foreach ($requestHistoryData as $golongan => $values) {
+                $requestHistoryDatasets[] = [
+                    'label' => $golongan,
+                    'data' => $values,
+                    'backgroundColor' => $colors[$golongan],
+                ];
+            }
         }
 
         $totalUsers = $this->userModel->getTotalUsers();
@@ -181,8 +236,6 @@ class Dashboard extends BaseController
             ];
         }
 
-        $produsenList = $this->produsenModel->orderBy('nama')->findAll();
-
         $data = [
             'title' => 'Dashboard',
             'page_title' => 'Dashboard Management Stok Darah PMI',
@@ -198,6 +251,10 @@ class Dashboard extends BaseController
             'stok_by_golongan' => $stokByGolongan,
             'stok_by_jenis' => $stokByJenis,
             'stok_per_bdrs' => $stokPerBDRS,
+            'stok_per_bdrs_golongan' => $stockByBdrsAndBloodGroup,
+            'golongan_darah' => $golonganDarah,
+            'riwayat_permintaan_labels' => $requestHistoryLabels,
+            'riwayat_permintaan_datasets' => $requestHistoryDatasets,
             'current_role' => $currentRole,
             'chart_labels' => $chartLabels,
             'chart_data' => $chartData,

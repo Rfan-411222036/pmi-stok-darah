@@ -443,10 +443,18 @@
                     <div class="card card-outline card-danger pmi-card">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <div>
-                                <h3 class="card-title"><?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?></h3>
-                                <p class="text-muted mb-0"><?php if (in_array($current_role, ['admin', 'pimpinan'], true)): ?>Menampilkan total stok darah untuk setiap BDRS yang terdaftar.<?php else: ?>Menampilkan total stok darah di BDRS Anda sendiri.<?php endif; ?></p>
+                                <h3 class="card-title">
+                                    <?= in_array($current_role, ['admin', 'pimpinan', 'rs'], true) ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?>
+                                </h3>
+                                <p class="text-muted mb-0">
+                                    <?php if (in_array($current_role, ['admin', 'pimpinan', 'rs'], true)): ?>
+                                        Menampilkan total stok darah tersedia untuk setiap BDRS.
+                                    <?php else: ?>
+                                        Menampilkan total stok darah di BDRS Anda sendiri.
+                                    <?php endif; ?>
+                                </p>
                             </div>
-                            <span class="badge badge-pill badge-danger"><?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Admin View' : 'BDRS View' ?></span>
+                            <span class="badge badge-pill badge-danger"><?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Admin View' : ($current_role === 'rs' ? 'RS View' : 'BDRS View') ?></span>
                         </div>
                         <div class="card-body">
                             <div class="chart-wrapper" style="min-height: 360px; position: relative;">
@@ -456,6 +464,28 @@
                     </div>
                 </div>
             </div>
+
+            <?php if (in_array($current_role, ['admin', 'pimpinan'], true)): ?>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Riwayat Permintaan Darah RS per Golongan dan BDRS</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">Total kantong yang diminta RS, dikelompokkan berdasarkan BDRS dan golongan darah.</p>
+                            <?php if (!empty($riwayat_permintaan_labels)): ?>
+                                <div style="height: 360px; position: relative;">
+                                    <canvas id="riwayatPermintaanChart"></canvas>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-muted text-center mb-0">Belum ada riwayat permintaan darah.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <?php if (!empty($monthly_distribusi) && $current_role === 'admin'): ?>
             <!-- <div class="row mt-3">
@@ -583,6 +613,46 @@
                                 </div>
                             <?php else: ?>
                                 <p class="text-muted text-center">Tidak ada data stok per BDRS</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <?= $current_role === 'rs' ? 'Stok Tersedia per Golongan di Setiap BDRS' : 'Stok Tersedia per Golongan Darah' ?>
+                            </h3>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <?php if (!empty($stok_per_bdrs_golongan)): ?>
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>BDRS</th>
+                                            <?php foreach ($golongan_darah as $golongan): ?>
+                                                <th><?= esc($golongan) ?></th>
+                                            <?php endforeach; ?>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($stok_per_bdrs_golongan as $stok): ?>
+                                            <?php $totalGolongan = array_sum($stok['golongan']); ?>
+                                            <tr>
+                                                <td><?= esc($stok['nama_produsen']) ?></td>
+                                                <?php foreach ($golongan_darah as $golongan): ?>
+                                                    <td><?= number_format($stok['golongan'][$golongan], 0, ',', '.') ?></td>
+                                                <?php endforeach; ?>
+                                                <td><strong><?= number_format($totalGolongan, 0, ',', '.') ?></strong></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            <?php else: ?>
+                                <p class="text-muted text-center mb-0">Tidak ada stok tersedia.</p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -774,6 +844,39 @@
                 }
             }
         });
+
+        var requestHistoryCanvas = document.getElementById('riwayatPermintaanChart');
+        if (requestHistoryCanvas) {
+            new Chart(requestHistoryCanvas, {
+                type: 'bar',
+                data: {
+                    labels: <?= json_encode($riwayat_permintaan_labels) ?>,
+                    datasets: <?= json_encode($riwayat_permintaan_datasets) ?>
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            title: { display: true, text: 'Jumlah kantong diminta' },
+                            ticks: { precision: 0 }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID') + ' kantong';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
                 // Monthly distribusi chart (admin) with click -> per-gudang
                 <?php if (!empty($monthly_distribusi) && in_array($current_role, ['admin', 'pimpinan'], true)): ?>

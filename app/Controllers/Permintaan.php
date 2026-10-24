@@ -342,32 +342,36 @@ class Permintaan extends BaseController
         return $this->permintaanModel->getAllWithNames($filters);
     }
 
+    protected function getCurrentRs($userId)
+    {
+        $rs = $this->rsModel->getRumahSakitByUser($userId);
+        if (!$rs && session()->has('id_rs')) {
+            $rs = $this->rsModel->find(session()->get('id_rs'));
+        }
+        if (!$rs && session()->has('nama')) {
+            $rs = $this->rsModel->where('nama_rs', session()->get('nama'))->first();
+        }
+
+        return $rs;
+    }
+
     public function create()
     {
         $role = session()->get('role');
         $userId = session()->get('id_user');
 
-        $selected_rs = null;
-        if ($role === 'bdrs') {
-            $prod = $this->produsenModel->getProdusenByUser($userId);
-            $produsen = $prod ? [$prod] : [];
-            $rumahSakit = $this->rsModel->findAll();
-        } elseif ($role === 'rs') {
-            // try multiple fallbacks to detect RS mapping
-            $rs = $this->rsModel->getRumahSakitByUser($userId);
-            if (!$rs && session()->has('id_rs')) {
-                $rs = $this->rsModel->find(session()->get('id_rs'));
-            }
-            if (!$rs && session()->has('nama')) {
-                $rs = $this->rsModel->where('nama_rs', session()->get('nama'))->first();
-            }
-            $rumahSakit = $rs ? [$rs] : [];
-            $produsen = $this->produsenModel->findAll();
-            $selected_rs = $rs['id_rs'] ?? null;
-        } else {
-            $produsen = $this->produsenModel->findAll();
-            $rumahSakit = $this->rsModel->findAll();
+        if ($role !== 'rs') {
+            return redirect()->to('/permintaan')->with('error', 'Hanya user RS yang dapat membuat permintaan darah.');
         }
+
+        $rs = $this->getCurrentRs($userId);
+        if (!$rs) {
+            return redirect()->to('/permintaan')->with('error', 'Data Rumah Sakit untuk akun ini belum terhubung.');
+        }
+
+        $produsen = $this->produsenModel->where('is_active', 1)->findAll();
+        $rumahSakit = [$rs];
+        $selected_rs = $rs['id_rs'];
 
         // get dropdown lists for golongan and jenis
         $golongan = $this->stokModel->getDistinctGolongan();
@@ -393,18 +397,46 @@ class Permintaan extends BaseController
 
     public function store()
     {
-        $post = $this->request->getPost();
+        if (session()->get('role') !== 'rs') {
+            return redirect()->to('/permintaan')->with('error', 'Hanya user RS yang dapat membuat permintaan darah.');
+        }
+
+        $post = $this->request->getPost() ?? [];
         $userId = session()->get('id_user');
+        $rs = $this->getCurrentRs($userId);
+        if (!$rs) {
+            return redirect()->to('/permintaan')->with('error', 'Data Rumah Sakit untuk akun ini belum terhubung.');
+        }
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'id_produsen' => 'required|is_natural_no_zero',
+            'jumlah' => 'required|integer|greater_than[0]',
+            'gol_dar' => 'permit_empty|in_list[A,B,AB,O]',
+            'jenis' => 'permit_empty|max_length[50]',
+            'diagnosa' => 'required|in_list[CKD ON HD,ANEMIA,POST SC,DBD,THALASEMIA,Lain-lain]',
+            'diagnosa_lain' => 'permit_empty|max_length[255]',
+            'nama_penerima' => 'required|max_length[255]',
+            'priority_cito' => 'required|in_list[high,medium,low]',
+        ]);
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        $produsen = $this->produsenModel->find($post['id_produsen']);
+        if (!$produsen || (isset($produsen['is_active']) && (int) $produsen['is_active'] !== 1)) {
+            return redirect()->back()->withInput()->with('error', 'BDRS tujuan tidak tersedia.');
+        }
 
         $data = [
-            'id_rs' => $post['id_rs'] ?? null,
-            'id_produsen' => $post['id_produsen'] ?? null,
-            'jumlah' => (int) ($post['jumlah'] ?? 0),
+            'id_rs' => $rs['id_rs'],
+            'id_produsen' => $post['id_produsen'],
+            'jumlah' => (int) $post['jumlah'],
             'gol_dar' => $post['gol_dar'] ?? null,
             'jenis' => $post['jenis'] ?? null,
             'keterangan' => ($post['diagnosa'] === 'Lain-lain' ? trim($post['diagnosa_lain'] ?? '') : $post['diagnosa']) ?: null,
-            'nama_penerima' => $post['nama_penerima'] ?? null,
-            'priority_cito' => in_array($post['priority_cito'] ?? '', ['high', 'medium', 'low'], true) ? $post['priority_cito'] : 'medium',
+            'nama_penerima' => $post['nama_penerima'],
+            'priority_cito' => $post['priority_cito'],
             'status' => 'pending',
             'created_by' => $userId,
             'created_at' => date('Y-m-d H:i:s')
@@ -741,6 +773,11 @@ class Permintaan extends BaseController
 
         if ($role !== 'rs') {
             return redirect()->back()->with('error', 'Akses tidak diizinkan');
+        }
+
+        $rs = $this->getCurrentRs(session()->get('id_user'));
+        if (!$rs || (int) $rs['id_rs'] !== (int) $perm['id_rs']) {
+            return redirect()->back()->with('error', 'Permintaan ini bukan milik Rumah Sakit Anda.');
         }
 
         if ($perm['status'] !== 'approved') {

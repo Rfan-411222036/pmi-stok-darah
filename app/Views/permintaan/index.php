@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <div class="float-sm-right">
                         <?php $role = session()->get('role'); ?>
-                        <?php if ($role === 'rs' || $role === 'admin'): ?>
+                        <?php if ($role === 'rs'): ?>
                             <a href="<?= base_url('/permintaan/create') ?>" class="btn btn-primary btn-sm">Buat Permintaan</a>
                         <?php endif; ?>
                     </div>

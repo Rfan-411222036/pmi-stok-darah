@@ -34,11 +34,19 @@ class Stok extends BaseController
                 $produsenFilter = $ownProdusen['id_produsen'];
                 $produsenName = $ownProdusen['nama'];
             } else {
-                $produsenFilter = null;
+                $produsenFilter = -1;
             }
         }
 
-        $result = $this->stokModel->getStokWithDetails($search, $perPage, $produsenFilter, $from, $to, $keterangan);
+        $result = $this->stokModel->getStokWithDetails(
+            $search,
+            $perPage,
+            $produsenFilter,
+            $from,
+            $to,
+            $keterangan,
+            $role === 'rs'
+        );
         $golonganRhesus = $this->stokModel->getStokByGolonganRhesus($produsenFilter);
 
         $bloodGroups = ['A', 'B', 'AB', 'O'];
@@ -93,8 +101,23 @@ class Stok extends BaseController
         $from = $this->request->getGet('from');
         $to = $this->request->getGet('to');
         $keterangan = $this->request->getGet('keterangan');
+        $role = session()->get('role');
+        $availableOnly = $role === 'rs';
 
-        $stokData = $this->stokModel->getStokWithDetails($search, null, $produsenFilter, $from, $to, $keterangan)['stok'];
+        if ($role === 'bdrs') {
+            $ownProdusen = $this->produsenModel->getProdusenByUser(session()->get('id_user'));
+            $produsenFilter = $ownProdusen['id_produsen'] ?? -1;
+        }
+
+        $stokData = $this->stokModel->getStokWithDetails(
+            $search,
+            null,
+            $produsenFilter,
+            $from,
+            $to,
+            $keterangan,
+            $availableOnly
+        )['stok'];
 
         $pdf = new \App\Libraries\PdfGenerator();
         $pdf->AddPage();
@@ -183,7 +206,7 @@ class Stok extends BaseController
     {
         $role = session()->get('role');
 
-        if ($role === 'rs') {
+        if (!in_array($role, ['admin', 'pimpinan', 'bdrs'], true)) {
             session()->setFlashdata('error', 'Akses tidak diizinkan.');
             return redirect()->to('/stok');
         }
@@ -351,7 +374,7 @@ class Stok extends BaseController
             return redirect()->to('/stok');
         }
 
-        if ($role === 'rs') {
+        if (!in_array($role, ['admin', 'pimpinan', 'bdrs'], true)) {
             session()->setFlashdata('error', 'Akses tidak diizinkan.');
             return redirect()->to('/stok');
         }
@@ -364,37 +387,26 @@ class Stok extends BaseController
             }
         }
 
-        if ($stok['status'] === 'terdistribusi') {
-            session()->setFlashdata('error', 'Tidak dapat menghapus stok yang sudah didistribusikan');
-            return redirect()->to('/stok');
-        }
-
         if ($stok['status'] === 'musnah') {
             session()->setFlashdata('error', 'Tidak dapat menghapus stok yang sudah dimusnahkan');
             return redirect()->to('/stok');
         }
 
-        $distribusiModel = new \App\Models\DistribusiModel();
-        $distribusiCount = $distribusiModel->where('id_bag', $id)->countAllResults();
-
-        if ($distribusiCount > 0) {
-            session()->setFlashdata('error', 'Tidak dapat menghapus stok karena sudah didistribusikan');
-            return redirect()->to('/stok');
-        }
-
-        $pemusnahanModel = new \App\Models\PemusnahanModel();
-        $pemusnahanCount = $pemusnahanModel->where('id_bag', $id)->countAllResults();
-
-        if ($pemusnahanCount > 0) {
-            session()->setFlashdata('error', 'Tidak dapat menghapus stok karena sudah dimusnahkan');
+        $permintaanModel = new \App\Models\PermintaanModel();
+        $pendingRequestCount = $permintaanModel
+            ->where('id_bag', $id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->countAllResults();
+        if ($pendingRequestCount > 0) {
+            session()->setFlashdata('error', 'Stok belum dapat diarsipkan karena transaksi permintaan belum selesai.');
             return redirect()->to('/stok');
         }
 
         try {
             if ($this->stokModel->delete($id)) {
-                session()->setFlashdata('success', 'Stok darah berhasil dihapus');
+                session()->setFlashdata('success', 'Stok darah berhasil diarsipkan. Riwayat transaksi tetap tersimpan.');
             } else {
-                session()->setFlashdata('error', 'Gagal menghapus stok darah');
+                session()->setFlashdata('error', 'Gagal mengarsipkan stok darah');
             }
         } catch (\Exception $e) {
             session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());

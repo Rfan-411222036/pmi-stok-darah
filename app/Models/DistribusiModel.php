@@ -152,16 +152,17 @@ class DistribusiModel extends Model
         // Aggregate by produsen (BDRS) so producers without linked login users are still shown
         $builder = $this->db->table('produsen p')
                    ->select('p.id_produsen, p.nama as nama_produsen,
-                         COALESCE(SUM(CASE WHEN s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as jumlah_stok,
-                         COALESCE(SUM(CASE WHEN s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as layak_pakai,
-                         COALESCE(SUM(CASE WHEN (s.status = "tersedia" AND s.tanggal_expired < CURDATE()) OR s.status = "expired" THEN 1 ELSE 0 END), 0) as sudah_expired')
+                         COALESCE(SUM(CASE WHEN s.deleted_at IS NULL AND s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as jumlah_stok,
+                         COALESCE(SUM(CASE WHEN s.deleted_at IS NULL AND s.status = "tersedia" AND s.tanggal_expired >= CURDATE() THEN 1 ELSE 0 END), 0) as layak_pakai,
+                         COALESCE(SUM(CASE WHEN s.deleted_at IS NULL AND ((s.status = "tersedia" AND s.tanggal_expired < CURDATE()) OR s.status = "expired") THEN 1 ELSE 0 END), 0) as sudah_expired')
                    ->join('stok s', 'p.id_produsen = s.id_produsen', 'left');
 
         if ($id_user) {
             $builder->where('p.id_user', $id_user);
         }
 
-        $builder->groupBy('p.id_produsen, p.nama')
+        $builder->where('p.is_active', 1)
+                ->groupBy('p.id_produsen, p.nama')
                 ->orderBy('p.nama');
 
         return $builder->get()->getResultArray();

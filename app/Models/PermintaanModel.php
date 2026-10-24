@@ -117,4 +117,17 @@ class PermintaanModel extends Model
         $filters['id_rs'] = $id_rs;
         return $this->filterQuery($this->baseQuery(), $filters)->findAll();
     }
+
+    public function getRequestVolumeByProdusenAndGolongan()
+    {
+        return $this->db->table('permintaan')
+            ->select('produsen.id_produsen, produsen.nama as nama_produsen, permintaan.gol_dar, SUM(permintaan.jumlah) as total_diminta')
+            ->join('produsen', 'produsen.id_produsen = permintaan.id_produsen')
+            ->where('permintaan.gol_dar IS NOT NULL', null, false)
+            ->groupBy('produsen.id_produsen, produsen.nama, permintaan.gol_dar')
+            ->orderBy('produsen.nama')
+            ->orderBy('permintaan.gol_dar')
+            ->get()
+            ->getResultArray();
+    }
 }
