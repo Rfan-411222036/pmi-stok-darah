@@ -25,6 +25,10 @@
           "path": "/stok"
         },
         {
+          "name": "laporan",
+          "path": "/laporan"
+        },
+        {
           "name": "distribusi",
           "path": "/distribusi"
         },
@@ -48,6 +52,10 @@
         {
           "name": "dashboard",
           "path": "/dashboard"
+        },
+        {
+          "name": "laporan",
+          "path": "/laporan"
         },
         {
           "name": "distribusi",

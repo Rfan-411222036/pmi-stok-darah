@@ -97,6 +97,7 @@ class MenuHelper
             'bdrs' => 'fas fa-industry',
             'rumah sakit' => 'fas fa-hospital-user',
             'stok darah' => 'fas fa-tint',
+            'laporan' => 'fas fa-chart-line',
             'distribusi' => 'fas fa-truck',
             'pemusnahan' => 'fas fa-trash',
             'return' => 'fas fa-undo',

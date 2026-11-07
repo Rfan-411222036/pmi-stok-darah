@@ -171,6 +171,30 @@
             <?php endif; ?>
             <?php endif; ?>
 
+            <?php if ($current_role === 'bdrs'): ?>
+            <div class="card card-outline card-danger mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Notifikasi Stok Rendah</h3>
+                </div>
+                <div class="card-body">
+                    <?php if (!empty($low_stock_notifications)): ?>
+                        <ul class="list-group list-group-flush">
+                            <?php foreach ($low_stock_notifications as $notification): ?>
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span><?= esc($notification['message']) ?></span>
+                                        <small class="text-muted"><?= date('d/m/Y H:i', strtotime($notification['created_at'])) ?></small>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <div class="alert alert-success mb-0">Tidak ada notifikasi stok rendah saat ini.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <div class="modal fade" id="stokPreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content">
@@ -440,93 +464,6 @@
                     </div>
                 </div>
             </div> -->
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-outline card-danger pmi-card">
-                        <div class="card-header border-0 d-flex justify-content-between align-items-center">
-                            <div>
-                                <h3 class="card-title">
-                                    <?= in_array($current_role, ['admin', 'pimpinan', 'rs'], true) ? 'Grafik Stok Darah di Setiap BDRS' : 'Grafik Stok Darah BDRS Saya' ?>
-                                </h3>
-                                <p class="text-muted mb-0">
-                                    <?php if (in_array($current_role, ['admin', 'pimpinan', 'rs'], true)): ?>
-                                        Menampilkan total stok darah tersedia untuk setiap BDRS.
-                                    <?php else: ?>
-                                        Menampilkan total stok darah di BDRS Anda sendiri.
-                                    <?php endif; ?>
-                                </p>
-                            </div>
-                            <span class="badge badge-pill badge-danger"><?= in_array($current_role, ['admin', 'pimpinan'], true) ? 'Admin View' : ($current_role === 'rs' ? 'RS View' : 'BDRS View') ?></span>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-wrapper" style="min-height: 360px; position: relative;">
-                                <canvas id="dashboardStokDarahChart" style="height: 360px;"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <?php if ($current_role === 'bdrs'): ?>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-outline card-danger pmi-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Grafik Distribusi Darah per Golongan dan Rumah Sakit</h3>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($bdrs_distribution_chart['labels'])): ?>
-                                <div style="height: 360px; position: relative;">
-                                    <canvas id="bdrsDistributionByHospitalChart"></canvas>
-                                </div>
-                            <?php else: ?>
-                                <p class="text-muted text-center mb-0">Belum ada data distribusi untuk BDRS Anda.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <?php if (in_array($current_role, ['admin', 'pimpinan'], true)): ?>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-outline card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Riwayat Permintaan Darah RS per Golongan dan BDRS</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-muted">Total kantong yang diminta RS, dikelompokkan berdasarkan BDRS dan golongan darah.</p>
-                            <?php if (!empty($riwayat_permintaan_labels)): ?>
-                                <div style="height: 360px; position: relative;">
-                                    <canvas id="riwayatPermintaanChart"></canvas>
-                                </div>
-                            <?php else: ?>
-                                <p class="text-muted text-center mb-0">Belum ada riwayat permintaan darah.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <?php if (!empty($monthly_distribusi) && $current_role === 'admin'): ?>
-            <!-- <div class="row mt-3">
-                <div class="col-12">
-                    <div class="card card-outline card-danger pmi-card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h3 class="card-title">Grafik Distribusi Bulanan (Klik bar untuk lihat per gudang)</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-wrapper" style="min-height: 300px; position: relative;">
-                                <canvas id="monthlyDistribusiChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <?php endif; ?>
 
             <!-- Card Laporan PDF -->
             <!-- <div class="row">
@@ -801,207 +738,5 @@
         </div>
     </section>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('dashboardStokDarahChart');
-        if (!ctx) return;
-
-        var labels = <?= json_encode($chart_labels) ?>;
-        var chartData = <?= json_encode($chart_data) ?>;
-
-        var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 360);
-        gradient.addColorStop(0, 'rgba(220, 53, 69, 0.35)');
-        gradient.addColorStop(1, 'rgba(220, 53, 69, 0.05)');
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Jumlah Stok Darah',
-                        data: chartData,
-                        borderColor: '#dc3545',
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.35,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#dc3545',
-                        pointBorderWidth: 2
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                plugins: {
-                    legend: {
-                        labels: {
-                            boxWidth: 12,
-                            padding: 20
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID');
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#495057' }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function (value) { return value.toLocaleString('id-ID'); },
-                            color: '#495057'
-                        },
-                        grid: { color: 'rgba(0,0,0,0.05)' }
-                    }
-                }
-            }
-        });
-
-        var requestHistoryCanvas = document.getElementById('riwayatPermintaanChart');
-        if (requestHistoryCanvas) {
-            new Chart(requestHistoryCanvas, {
-                type: 'bar',
-                data: {
-                    labels: <?= json_encode($riwayat_permintaan_labels) ?>,
-                    datasets: <?= json_encode($riwayat_permintaan_datasets) ?>
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    scales: {
-                        x: { stacked: true, grid: { display: false } },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            title: { display: true, text: 'Jumlah kantong diminta' },
-                            ticks: { precision: 0 }
-                        }
-
-                        var bdrsDistributionCanvas = document.getElementById('bdrsDistributionByHospitalChart');
-                        if (bdrsDistributionCanvas) {
-                            new Chart(bdrsDistributionCanvas, {
-                                type: 'bar',
-                                data: {
-                                    labels: <?= json_encode($bdrs_distribution_chart['labels']) ?>,
-                                    datasets: <?= json_encode($bdrs_distribution_chart['datasets']) ?>
-                                },
-                                options: {
-                                    maintainAspectRatio: false,
-                                    responsive: true,
-                                    scales: {
-                                        x: { stacked: true, grid: { display: false } },
-                                        y: {
-                                            stacked: true,
-                                            beginAtZero: true,
-                                            title: { display: true, text: 'Jumlah kantong darah' },
-                                            ticks: { precision: 0 }
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return context.dataset.label + ': ' + context.parsed.y.toLocaleString('id-ID') + ' kantong';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-                // Monthly distribusi chart (admin) with click -> per-gudang
-                <?php if (!empty($monthly_distribusi) && in_array($current_role, ['admin', 'pimpinan'], true)): ?>
-                (function(){
-                        var mCtx = document.getElementById('monthlyDistribusiChart');
-                        if (!mCtx) return;
-
-                        var mLabels = <?= json_encode($monthly_distribusi['labels']) ?>;
-                        var mData = <?= json_encode($monthly_distribusi['data']) ?>;
-
-                        var monthlyChart = new Chart(mCtx, {
-                                type: 'bar',
-                                data: {
-                                        labels: mLabels,
-                                        datasets: [{
-                                                label: 'Jumlah Distribusi',
-                                                data: mData,
-                                                backgroundColor: '#dc3545',
-                                                borderColor: '#b21f2b'
-                                        }]
-                                },
-                                options: {
-                                        maintainAspectRatio: false,
-                                        onClick: function (evt, activeEls) {
-                                                var points = this.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-                                                if (!points.length) return;
-                                                var idx = points[0].index; // month index 0..11
-                                                var month = idx + 1;
-
-                                                // fetch per-gudang data
-                                                fetch('<?= base_url('/dashboard/distribusi-per-gudang') ?>?month=' + month)
-                                                        .then(res => res.json())
-                                                        .then(json => {
-                                                                if (!json.success) return alert('Data tidak tersedia');
-                                                                var labels = json.data.map(function(i){ return i.nama_produsen || 'Unknown'; });
-                                                                var data = json.data.map(function(i){ return parseInt(i.jumlah) || 0; });
-
-                                                                // show modal with chart
-                                                                var modalId = 'perGudangModal';
-                                                                var existing = document.getElementById(modalId);
-                                                                if (existing) existing.remove();
-
-                                                                var modalHtml = `
-                                                                <div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
-                                                                    <div class="modal-dialog modal-lg" role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title">Distribusi per Gudang - ${mLabels[idx]}</h5>
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                <canvas id="perGudangChartCanvas" style="height:360px"></canvas>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>`;
-
-                                                                document.body.insertAdjacentHTML('beforeend', modalHtml);
-                                                                $('#'+modalId).modal('show');
-
-                                                                setTimeout(function(){
-                                                                        var pc = document.getElementById('perGudangChartCanvas');
-                                                                        new Chart(pc, {
-                                                                                type: 'bar',
-                                                                                data: { labels: labels, datasets: [{ label: 'Jumlah Distribusi', data: data, backgroundColor: '#dc3545' }] },
-                                                                                options: { maintainAspectRatio: false }
-                                                                        });
-                                                                }, 300);
-                                                        })
-                                                        .catch(err => { console.error(err); alert('Gagal mengambil data.'); });
-                                        },
-                                        plugins: { legend: { display: false } }
-                                }
-                        });
-                })();
-                <?php endif; ?>
-    });
-</script>
 
 <?= $this->include('templates/footer') ?>

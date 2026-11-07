@@ -172,6 +172,43 @@ class DistribusiModel extends Model
             ->getResultArray();
     }
 
+    public function getTrendByGolongan(string $from, string $to, ?int $produsenId = null): array
+    {
+        $builder = $this->db->table('distribusi d')
+            ->select("DATE_FORMAT(d.tanggal_distribusi, '%Y-%m') AS period, s.gol_dar, COUNT(d.id_distribusi) AS total", false)
+            ->join('stok s', 's.id_bag = d.id_bag')
+            ->where('d.tanggal_distribusi >=', $from . ' 00:00:00')
+            ->where('d.tanggal_distribusi <=', $to . ' 23:59:59')
+            ->where('s.gol_dar IS NOT NULL', null, false)
+            ->groupBy('period, s.gol_dar');
+
+        if ($produsenId !== null) {
+            $builder->where('s.id_produsen', $produsenId);
+        }
+
+        return $builder->orderBy('period')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getTrendByKeperluan(string $from, string $to, ?int $produsenId = null): array
+    {
+        $builder = $this->db->table('distribusi d')
+            ->select("DATE_FORMAT(d.tanggal_distribusi, '%Y-%m') AS period, COALESCE(NULLIF(TRIM(d.keperluan), ''), 'Tidak diketahui') AS keperluan, COUNT(d.id_distribusi) AS total", false)
+            ->join('stok s', 's.id_bag = d.id_bag')
+            ->where('d.tanggal_distribusi >=', $from . ' 00:00:00')
+            ->where('d.tanggal_distribusi <=', $to . ' 23:59:59')
+            ->groupBy('period, keperluan');
+
+        if ($produsenId !== null) {
+            $builder->where('s.id_produsen', $produsenId);
+        }
+
+        return $builder->orderBy('period')
+            ->get()
+            ->getResultArray();
+    }
+
     public function getStokPerBDRS($id_user = null)
     {
         // Aggregate by produsen (BDRS) so producers without linked login users are still shown

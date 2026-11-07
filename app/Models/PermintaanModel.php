@@ -130,4 +130,43 @@ class PermintaanModel extends Model
             ->get()
             ->getResultArray();
     }
+
+    public function getTrendByGolongan(string $from, string $to): array
+    {
+        return $this->db->table('permintaan')
+            ->select("DATE_FORMAT(created_at, '%Y-%m') AS period, gol_dar, SUM(jumlah) AS total", false)
+            ->where('created_at >=', $from . ' 00:00:00')
+            ->where('created_at <=', $to . ' 23:59:59')
+            ->where('gol_dar IS NOT NULL', null, false)
+            ->groupBy('period, gol_dar')
+            ->orderBy('period')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getTrendByKeperluan(string $from, string $to): array
+    {
+        return $this->db->table('permintaan')
+            ->select("DATE_FORMAT(created_at, '%Y-%m') AS period, COALESCE(NULLIF(TRIM(keterangan), ''), 'Tidak diketahui') AS keperluan, SUM(jumlah) AS total", false)
+            ->where('created_at >=', $from . ' 00:00:00')
+            ->where('created_at <=', $to . ' 23:59:59')
+            ->groupBy('period, keperluan')
+            ->orderBy('period')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getActiveHighPriorityRequests(): array
+    {
+        return $this->db->table('permintaan p')
+            ->select('p.id_permintaan, p.created_at, rs.nama_rs, produsen.nama AS nama_produsen')
+            ->join('rumah_sakit rs', 'rs.id_rs = p.id_rs', 'left')
+            ->join('produsen', 'produsen.id_produsen = p.id_produsen', 'left')
+            ->where('p.priority_cito', 'high')
+            ->whereIn('p.status', ['pending', 'approved'])
+            ->orderBy('p.created_at', 'DESC')
+            ->limit(5)
+            ->get()
+            ->getResultArray();
+    }
 }

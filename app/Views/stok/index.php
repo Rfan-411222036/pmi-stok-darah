@@ -38,7 +38,7 @@
             <div class="card">
                     <div class="card-header">
                     <h3 class="card-title">Daftar Stok Darah</h3>
-                    <?php if (session()->get('role') !== 'rs'): ?>
+                    <?php if (in_array(session()->get('role'), ['admin', 'pimpinan'], true)): ?>
                     <div class="card-tools">
                         <a href="<?= base_url('/stok/create') ?>" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Stok
