@@ -455,7 +455,7 @@ class Permintaan extends BaseController
         if ($insertId) {
             $this->notifyBdrsNewRequest($data['id_produsen'], $insertId, $data['no_permintaan'] ?? null);
             if (($data['priority_cito'] ?? 'medium') === 'high') {
-                $this->notifyHighPriorityRequest($data);
+                $this->notifyHighPriorityRequest($data, (int) $insertId);
             }
             session()->setFlashdata('success', 'Permintaan berhasil diajukan. Menunggu persetujuan BDRS.');
         } else {
@@ -465,7 +465,7 @@ class Permintaan extends BaseController
         return redirect()->to('/permintaan');
     }
 
-    protected function notifyHighPriorityRequest(array $data)
+    protected function notifyHighPriorityRequest(array $data, int $requestId)
     {
         $produsen = $this->produsenModel->find($data['id_produsen']);
         $rs = $this->rsModel->find($data['id_rs']);
@@ -485,7 +485,8 @@ class Permintaan extends BaseController
         $targetUserIds = array_values(array_unique($targetUserIds));
         $rsName = $rs['nama_rs'] ?? 'Rumah Sakit';
         $produsenName = $produsen['nama'] ?? 'BDRS';
-        $message = 'Permintaan darah PRIORITAS HIGH dari ' . $rsName . ' untuk ' . $produsenName . ' membutuhkan perhatian segera.';
+        $message = 'Permintaan #' . $requestId . ' - Permintaan darah PRIORITAS HIGH dari '
+            . $rsName . ' untuk ' . $produsenName . ' membutuhkan perhatian segera.';
 
         foreach ($targetUserIds as $userId) {
             $this->notificationModel->insert([
@@ -712,8 +713,8 @@ class Permintaan extends BaseController
             }
 
             if ($minimalBroken) {
-                $this->notifyAdminLowStock($perm['id_produsen'], $bag['gol_dar'], $bag['jenis_darah'], $remaining);
-                session()->setFlashdata('warning', 'Permintaan disetujui tetapi stok golongan darah sekarang berada di bawah batas minimal. Admin telah diberitahu.');
+                $this->notifyLowStock($perm['id_produsen'], $bag['gol_dar'], $bag['jenis_darah'], $remaining);
+                session()->setFlashdata('warning', 'Permintaan disetujui tetapi stok golongan darah sekarang berada di bawah batas minimal. Admin dan BDRS telah diberitahu.');
             } else {
                 session()->setFlashdata('success', 'Permintaan disetujui dan no kantong darah telah dipilih.');
             }
@@ -754,22 +755,14 @@ class Permintaan extends BaseController
         }
     }
 
-    protected function notifyAdminLowStock($produsenId, $golongan, $jenis, $remaining)
+    protected function notifyLowStock($produsenId, $golongan, $jenis, $remaining)
     {
-        // Simple stub for low stock alert. Adjust to actual admin notification flow.
-        $produsen = $this->produsenModel->find($produsenId);
-        $produsenName = $produsen['nama'] ?? ('BDRS #' . $produsenId);
-        $adminUsers = $this->userModel->where('role', 'admin')->findAll();
-
-        foreach ($adminUsers as $admin) {
-            $this->notificationModel->insert([
-                'user_id' => $admin['id_user'],
-                'title' => 'Stok Rendah: ' . $golongan . ' ' . $jenis,
-                'message' => 'Stok kantong darah ' . $golongan . ' ' . $jenis . ' untuk BDRS ' . $produsenName . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
-                'is_read' => 0,
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-        }
+        $this->notificationModel->notifyLowStock(
+            (int) $produsenId,
+            (string) $golongan,
+            $jenis !== null ? (string) $jenis : null,
+            (int) $remaining
+        );
     }
 
     public function reject($id)
@@ -780,13 +773,18 @@ class Permintaan extends BaseController
         $perm = $this->permintaanModel->find($id);
         if (!$perm) return redirect()->back()->with('error', 'Permintaan tidak ditemukan');
 
-        $this->permintaanModel->update($id, [
+        $updated = $this->permintaanModel->update($id, [
             'status' => 'rejected',
             'approved_by' => $userId,
             'approved_at' => date('Y-m-d H:i:s')
         ]);
 
-        session()->setFlashdata('success', 'Permintaan ditolak');
+        if ($updated) {
+            $this->removeCitoNotification($perm);
+            session()->setFlashdata('success', 'Permintaan ditolak');
+        } else {
+            session()->setFlashdata('error', 'Gagal menolak permintaan');
+        }
         return redirect()->to('/permintaan');
     }
 
@@ -813,11 +811,29 @@ class Permintaan extends BaseController
         }
 
         if ($this->permintaanModel->update($id, ['status' => 'completed'])) {
+            $this->removeCitoNotification($perm);
             session()->setFlashdata('success', 'Permintaan berhasil diselesaikan');
         } else {
             session()->setFlashdata('error', 'Gagal menyelesaikan permintaan');
         }
 
         return redirect()->to('/permintaan');
+    }
+
+    protected function removeCitoNotification(array $request): void
+    {
+        if (($request['priority_cito'] ?? '') !== 'high') {
+            return;
+        }
+
+        $rs = $this->rsModel->find($request['id_rs']);
+        $produsen = $this->produsenModel->find($request['id_produsen']);
+        $this->notificationModel->removeCitoForRequest(
+            (int) $request['id_permintaan'],
+            (int) $request['id_rs'],
+            (int) $request['id_produsen'],
+            (string) ($rs['nama_rs'] ?? 'Rumah Sakit'),
+            (string) ($produsen['nama'] ?? 'BDRS')
+        );
     }
 }

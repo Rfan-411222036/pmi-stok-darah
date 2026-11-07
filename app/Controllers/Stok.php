@@ -181,19 +181,12 @@ class Stok extends BaseController
         $role = session()->get('role');
         $produsen = [];
 
-        if ($role === 'rs') {
+        if (!in_array($role, ['admin', 'pimpinan'], true)) {
             session()->setFlashdata('error', 'Akses tidak diizinkan.');
             return redirect()->to('/stok');
         }
 
-        if ($role === 'bdrs') {
-            $ownProdusen = $this->produsenModel->getProdusenByUser(session()->get('id_user'));
-            if ($ownProdusen) {
-                $produsen = [$ownProdusen];
-            }
-        } else {
-            $produsen = $this->produsenModel->findAll();
-        }
+        $produsen = $this->produsenModel->findAll();
 
         $data = [
             'title' => 'Tambah Stok Darah',
@@ -208,7 +201,7 @@ class Stok extends BaseController
     {
         $role = session()->get('role');
 
-        if (!in_array($role, ['admin', 'pimpinan', 'bdrs'], true)) {
+        if (!in_array($role, ['admin', 'pimpinan'], true)) {
             session()->setFlashdata('error', 'Akses tidak diizinkan.');
             return redirect()->to('/stok');
         }
@@ -229,13 +222,6 @@ class Stok extends BaseController
         }
 
         $idProdusen = $this->request->getPost('id_produsen');
-        if ($role === 'bdrs') {
-            $ownProdusen = $this->produsenModel->getProdusenByUser(session()->get('id_user'));
-            if (!$ownProdusen || $ownProdusen['id_produsen'] != $idProdusen) {
-                session()->setFlashdata('error', 'Akses tidak diizinkan.');
-                return redirect()->to('/stok');
-            }
-        }
 
         $data = [
             'no_kantong' => $this->request->getPost('no_kantong'),

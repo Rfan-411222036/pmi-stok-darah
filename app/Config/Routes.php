@@ -22,6 +22,8 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/dashboard/laporan/pemusnahan', 'Dashboard::downloadPemusnahan');
     $routes->get('/dashboard/laporan/retur', 'Dashboard::downloadRetur');
     $routes->post('/dashboard/check-low-stock', 'Dashboard::checkLowStock');
+    $routes->get('/laporan', 'Laporan::index');
+    $routes->get('/laporan/download', 'Laporan::download');
 
     // User Management
     $routes->get('/users', 'Users::index');

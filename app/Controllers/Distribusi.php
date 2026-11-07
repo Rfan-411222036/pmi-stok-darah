@@ -207,7 +207,7 @@ class Distribusi extends BaseController
         $stokData = ['status' => 'terdistribusi'];
 
         if ($this->distribusiModel->save($data) && $this->stokModel->update($this->request->getPost('id_bag'), $stokData)) {
-            // After marking stok as distributed, check low stock thresholds and notify admin if needed
+            // After marking stok as distributed, check low stock thresholds and notify admin and BDRS.
             try {
                 $bag = $this->stokModel->find($id_bag);
                 if ($bag) {
@@ -218,24 +218,19 @@ class Distribusi extends BaseController
                     if ($gol && isset($thresholds[$gol]) && $prodId) {
                         $remaining = $this->stokModel->countAvailableByProdusenGolonganJenis($prodId, $gol, $jenis);
                         if ($remaining < $thresholds[$gol]) {
-                            $produsen = $this->produsenModel->find($prodId);
-                            $produsenName = $produsen['nama'] ?? ('BDRS #' . $prodId);
-                            $notificationModel = new \App\Models\NotificationModel();
-                            $adminUsers = (new \App\Models\UserModel())->where('role', 'admin')->findAll();
-                            foreach ($adminUsers as $admin) {
-                                $notificationModel->insert([
-                                    'user_id' => $admin['id_user'],
-                                    'title' => 'Stok Rendah: ' . $gol . ' ' . $jenis,
-                                    'message' => 'Stok kantong darah ' . $gol . ' ' . $jenis . ' untuk BDRS ' . $produsenName . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
-                                    'is_read' => 0,
-                                    'created_at' => date('Y-m-d H:i:s')
-                                ]);
-                            }
+                            (new NotificationModel())->notifyLowStock(
+                                (int) $prodId,
+                                (string) $gol,
+                                $jenis !== null ? (string) $jenis : null,
+                                (int) $remaining
+                            );
                         }
                     }
                 }
             } catch (\Exception $e) {
-                // ignore notification errors
+                log_message('error', 'Gagal membuat notifikasi stok rendah setelah distribusi: {error}', [
+                    'error' => $e->getMessage(),
+                ]);
             }
 
             session()->setFlashdata('success', 'Distribusi darah berhasil dicatat');

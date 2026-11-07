@@ -87,7 +87,7 @@ class Pemusnahan extends BaseController
             $db->transComplete();
 
             if ($pemusnahanSaved && $stokUpdated) {
-                // After pemusnahan, check low-stock thresholds and notify admin if needed
+                // After pemusnahan, check low-stock thresholds and notify admin and BDRS.
                 try {
                     $bag = $this->stokModel->find($this->request->getPost('id_bag'));
                     if ($bag) {
@@ -96,27 +96,21 @@ class Pemusnahan extends BaseController
                         $jenis = $bag['jenis_darah'] ?? null;
                         $prodId = $bag['id_produsen'] ?? null;
                         if ($gol && isset($thresholds[$gol]) && $prodId) {
-                            $produsenModel = new \App\Models\ProdusenModel();
-                            $produsen = $produsenModel->find($prodId);
-                            $produsenName = $produsen['nama'] ?? ('BDRS #' . $prodId);
                             $remaining = $this->stokModel->countAvailableByProdusenGolonganJenis($prodId, $gol, $jenis);
                             if ($remaining < $thresholds[$gol]) {
-                                $notificationModel = new \App\Models\NotificationModel();
-                                $adminUsers = (new \App\Models\UserModel())->where('role', 'admin')->findAll();
-                                foreach ($adminUsers as $admin) {
-                                    $notificationModel->insert([
-                                        'user_id' => $admin['id_user'],
-                                        'title' => 'Stok Rendah: ' . $gol . ' ' . $jenis,
-                                        'message' => 'Stok kantong darah ' . $gol . ' ' . $jenis . ' untuk BDRS ' . $produsenName . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
-                                        'is_read' => 0,
-                                        'created_at' => date('Y-m-d H:i:s')
-                                    ]);
-                                }
+                                (new \App\Models\NotificationModel())->notifyLowStock(
+                                    (int) $prodId,
+                                    (string) $gol,
+                                    $jenis !== null ? (string) $jenis : null,
+                                    (int) $remaining
+                                );
                             }
                         }
                     }
                 } catch (\Exception $e) {
-                    // ignore notification errors
+                    log_message('error', 'Gagal membuat notifikasi stok rendah setelah pemusnahan: {error}', [
+                        'error' => $e->getMessage(),
+                    ]);
                 }
 
                 session()->setFlashdata('success', 'Data pemusnahan berhasil dicatat');

@@ -37,6 +37,16 @@ class Dashboard extends BaseController
         $db = \Config\Database::connect();
         $forge = \Config\Database::forge();
         try {
+            if ($db->tableExists('permintaan') && !$db->fieldExists('priority_cito', 'permintaan')) {
+                $forge->addColumn('permintaan', [
+                    'priority_cito' => [
+                        'type' => 'ENUM',
+                        'constraint' => ['high', 'medium', 'low'],
+                        'default' => 'medium',
+                    ],
+                ]);
+            }
+
             if (!$db->tableExists('notifications')) {
                 $forge->addField([
                     'id' => [ 'type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true ],
@@ -62,9 +72,6 @@ class Dashboard extends BaseController
 
         $thresholds = [ 'A' => 10, 'B' => 10, 'O' => 15, 'AB' => 5 ];
         $produsenList = $this->produsenModel->findAll();
-        $notificationModel = new \App\Models\NotificationModel();
-        $userModel = new \App\Models\UserModel();
-        $adminUsers = $userModel->where('role', 'admin')->findAll();
         $created = 0;
 
         foreach ($produsenList as $prod) {
@@ -72,16 +79,12 @@ class Dashboard extends BaseController
             foreach ($thresholds as $gol => $th) {
                 $remaining = $this->stokModel->countAvailableByProdusenGolonganJenis($prodId, $gol, null);
                 if ($remaining < $th) {
-                    foreach ($adminUsers as $admin) {
-                        $notificationModel->insert([
-                            'user_id' => $admin['id_user'],
-                            'title' => 'Stok Rendah: ' . $gol,
-                            'message' => 'Stok kantong darah ' . $gol . ' untuk BDRS ' . $prod['nama'] . ' tersisa ' . $remaining . ' dan di bawah batas minimal.',
-                            'is_read' => 0,
-                            'created_at' => date('Y-m-d H:i:s')
-                        ]);
-                        $created++;
-                    }
+                    $created += $this->notificationModel->notifyLowStock(
+                        (int) $prodId,
+                        $gol,
+                        null,
+                        (int) $remaining
+                    );
                 }
             }
         }
@@ -150,62 +153,15 @@ class Dashboard extends BaseController
 
         $stokByGolongan = $this->stokModel->getStokByGolongan($produsenId);
         $stokByJenis = $this->stokModel->getStokByJenis($produsenId);
-        $bdrsDistributionByHospital = [];
-        $bdrsDistributionChart = ['labels' => [], 'datasets' => []];
 
         if ($currentRole === 'bdrs') {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS($currentUserId);
             if ($produsenId) {
                 $pendingRequests = $this->permintaanModel->getPendingForProdusen($produsenId);
                 $this->notificationModel->notifyPendingRequests((int) $currentUserId, $pendingRequests);
-
-                $bdrsDistributionByHospital = $this->distribusiModel
-                    ->getDistribusiPerRsAndGolongan($produsenId);
-                $hospitalLabels = [];
-                $distributionData = array_fill_keys(['A', 'B', 'AB', 'O'], []);
-
-                foreach ($bdrsDistributionByHospital as $row) {
-                    if (!array_key_exists($row['id_rs'], $hospitalLabels)) {
-                        $hospitalLabels[$row['id_rs']] = $row['nama_rs'];
-                    }
-                }
-                $hospitalIds = array_keys($hospitalLabels);
-                $hospitalLabels = array_values($hospitalLabels);
-                foreach ($distributionData as $golongan => $unused) {
-                    $distributionData[$golongan] = array_fill(0, count($hospitalLabels), 0);
-                }
-
-                $hospitalIndexes = [];
-                foreach ($hospitalIds as $index => $hospitalId) {
-                    $hospitalIndexes[$hospitalId] = $index;
-                }
-                foreach ($bdrsDistributionByHospital as $row) {
-                    $index = $hospitalIndexes[$row['id_rs']] ?? null;
-                    if ($index !== null && isset($distributionData[$row['gol_dar']])) {
-                        $distributionData[$row['gol_dar']][$index] = (int) $row['jumlah'];
-                    }
-                }
-
-                $colors = ['A' => '#dc3545', 'B' => '#007bff', 'AB' => '#28a745', 'O' => '#ffc107'];
-                foreach ($distributionData as $golongan => $values) {
-                    $bdrsDistributionChart['datasets'][] = [
-                        'label' => $golongan,
-                        'data' => $values,
-                        'backgroundColor' => $colors[$golongan],
-                    ];
-                }
-                $bdrsDistributionChart['labels'] = $hospitalLabels;
             }
         } else {
             $stokPerBDRS = $this->distribusiModel->getStokPerBDRS();
-        }
-
-        $chartLabels = [];
-        $chartData = [];
-        foreach ($stokPerBDRS as $item) {
-            $label = $item['nama_produsen'] ?? $item['nama'] ?? ($item['nama_rs'] ?? 'Unknown');
-            $chartLabels[] = $label;
-            $chartData[] = (int) ($item['jumlah_stok'] ?? 0);
         }
 
         $produsenList = $this->produsenModel->where('is_active', 1)->orderBy('nama')->findAll();
@@ -227,54 +183,35 @@ class Dashboard extends BaseController
             }
         }
 
-        $requestHistory = [];
-        $requestHistoryLabels = [];
-        $requestHistoryDatasets = [];
-        if ($isAdminLike) {
-            $requestHistory = $this->permintaanModel->getRequestVolumeByProdusenAndGolongan();
-            $requestHistoryLabels = array_column($produsenList, 'nama');
-            $requestHistoryData = [];
-            foreach ($golonganDarah as $golongan) {
-                $requestHistoryData[$golongan] = array_fill(0, count($requestHistoryLabels), 0);
-            }
-
-            $producerIndexes = [];
-            foreach ($produsenList as $index => $produsen) {
-                $producerIndexes[$produsen['id_produsen']] = $index;
-            }
-            foreach ($requestHistory as $requestRow) {
-                $index = $producerIndexes[$requestRow['id_produsen']] ?? null;
-                $golongan = $requestRow['gol_dar'];
-                if ($index !== null && isset($requestHistoryData[$golongan])) {
-                    $requestHistoryData[$golongan][$index] = (int) $requestRow['total_diminta'];
-                }
-            }
-
-            $colors = ['A' => '#dc3545', 'B' => '#007bff', 'AB' => '#28a745', 'O' => '#ffc107'];
-            foreach ($requestHistoryData as $golongan => $values) {
-                $requestHistoryDatasets[] = [
-                    'label' => $golongan,
-                    'data' => $values,
-                    'backgroundColor' => $colors[$golongan],
-                ];
-            }
-        }
-
         $totalUsers = $this->userModel->getTotalUsers();
         $totalAdmins = $this->userModel->getTotalAdmins();
         $totalStaff = $this->userModel->getTotalStaff();
 
         $lowStockNotifications = [];
         $priorityNotifications = [];
-        if (in_array($currentRole, ['admin', 'pimpinan', 'bdrs', 'rs'], true)) {
-            $priorityNotifications = $this->notificationModel
-                ->where('user_id', $currentUserId)
-                ->orderBy('created_at', 'DESC')
-                ->findAll(5);
+        if (in_array($currentRole, ['admin', 'pimpinan'], true)) {
+            $priorityNotifications = array_map(static function (array $request): array {
+                return [
+                    'message' => 'Permintaan darah PRIORITAS HIGH dari '
+                        . ($request['nama_rs'] ?? 'Rumah Sakit') . ' untuk '
+                        . ($request['nama_produsen'] ?? 'BDRS')
+                        . ' membutuhkan perhatian segera.',
+                    'created_at' => $request['created_at'],
+                ];
+            }, $this->permintaanModel->getActiveHighPriorityRequests());
         }
 
         if ($isAdminLike) {
-            $lowStockNotifications = $this->notificationModel->orderBy('created_at', 'DESC')->findAll(5);
+            $lowStockNotifications = $this->notificationModel
+                ->like('title', 'Stok Rendah:')
+                ->orderBy('created_at', 'DESC')
+                ->findAll(5);
+        } elseif ($currentRole === 'bdrs') {
+            $lowStockNotifications = $this->notificationModel
+                ->where('user_id', $currentUserId)
+                ->like('title', 'Stok Rendah:')
+                ->orderBy('created_at', 'DESC')
+                ->findAll(5);
         }
 
         $recentDistribusi = $this->distribusiModel->getRecentDistribusi(
@@ -282,17 +219,6 @@ class Dashboard extends BaseController
             $distributionRsId,
             $currentRole === 'bdrs' ? $produsenId : null
         );
-
-        // Monthly distribusi chart (for admin)
-        $monthlyDistribusi = [];
-        if ($isAdminLike) {
-            $monthlyCounts = $this->distribusiModel->getDistribusiPerMonth();
-            $monthlyLabels = array_map(function($m){ return date('F', mktime(0,0,0,$m,1)); }, range(1,12));
-            $monthlyDistribusi = [
-                'labels' => $monthlyLabels,
-                'data' => array_values($monthlyCounts)
-            ];
-        }
 
         $data = [
             'title' => 'Dashboard',
@@ -311,19 +237,13 @@ class Dashboard extends BaseController
             'stok_per_bdrs' => $stokPerBDRS,
             'stok_per_bdrs_golongan' => $stockByBdrsAndBloodGroup,
             'golongan_darah' => $golonganDarah,
-            'riwayat_permintaan_labels' => $requestHistoryLabels,
-            'riwayat_permintaan_datasets' => $requestHistoryDatasets,
             'current_role' => $currentRole,
-            'chart_labels' => $chartLabels,
-            'chart_data' => $chartData,
             'total_users' => $totalUsers,
             'total_admins' => $totalAdmins,
             'total_staff' => $totalStaff,
             'low_stock_notifications' => $lowStockNotifications,
             'priority_notifications' => $priorityNotifications,
             'recent_distribusi' => $recentDistribusi,
-            'monthly_distribusi' => $monthlyDistribusi,
-            'bdrs_distribution_chart' => $bdrsDistributionChart,
             'bdrs_link_missing' => $bdrsLinkMissing,
             'produsen_list' => $produsenList,
             'golongan_list' => $this->stokModel->getDistinctGolongan(),
