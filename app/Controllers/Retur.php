@@ -97,7 +97,7 @@ class Retur extends BaseController
                 $item['no_kantong'] ?? '-',
                 $item['gol_dar'] ?? '-',
                 $item['jenis_darah'] ?? '-',
-                $item['nama_rs'] ?? '-',
+                $item['nama_rs'] ?? ($item['nama_produsen'] ?? '-'),
                 isset($item['tanggal_distribusi']) ? date('d-m-Y', strtotime($item['tanggal_distribusi'])) : '-',
                 isset($item['tanggal_retur']) ? date('d-m-Y', strtotime($item['tanggal_retur'])) : '-',
                 $item['alasan_return'] ?? '-',
@@ -114,9 +114,15 @@ class Retur extends BaseController
 
     public function create()
     {
-        $distribusi = $this->returnModel->getDistribusiForReturn();
         $role = session()->get('role');
+        if (!in_array($role, ['admin', 'rs'], true)) {
+            return redirect()->to('/dashboard')->with('error', 'Akses tidak diizinkan.');
+        }
+
         $userId = session()->get('id_user');
+        $isAdmin = $role === 'admin';
+        $distribusi = $isAdmin ? [] : $this->returnModel->getDistribusiForReturn();
+        $stokMendekatiExpired = $isAdmin ? $this->stokModel->getStokMendekatiExpiredDetails() : [];
 
         if ($role === 'rs') {
             $rs = $this->rumahSakitModel->getRumahSakitByUser($userId);
@@ -129,6 +135,8 @@ class Retur extends BaseController
             'title' => 'Tambah Return Darah',
             'page_title' => 'Tambah Data Return Darah',
             'distribusi' => $distribusi,
+            'stok_mendekati_expired' => $stokMendekatiExpired,
+            'is_admin' => $isAdmin,
             'rumah_sakit' => $rumahSakit,
             'validation' => \Config\Services::validation()
         ];
@@ -137,27 +145,62 @@ class Retur extends BaseController
 
     public function store()
     {
+        $role = session()->get('role');
+        if (!in_array($role, ['admin', 'rs'], true)) {
+            return redirect()->to('/dashboard')->with('error', 'Akses tidak diizinkan.');
+        }
+
+        $isAdmin = $role === 'admin';
         $validation = \Config\Services::validation();
-        $validation->setRules([
-            'id_distribusi' => 'required',
+        $rules = [
             'id_bag' => 'required',
-            'id_rs' => 'required',
             'tanggal_retur' => 'required',
             'alasan_return' => 'required',
             'kondisi_darah' => 'required'
-        ]);
+        ];
+        if (!$isAdmin) {
+            $rules['id_distribusi'] = 'required';
+        }
+        $validation->setRules($rules);
 
         if (!$validation->withRequest($this->request)->run()) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        $id_distribusi = $this->request->getPost('id_distribusi');
-        $distribusiRecord = $this->distribusiModel->find($id_distribusi);
+        $idBag = (int) $this->request->getPost('id_bag');
+        $idDistribusi = null;
+        $idRs = null;
+
+        if ($isAdmin) {
+            $eligibleStockIds = array_map(
+                'intval',
+                array_column($this->stokModel->getStokMendekatiExpiredDetails(), 'id_bag')
+            );
+            if (!in_array($idBag, $eligibleStockIds, true)) {
+                return redirect()->back()->withInput()->with('error', 'Stok harus tersedia di BDRS dan mendekati tanggal kedaluwarsa.');
+            }
+        } else {
+            $idDistribusi = (int) $this->request->getPost('id_distribusi');
+            $eligibleDistributions = $this->returnModel->getDistribusiForReturn();
+            $distribusiRecord = null;
+            foreach ($eligibleDistributions as $distribution) {
+                if ((int) $distribution['id_distribusi'] === $idDistribusi) {
+                    $distribusiRecord = $distribution;
+                    break;
+                }
+            }
+
+            if (!$distribusiRecord || (int) $distribusiRecord['id_bag'] !== $idBag) {
+                return redirect()->back()->withInput()->with('error', 'Distribusi tidak valid untuk retur.');
+            }
+
+            $idRs = $distribusiRecord['id_rs'];
+        }
 
         $data = [
-            'id_distribusi' => $id_distribusi,
-            'id_bag' => $this->request->getPost('id_bag'),
-            'id_rs' => $distribusiRecord['id_rs'] ?? null,
+            'id_distribusi' => $idDistribusi,
+            'id_bag' => $idBag,
+            'id_rs' => $idRs,
             'tanggal_retur' => $this->request->getPost('tanggal_retur'),
             'alasan_return' => $this->request->getPost('alasan_return'),
             'kondisi_darah' => $this->request->getPost('kondisi_darah'),
@@ -172,7 +215,7 @@ class Retur extends BaseController
             $db->transStart();
 
             $returnSaved = $this->returnModel->save($data);
-            $stokUpdated = $this->stokModel->update($this->request->getPost('id_bag'), $stokData);
+            $stokUpdated = $this->stokModel->update($idBag, $stokData);
 
             $db->transComplete();
 
@@ -200,8 +243,14 @@ class Retur extends BaseController
             $db = \Config\Database::connect();
             $db->transStart();
 
-            $status = 'terdistribusi';
             if (!empty($retur['id_bag'])) {
+                $status = 'terdistribusi';
+                if (empty($retur['id_distribusi'])) {
+                    $stok = $this->stokModel->find($retur['id_bag']);
+                    $status = $stok && $stok['tanggal_expired'] < date('Y-m-d')
+                        ? 'expired'
+                        : 'tersedia';
+                }
                 $this->stokModel->update($retur['id_bag'], ['status' => $status]);
             }
 
@@ -222,10 +271,11 @@ class Retur extends BaseController
 
     public function edit($id)
     {
-        $retur = $this->returnModel->select('return_darah.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, stok.tanggal_expired, rumah_sakit.nama_rs, distribusi.penerima')
+        $retur = $this->returnModel->select('return_darah.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, stok.tanggal_expired, rumah_sakit.nama_rs, produsen.nama as nama_produsen, distribusi.penerima')
                                    ->join('stok', 'stok.id_bag = return_darah.id_bag')
                                    ->join('rumah_sakit', 'rumah_sakit.id_rs = return_darah.id_rs', 'left')
                                    ->join('distribusi', 'distribusi.id_distribusi = return_darah.id_distribusi', 'left')
+                                   ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
                                    ->where('return_darah.id_return', $id)
                                    ->first();
 
@@ -261,9 +311,11 @@ class Retur extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        $oldReturn = $this->returnModel->find($id);
         $newCondition = $this->request->getPost('kondisi_darah');
-        $stokStatus = $newCondition === 'baik' ? 'tersedia' : 'musnah';
+        $stok = $this->stokModel->find($retur['id_bag']);
+        $stokStatus = $newCondition === 'baik'
+            ? ($stok && $stok['tanggal_expired'] < date('Y-m-d') ? 'expired' : 'tersedia')
+            : 'musnah';
 
         $data = [
             'tanggal_retur' => $this->request->getPost('tanggal_retur'),

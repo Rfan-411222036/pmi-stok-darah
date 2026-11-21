@@ -16,7 +16,7 @@ class ReturnModel extends Model
         $builder = $this->select('return_darah.*, stok.no_kantong, stok.gol_dar, stok.jenis_darah, rumah_sakit.nama_rs, distribusi.tanggal_distribusi, distribusi.penerima, produsen.nama as nama_produsen')
                    ->join('stok', 'stok.id_bag = return_darah.id_bag')
                    ->join('rumah_sakit', 'rumah_sakit.id_rs = return_darah.id_rs', 'left')
-                   ->join('distribusi', 'distribusi.id_distribusi = return_darah.id_distribusi')
+                   ->join('distribusi', 'distribusi.id_distribusi = return_darah.id_distribusi', 'left')
                    ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left');
 
         if ($search) {

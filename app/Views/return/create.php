@@ -27,6 +27,10 @@
                     <form action="<?= base_url('/return/store') ?>" method="post">
                         <?= csrf_field() ?>
 
+                        <?php if (session()->getFlashdata('error')): ?>
+                            <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
+                        <?php endif; ?>
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -39,21 +43,37 @@
 
                         <div class="row">
                             <div class="col-md-6">
+                                <?php if ($is_admin): ?>
                                 <div class="form-group">
-                                    <label for="id_distribusi">Pilih Distribusi untuk Direturn *</label>
-                                    <select class="form-control" id="id_distribusi" name="id_distribusi" required>
+                                    <label for="id_bag">Pilih Stok BDRS Mendekati Expired *</label>
+                                    <select class="form-control" id="id_bag" name="id_bag" required>
+                                        <option value="">Pilih Stok Darah</option>
+                                        <?php foreach ($stok_mendekati_expired as $stok): ?>
+                                            <option value="<?= esc($stok['id_bag']) ?>" <?= old('id_bag') == $stok['id_bag'] ? 'selected' : '' ?>>
+                                                <?= esc($stok['no_kantong']) ?> - <?= esc($stok['gol_dar']) ?><?= esc($stok['rhesus']) ?>
+                                                (<?= esc($stok['jenis_darah']) ?>) - BDRS: <?= esc($stok['nama_produsen'] ?? '-') ?>
+                                                - Expired: <?= date('d/m/Y', strtotime($stok['tanggal_expired'])) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <input type="hidden" name="id_distribusi" value="">
+                                    <small class="form-text text-muted">Hanya stok yang masih tersedia dan akan expired dalam 14 hari.</small>
+                                </div>
+                                <?php else: ?>
+                                <div class="form-group">
+                                    <label for="distribusi_select">Pilih Distribusi untuk Diretur *</label>
+                                    <select class="form-control" id="distribusi_select" name="id_distribusi" required>
                                         <option value="">Pilih Distribusi</option>
                                         <?php foreach ($distribusi as $d): ?>
-                                            <option value="<?= $d['id_distribusi'] ?>" data-id_bag="<?= $d['id_bag'] ?>" data-id_rs="<?= $d['id_rs'] ?>" data-nama_produsen="<?= $d['nama_produsen'] ?>">
-                                                <?= $d['no_kantong'] ?> - <?= $d['gol_dar'] ?> (<?= $d['jenis_darah'] ?>)
-                                                - Sumber BDRS: <?= $d['nama_produsen'] ?>
+                                            <option value="<?= esc($d['id_distribusi']) ?>" data-id_bag="<?= esc($d['id_bag']) ?>" data-id_rs="<?= esc($d['id_rs']) ?>" data-nama_produsen="<?= esc($d['nama_produsen'] ?? '') ?>">
+                                                <?= esc($d['no_kantong']) ?> - <?= esc($d['gol_dar']) ?> (<?= esc($d['jenis_darah']) ?>)
+                                                - Sumber BDRS: <?= esc($d['nama_produsen'] ?? '-') ?>
                                                 - Distribusi: <?= date('d/m/Y', strtotime($d['tanggal_distribusi'])) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                     <small class="form-text text-muted">Pilih distribusi yang akan diretur</small>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="id_bag">ID Kantong Darah *</label>
                                     <input type="text" class="form-control" id="id_bag" name="id_bag" readonly required>
@@ -64,6 +84,7 @@
                                     <label for="sumber_bdrs">Sumber BDRS</label>
                                     <input type="text" class="form-control" id="sumber_bdrs" name="sumber_bdrs" readonly>
                                 </div>
+                                <?php endif; ?>
 
                                 <div class="form-group">
                                     <label for="alasan_return">Alasan Return *</label>
@@ -127,7 +148,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const distribusiSelect = document.getElementById('id_distribusi');
+    const distribusiSelect = document.getElementById('distribusi_select');
+    if (!distribusiSelect) {
+        return;
+    }
+
     const id_bagInput = document.getElementById('id_bag');
     const id_rsInput = document.getElementById('id_rs');
     const infoDiv = document.getElementById('distribusi-info');

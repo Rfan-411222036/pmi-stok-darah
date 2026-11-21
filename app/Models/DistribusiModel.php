@@ -172,7 +172,12 @@ class DistribusiModel extends Model
             ->getResultArray();
     }
 
-    public function getTrendByGolongan(string $from, string $to, ?int $produsenId = null): array
+    public function getTrendByGolongan(
+        string $from,
+        string $to,
+        ?int $produsenId = null,
+        bool $completedOnly = false
+    ): array
     {
         $builder = $this->db->table('distribusi d')
             ->select("DATE_FORMAT(d.tanggal_distribusi, '%Y-%m') AS period, s.gol_dar, COUNT(d.id_distribusi) AS total", false)
@@ -181,6 +186,15 @@ class DistribusiModel extends Model
             ->where('d.tanggal_distribusi <=', $to . ' 23:59:59')
             ->where('s.gol_dar IS NOT NULL', null, false)
             ->groupBy('period, s.gol_dar');
+
+        if ($completedOnly) {
+            $builder->join(
+                'permintaan p',
+                "d.no_permintaan = CONCAT('REQ-', p.id_permintaan) AND p.status = 'completed'",
+                'inner',
+                false
+            );
+        }
 
         if ($produsenId !== null) {
             $builder->where('s.id_produsen', $produsenId);
@@ -191,7 +205,12 @@ class DistribusiModel extends Model
             ->getResultArray();
     }
 
-    public function getTrendByKeperluan(string $from, string $to, ?int $produsenId = null): array
+    public function getTrendByKeperluan(
+        string $from,
+        string $to,
+        ?int $produsenId = null,
+        bool $completedOnly = false
+    ): array
     {
         $builder = $this->db->table('distribusi d')
             ->select("DATE_FORMAT(d.tanggal_distribusi, '%Y-%m') AS period, COALESCE(NULLIF(TRIM(d.keperluan), ''), 'Tidak diketahui') AS keperluan, COUNT(d.id_distribusi) AS total", false)
@@ -199,6 +218,15 @@ class DistribusiModel extends Model
             ->where('d.tanggal_distribusi >=', $from . ' 00:00:00')
             ->where('d.tanggal_distribusi <=', $to . ' 23:59:59')
             ->groupBy('period, keperluan');
+
+        if ($completedOnly) {
+            $builder->join(
+                'permintaan p',
+                "d.no_permintaan = CONCAT('REQ-', p.id_permintaan) AND p.status = 'completed'",
+                'inner',
+                false
+            );
+        }
 
         if ($produsenId !== null) {
             $builder->where('s.id_produsen', $produsenId);

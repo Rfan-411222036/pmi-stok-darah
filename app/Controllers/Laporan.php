@@ -42,10 +42,24 @@ class Laporan extends BaseController
         }
 
         $periods = $this->getPeriods($range['from'], $range['to']);
-        $requestGroupTrend = $isBdrs ? [] : $this->permintaanModel->getTrendByGolongan($range['from'], $range['to']);
-        $usageGroupTrend = $this->distribusiModel->getTrendByGolongan($range['from'], $range['to'], $produsenId);
-        $requestNeedTrend = $isBdrs ? [] : $this->permintaanModel->getTrendByKeperluan($range['from'], $range['to']);
-        $usageNeedTrend = $this->distribusiModel->getTrendByKeperluan($range['from'], $range['to'], $produsenId);
+        $usageGroupTrend = $this->distribusiModel->getTrendByGolongan(
+            $range['from'],
+            $range['to'],
+            $produsenId,
+            $isBdrs
+        );
+        $requestGroupTrend = $isBdrs
+            ? $usageGroupTrend
+            : $this->permintaanModel->getTrendByGolongan($range['from'], $range['to']);
+        $usageNeedTrend = $this->distribusiModel->getTrendByKeperluan(
+            $range['from'],
+            $range['to'],
+            $produsenId,
+            $isBdrs
+        );
+        $requestNeedTrend = $isBdrs
+            ? $usageNeedTrend
+            : $this->permintaanModel->getTrendByKeperluan($range['from'], $range['to']);
         $requestByGroup = $this->indexTrend(
             $requestGroupTrend,
             'gol_dar'
@@ -367,22 +381,22 @@ class Laporan extends BaseController
         bool $distributionOnly = false
     ): array {
         if ($type === 'golongan') {
-            $usageRows = $this->distribusiModel->getTrendByGolongan($from, $to, $produsenId);
+            $usageRows = $this->distribusiModel->getTrendByGolongan($from, $to, $produsenId, $distributionOnly);
             $report = $this->buildReportData(
                 'golongan',
                 $from,
                 $to,
-                $distributionOnly ? [] : $this->permintaanModel->getTrendByGolongan($from, $to),
+                $distributionOnly ? $usageRows : $this->permintaanModel->getTrendByGolongan($from, $to),
                 $usageRows,
                 $distributionOnly
             );
         } else {
-            $usageRows = $this->distribusiModel->getTrendByKeperluan($from, $to, $produsenId);
+            $usageRows = $this->distribusiModel->getTrendByKeperluan($from, $to, $produsenId, $distributionOnly);
             $report = $this->buildReportData(
                 'keperluan',
                 $from,
                 $to,
-                $distributionOnly ? [] : $this->permintaanModel->getTrendByKeperluan($from, $to),
+                $distributionOnly ? $usageRows : $this->permintaanModel->getTrendByKeperluan($from, $to),
                 $usageRows,
                 $distributionOnly
             );

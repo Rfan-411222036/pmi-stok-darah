@@ -120,8 +120,8 @@
                                         <td>
                                             <span class="badge badge-danger"><?= $item['gol_dar'] ?></span>
                                         </td>
-                                        <td><?= $item['nama_produsen'] ?? ($item['nama_rs'] ?? '-') ?></td>
-                                        <td><?= date('d/m/Y H:i', strtotime($item['tanggal_distribusi'])) ?></td>
+                                        <td><?= esc($item['nama_produsen'] ?? ($item['nama_rs'] ?? '-')) ?></td>
+                                        <td><?= !empty($item['tanggal_distribusi']) ? date('d/m/Y H:i', strtotime($item['tanggal_distribusi'])) : '-' ?></td>
                                         <td><?= date('d/m/Y H:i', strtotime($item['tanggal_retur'])) ?></td>
                                         <td><?= $item['alasan_return'] ?></td>
                                         <td>

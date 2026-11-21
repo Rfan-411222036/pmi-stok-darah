@@ -185,6 +185,35 @@ class StokModel extends Model
                        ->findAll();
     }
 
+    public function getStokMendekatiExpiredDetails()
+    {
+        $today = date('Y-m-d');
+        $expiredDate = date('Y-m-d', strtotime('+14 days'));
+
+        return $this->select('stok.*, produsen.nama as nama_produsen')
+                    ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
+                    ->join('return_darah', 'return_darah.id_bag = stok.id_bag', 'left')
+                    ->where('stok.deleted_at', null)
+                    ->where('stok.status', 'tersedia')
+                    ->where('stok.tanggal_expired >=', $today)
+                    ->where('stok.tanggal_expired <=', $expiredDate)
+                    ->where('return_darah.id_return', null)
+                    ->orderBy('stok.tanggal_expired', 'ASC')
+                    ->findAll();
+    }
+
+    public function getStokForPemusnahan()
+    {
+        $this->markExpiredAsExpired();
+
+        return $this->select('stok.*, produsen.nama as nama_produsen')
+                    ->join('produsen', 'produsen.id_produsen = stok.id_produsen', 'left')
+                    ->where('stok.deleted_at', null)
+                    ->whereIn('stok.status', ['tersedia', 'expired'])
+                    ->orderBy('stok.tanggal_expired', 'ASC')
+                    ->findAll();
+    }
+
     /**
      * Return distinct golongan darah values from stok table as simple array
      */

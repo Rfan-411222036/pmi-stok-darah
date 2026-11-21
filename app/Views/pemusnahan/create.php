@@ -27,6 +27,10 @@
                     <form action="<?= base_url('/pemusnahan/store') ?>" method="post">
                         <?= csrf_field() ?>
 
+                        <?php if (session()->getFlashdata('error')): ?>
+                            <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
+                        <?php endif; ?>
+
                         <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -40,21 +44,18 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_bag">Pilih Stok Darah untuk Dimusnahkan *</label>
+                                    <label for="id_bag">Pilih Stok Darah BDRS untuk Dimusnahkan *</label>
                                     <select class="form-control" id="id_bag" name="id_bag" required>
                                         <option value="">Pilih Stok Darah</option>
-                                        <?php if (!empty($stok_expired)): ?>
-                                            <optgroup label="Stok Expired">
-                                                <?php foreach ($stok_expired as $stok): ?>
-                                                    <option value="<?= $stok['id_bag'] ?>" <?= old('id_bag') == $stok['id_bag'] ? 'selected' : '' ?>>
-                                                        <?= $stok['no_kantong'] ?> - <?= $stok['gol_dar'] ?><?= $stok['rhesus'] ?> (<?= $stok['jenis_darah'] ?>)
-                                                        - Expired: <?= date('d/m/Y', strtotime($stok['tanggal_expired'])) ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </optgroup>
-                                        <?php endif; ?>
+                                        <?php foreach ($stok as $item): ?>
+                                            <?php $statusStok = $item['status'] === 'expired' || $item['tanggal_expired'] < date('Y-m-d') ? 'Expired' : 'Tersedia'; ?>
+                                            <option value="<?= esc($item['id_bag']) ?>" <?= old('id_bag') == $item['id_bag'] ? 'selected' : '' ?>>
+                                                <?= esc($item['no_kantong']) ?> - <?= esc($item['gol_dar']) ?><?= esc($item['rhesus']) ?> (<?= esc($item['jenis_darah']) ?>)
+                                                - BDRS: <?= esc($item['nama_produsen'] ?? '-') ?> - <?= $statusStok ?>: <?= date('d/m/Y', strtotime($item['tanggal_expired'])) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
-                                    <small class="form-text text-muted">Hanya menampilkan stok yang tersedia dan expired/rusak</small>
+                                    <small class="form-text text-muted">Daftar stok yang masih berada di BDRS dan belum didistribusikan ke RS.</small>
                                 </div>
 
                                 <div class="form-group">

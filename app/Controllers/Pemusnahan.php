@@ -36,18 +36,10 @@ class Pemusnahan extends BaseController
 
     public function create()
     {
-        $stokExpired = $this->stokModel->where('status', 'tersedia')
-                                      ->where('tanggal_expired <', date('Y-m-d'))
-                                      ->findAll();
-
-        $stokRusak = $this->stokModel->where('status', 'tersedia')
-                                    ->findAll();
-
         $data = [
             'title' => 'Tambah Pemusnahan',
             'page_title' => 'Tambah Data Pemusnahan',
-            'stok_expired' => $stokExpired,
-            'stok_rusak' => $stokRusak,
+            'stok' => $this->stokModel->getStokForPemusnahan(),
             'validation' => \Config\Services::validation()
         ];
         return view('pemusnahan/create', $data);
@@ -67,8 +59,14 @@ class Pemusnahan extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
+        $idBag = (int) $this->request->getPost('id_bag');
+        $stok = $this->stokModel->find($idBag);
+        if (!$stok || !in_array($stok['status'], ['tersedia', 'expired'], true)) {
+            return redirect()->back()->withInput()->with('error', 'Pilih stok yang masih berada di BDRS.');
+        }
+
         $data = [
-            'id_bag' => $this->request->getPost('id_bag'),
+            'id_bag' => $idBag,
             'tanggal_pemusnahan' => $this->request->getPost('tanggal_pemusnahan'),
             'alasan' => $this->request->getPost('alasan'),
             'keterangan' => $this->request->getPost('keterangan'),
@@ -82,7 +80,7 @@ class Pemusnahan extends BaseController
             $db->transStart();
 
             $pemusnahanSaved = $this->pemusnahanModel->save($data);
-            $stokUpdated = $this->stokModel->update($this->request->getPost('id_bag'), $stokData);
+            $stokUpdated = $this->stokModel->update($idBag, $stokData);
 
             $db->transComplete();
 
@@ -138,7 +136,11 @@ class Pemusnahan extends BaseController
 
             $stokRestored = false;
             if (!empty($pemusnahan['id_bag'])) {
-                $stokRestored = $this->stokModel->update($pemusnahan['id_bag'], ['status' => 'tersedia']);
+                $stok = $this->stokModel->find($pemusnahan['id_bag']);
+                $restoredStatus = $stok && $stok['tanggal_expired'] < date('Y-m-d')
+                    ? 'expired'
+                    : 'tersedia';
+                $stokRestored = $this->stokModel->update($pemusnahan['id_bag'], ['status' => $restoredStatus]);
             }
 
             $deleted = $this->pemusnahanModel->delete($id);

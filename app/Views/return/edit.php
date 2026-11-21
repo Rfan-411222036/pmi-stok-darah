@@ -58,9 +58,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="nama_rs">Rumah Sakit</label>
+                                    <label for="nama_rs">Sumber BDRS / Rumah Sakit</label>
                                     <input type="text" class="form-control" id="nama_rs" name="nama_rs"
-                                           value="<?= old('nama_rs', $return['nama_rs']) ?>" readonly>
+                                           value="<?= old('nama_rs', $return['nama_produsen'] ?? $return['nama_rs'] ?? '-') ?>" readonly>
                                 </div>
                             </div>
 
